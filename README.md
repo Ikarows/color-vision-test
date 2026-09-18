@@ -1,6 +1,27 @@
-# 色盲色弱助手
+<div align="center">
+<p><img width="150" src="https://avatars0.githubusercontent.com/u/25151659?s=460&v=4"></p>
 
-一款基于《色盲检查图（第六版）》的单页 Web 应用，同时支持打包为 Android APP（Capacitor）和 Windows 桌面程序（Electron）。提供 **体检模拟** 与 **技巧背图** 两大模块，帮助用户自测色觉、备考体检。
+<h1>色盲色弱助手</h1>
+
+<p>
+   <strong>Vue 3 + Vite 打造的色盲色弱自测与记图助手</strong>
+</p>
+
+<p>
+  <sub>Made with ❤︎ by
+    <a href="https://github.com/Ikarows">Ikarows</a>
+  </sub>
+</p>
+
+<img src="https://shields.io/badge/node-%3E%3D%2018.0.0-brightgreen">
+<img src="https://img.shields.io/badge/vue-3.5.13-brightgreen">
+<img src="https://img.shields.io/badge/vite-6.0.7-brightgreen">
+<img src="https://img.shields.io/badge/capacitor-5.7.8-brightgreen">
+</div>
+
+<br>
+
+一款基于《色盲检查图（第六版）》的单页 Web 应用，同时支持打包为 Android APP（Capacitor）和 Windows 桌面程序（Electron）。提供 **体检模拟** 与 **技巧记图** 两大模块，帮助用户自测色觉、备考体检。
 
 ## 功能特性
 
@@ -12,7 +33,7 @@
 - **答题反馈**：选择后立即判分，答错高亮正确答案
 - **结果报告**：得分、等级评价、错题回顾（含超时未答标注）、历史成绩统计（localStorage 持久化）
 
-### 技巧背图
+### 技巧记图
 
 四个学习分类，卡片式浏览，每次随机排序：
 
@@ -47,7 +68,7 @@ color-vision-test/
 │   ├── App.vue                # 全部界面与交互逻辑（单组件应用）
 │   └── data/
 │       ├── questions.js       # 题库：题目、正确答案、答题/干扰选项池构建
-│       ├── study.js           # 背图学习数据：学习条目、分类、记忆技巧、解析图映射
+│       ├── study.js           # 记图学习数据：学习条目、分类、记忆技巧、解析图映射
 │       └── stats.js           # 历史成绩读写（localStorage）
 │
 ├── public/
@@ -116,7 +137,7 @@ npm run app:build # 构建 Windows 桌面程序（输出到 release/）
 }
 ```
 
-技巧背图模式的“原图”视图按 `q_imageN.png → plates/imageN.jpeg` 规则自动映射，无需额外配置；`category: 'easy'` 的条目不提供原图视图。
+技巧记图模式的“原图”视图按 `q_imageN.png → plates/imageN.jpeg` 规则自动映射，无需额外配置；`category: 'easy'` 的条目不提供原图视图。
 
 ## 免责声明
 

@@ -16,7 +16,7 @@
           <span class="menu-icon">
             <svg viewBox="0 0 24 24" width="30" height="30" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20V4H6.5A2.5 2.5 0 0 0 4 6.5v13z"/><path d="M4 19.5A2.5 2.5 0 0 0 6.5 22H20v-5"/><path d="M9 8h7M9 12h5"/></svg>
           </span>
-          <span class="menu-name">技巧背图</span>
+          <span class="menu-name">技巧记图</span>
           <span class="menu-desc">逐图记忆技巧讲解<br/>简单 13 · 特征 26 · 数字 9</span>
         </button>
         <button class="menu-card quiz" @click="stage = 'start'">
