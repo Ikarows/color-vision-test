@@ -934,7 +934,8 @@ body {
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding: 36px 16px 56px;
+  /*padding: 36px 16px 56px;*/
+  padding: 25px 16px;
 }
 
 .card {
@@ -1934,6 +1935,82 @@ em.good { color: #177a46; }
   font-size: 14px;
   font-weight: 700;
   color: #7a8a99;
+}
+
+/* ---------- 手机端学习模式适配 ---------- */
+@media (max-width: 480px) {
+  /* 分类 tab 四个并排一行,小字号收紧 */
+  .study-tabs {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 6px;
+  }
+
+  .study-tab {
+    padding: 9px 2px;
+    font-size: 13px;
+    letter-spacing: 0;
+    text-align: center;
+    white-space: nowrap;
+  }
+
+  .study-tab em {
+    font-size: 10.5px;
+    margin-left: 1px;
+  }
+
+  .sub-tab {
+    padding: 6px 12px;
+    font-size: 12.5px;
+  }
+
+  .sub-tab em {
+    font-size: 10.5px;
+  }
+
+  .view-switch {
+    padding: 0.19rem;
+  }
+
+  .vs-btn {
+    flex-shrink: 0;
+    white-space: nowrap;
+    padding: 0.375rem 0.69rem;
+    font-size: 0.78rem;
+  }
+
+  .study-info {
+    margin-top: 18px;
+    gap: 10px;
+  }
+
+  .study-answer-row {
+    gap: 10px;
+  }
+
+  .study-answer {
+    font-size: 20px;
+    word-break: break-all;
+  }
+
+  .study-label {
+    font-size: 11px;
+  }
+
+  .study-tip {
+    padding: 11px 13px;
+    gap: 10px;
+  }
+
+  .study-tip p {
+    font-size: 14px;
+    line-height: 1.75;
+  }
+
+  .nav-btn {
+    padding: 9px 16px;
+    font-size: 14px;
+  }
 }
 
 /* ---------- 题目/解析切换 ---------- */
