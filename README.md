@@ -21,7 +21,19 @@
 
 <br>
 
-一款基于《色盲检查图（第六版）》的单页 Web 应用，同时支持打包为 Android APP（Capacitor）和 Windows 桌面程序（Electron）。提供 **体检模拟** 与 **技巧记图** 两大模块，帮助用户自测色觉、备考体检。
+一款基于《色盲检查图（第六版）》的单页 Web 应用，同时支持打包为 Android APP（Capacitor）和 Windows 桌面程序（Electron）。提供 **体检模拟** 与 **技巧记图** 两大模块，帮助用户自测色觉、驾考体检。
+
+## 应用预览
+
+<div align="center">
+  <img src="public/preview/QQ20260918-142127.jpg" width="30%" alt="应用预览 1">&nbsp;
+  <img src="public/preview/QQ20260918-142256.jpg" width="30%" alt="应用预览 2">&nbsp;
+  <img src="public/preview/QQ20260918-142314.jpg" width="30%" alt="应用预览 3">
+  <br><br>
+  <img src="public/preview/QQ20260918-142336.jpg" width="30%" alt="应用预览 4">&nbsp;
+  <img src="public/preview/QQ20260918-142354.jpg" width="30%" alt="应用预览 5">&nbsp;
+  <img src="public/preview/QQ20260918-142405.jpg" width="30%" alt="应用预览 6">
+</div>
 
 ## 功能特性
 
