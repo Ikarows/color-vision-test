@@ -27,8 +27,8 @@
 
 <div align="center">
   <img src="public/preview/QQ20260918-142127.jpg" width="30%" alt="应用预览 1">&nbsp;
-  <img src="public/preview/QQ20260918-142256.jpg" width="30%" alt="应用预览 2">&nbsp;
-  <img src="public/preview/QQ20260918-142314.jpg" width="30%" alt="应用预览 3">
+  <img src="public/preview/QQ20260918-161005.jpg" width="30%" alt="应用预览 2">&nbsp;
+  <img src="public/preview/QQ20260918-161015.jpg" width="30%" alt="应用预览 3">
   <br><br>
   <img src="public/preview/QQ20260918-142336.jpg" width="30%" alt="应用预览 4">&nbsp;
   <img src="public/preview/QQ20260918-142354.jpg" width="30%" alt="应用预览 5">&nbsp;
@@ -51,12 +51,12 @@
 
 | 分类 | 数量 | 内容 |
 | --- | --- | --- |
-| 简单易看 | 13 | 无需背诵，看不出来的说明色觉异常（仅题目图） |
+| 简单易看 | 13 | 无需背诵，看不出来的说明色觉异常（仅技巧图） |
 | 特征对应 | 26 | 子分类切换：全部 26 / 数字 14 / 动物 8 / 其它 4 |
 | 数字对应 | 若干 | 数字型检查图逐图记忆 |
 | 总结复习 | 3 | 《第六版背图技巧》PDF 末尾三页总结（已去除水印），含“熟悉各图特性”“特征速查图”“备考建议” |
 
-- **三视图切换**：题目图 / 原图 / 答案解析图（原图与解析图缺失时按钮自动隐藏）
+- **三视图切换**：原图 / 技巧图 / 答案解析图（原图与解析图缺失时按钮自动隐藏）
 - **图片放大**：点击全屏查看，支持滚轮缩放、拖动平移、双击放大复位、移动端双指捏合，点击空白或 × 关闭
 
 ## 技术栈
@@ -87,7 +87,7 @@ color-vision-test/
 │   ├── app-icon.svg           # 应用图标（浅色极简色彩圆环设计）
 │   ├── plates/                # 48 张检查图原图（测试与速记共用，jpeg）
 │   └── study/                 # 88 张学习图：
-│       ├── q_image*.png       #   题目图（带题号边框）
+│       ├── q_image*.png       #   技巧图（带题号边框）
 │       ├── image*_d*.png      #   答案解析图（标出目标图形）
 │       └── review_p*.png      #   总结复习页（无水印，2x 高清）
 │
@@ -140,7 +140,7 @@ npm run app:build # 构建 Windows 桌面程序（输出到 release/）
 
 ```js
 {
-  image: 'q_image11.png',   // 题目图（public/study/ 下）
+  image: 'q_image11.png',   // 技巧图（public/study/ 下）
   answer: '268',            // 正确答案
   category: 'number',       // easy | number | feature | review
   sub: 'num',               // 特征对应子分类: num | animal | other

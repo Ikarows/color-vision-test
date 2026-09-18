@@ -64,16 +64,16 @@
       <main class="quiz-main study-main" :key="studyCat + '-' + studyIndex">
         <div v-if="hasStudyOriginal || studyItem.details?.length" class="view-switch">
           <button
-            class="vs-btn"
-            :class="{ active: studyView === 'question' }"
-            @click="studyView = 'question'"
-          >题目图</button>
-          <button
             v-if="hasStudyOriginal"
             class="vs-btn"
             :class="{ active: studyView === 'original' }"
             @click="studyView = 'original'"
           >原图</button>
+          <button
+            class="vs-btn"
+            :class="{ active: studyView === 'question' }"
+            @click="studyView = 'question'"
+          >技巧图</button>
           <button
             v-if="studyItem.details?.length"
             class="vs-btn"
@@ -88,6 +88,7 @@
             :alt="'学习图 ' + (studyIndex + 1)"
             class="plate-img zoomable"
             draggable="false"
+            @error="retryImg"
             @click="openZoom(studyPath(studyItem.image))"
           />
         </div>
@@ -97,6 +98,7 @@
             :alt="'原图'"
             class="plate-img zoomable"
             draggable="false"
+            @error="retryImg"
             @click="openZoom(studyOriginalPath(studyItem))"
           />
         </div>
@@ -108,6 +110,7 @@
             :alt="'答案解析图'"
             class="plate-img zoomable"
             draggable="false"
+            @error="retryImg"
             @click="openZoom(studyPath(d))"
           />
         </div>
@@ -399,7 +402,7 @@
 </template>
 
 <script setup>
-import { ref, computed } from 'vue'
+import { ref, computed, watch } from 'vue'
 import { QUESTIONS, buildOptions, shuffle } from './data/questions.js'
 import { STUDY_CATEGORIES, STUDY_ITEMS } from './data/study.js'
 import { loadStats, addRecord, resetStats } from './data/stats.js'
@@ -662,6 +665,40 @@ const hasStudyOriginal = computed(
   () => studyItem.value?.category !== 'easy' && !!studyOriginalPath(studyItem.value)
 )
 
+// 进入新卡片时:有原图默认展示原图,否则回退技巧图;并预加载原图与解析图
+watch(studyItem, (item) => {
+  if (!item) return
+  studyView.value = item.category !== 'easy' && studyOriginalPath(item) ? 'original' : 'question'
+  const orig = studyOriginalPath(item)
+  if (orig) new Image().src = orig
+  item.details?.forEach((d) => {
+    new Image().src = studyPath(d)
+  })
+})
+
+// 进入某分类时,延迟在后台预加载该分类全部图片,彻底消除翻卡等待
+watch(studyCat, (cat) => {
+  if (stage.value !== 'study') return
+  setTimeout(() => {
+    STUDY_ITEMS.filter((i) => i.category === cat).forEach((item) => {
+      new Image().src = studyPath(item.image)
+      const orig = studyOriginalPath(item)
+      if (orig) new Image().src = orig
+      item.details?.forEach((d) => {
+        new Image().src = studyPath(d)
+      })
+    })
+  }, 400)
+})
+
+// 图片加载失败自动重试一次(加时间戳绕过失败缓存)
+function retryImg(e) {
+  const img = e.target
+  if (img.dataset.retried) return
+  img.dataset.retried = '1'
+  img.src = img.src + (img.src.includes('?') ? '&' : '?') + 'retry=1'
+}
+
 function subCount(sub) {
   return STUDY_ITEMS.filter((i) => i.category === 'feature' && (sub === 'all' || i.sub === sub)).length
 }
@@ -669,7 +706,6 @@ function subCount(sub) {
 function setSubCat(sub) {
   studySubCat.value = sub
   studyIndex.value = 0
-  studyView.value = 'question'
   shuffleStudy()
 }
 
@@ -681,14 +717,12 @@ function switchCategory(key) {
   studyCat.value = key
   studySubCat.value = 'all'
   studyIndex.value = 0
-  studyView.value = 'question'
   shuffleStudy()
 }
 
 function enterStudy() {
   studyCat.value = 'easy'
   studyIndex.value = 0
-  studyView.value = 'question'
   shuffleStudy()
   stage.value = 'study'
 }
@@ -696,14 +730,12 @@ function enterStudy() {
 function prevStudy() {
   if (studyIndex.value > 0) {
     studyIndex.value--
-    studyView.value = 'question'
   }
 }
 
 function nextStudy() {
   if (studyIndex.value < studyList.value.length - 1) {
     studyIndex.value++
-    studyView.value = 'question'
   }
 }
 
@@ -1310,6 +1342,18 @@ body {
   display: inline-block;
   max-width: 500px;
   width: 100%;
+  min-height: 200px;
+  border-radius: 14px;
+  /* 图片加载中显示流光占位,加载完成后被图片覆盖 */
+  background: linear-gradient(100deg, #edf1f6 40%, #f8fafc 50%, #edf1f6 60%);
+  background-size: 200% 100%;
+  animation: plate-shimmer 1.2s linear infinite;
+}
+
+@keyframes plate-shimmer {
+  to {
+    background-position: -200% 0;
+  }
 }
 
 .plate-img {
