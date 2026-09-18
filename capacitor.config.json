@@ -1,0 +1,8 @@
+{
+  "appId": "com.local.colorvisiontest",
+  "appName": "色盲色弱助手",
+  "webDir": "dist",
+  "server": {
+    "androidScheme": "https"
+  }
+}
