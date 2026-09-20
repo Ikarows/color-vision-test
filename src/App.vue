@@ -28,7 +28,7 @@
         </button>
       </div>
       <p class="disclaimer">本测试仅供自测参考,不能替代专业医学诊断</p>
-      <p class="copyright">@copyright Ikarows 2026 v1.0.0</p>
+      <p class="copyright">@copyright Ikarows 2026 v1.2.0</p>
     </div>
 
     <!-- ===================== 学习模式 ===================== -->
@@ -84,12 +84,12 @@
 
         <div class="plate-wrap" v-if="studyView === 'question'">
           <img
-            :src="studyPath(studyItem.image)"
+            :src="studyQuestionSrc"
             :alt="'学习图 ' + (studyIndex + 1)"
             class="plate-img zoomable"
             draggable="false"
             @error="retryImg"
-            @click="openZoom(studyPath(studyItem.image))"
+            @click="openZoom(studyQuestionSrc)"
           />
         </div>
         <div class="plate-wrap" v-else-if="studyView === 'original' && hasStudyOriginal">
@@ -291,12 +291,17 @@
 
       <main class="quiz-main" :key="currentIndex">
         <div class="plate-wrap" :class="{ shake: shaking }">
-          <img
-            :src="plateSrc"
-            :alt="'色盲检查图 第' + (currentIndex + 1) + '题'"
-            class="plate-img"
-            draggable="false"
-          />
+          <div class="plate-box">
+            <img
+              :src="plateSrc"
+              :alt="'色盲检查图 第' + (currentIndex + 1) + '题'"
+              class="plate-img"
+              draggable="false"
+            />
+            <div class="answer-mask" aria-hidden="true">
+              <img :src="plateSrc" alt="" draggable="false" />
+            </div>
+          </div>
           <transition name="fade">
             <div v-if="answered" class="plate-badge" :class="lastCorrect ? 'ok' : 'no'">
               {{ lastCorrect ? '✓ 正确' : '✗ 正确答案:' + ' ' + currentQuestion.answer }}
@@ -665,10 +670,17 @@ const hasStudyOriginal = computed(
   () => studyItem.value?.category !== 'easy' && !!studyOriginalPath(studyItem.value)
 )
 
-// 进入新卡片时:有原图默认展示原图,否则回退技巧图;并预加载原图与解析图
+// 简单一眼出分类直接展示 plates 原图(与测试图一致),其余分类展示技巧题目图
+const studyQuestionSrc = computed(() => {
+  const item = studyItem.value
+  if (item?.category === 'easy' && studyOriginalPath(item)) return studyOriginalPath(item)
+  return studyPath(item.image)
+})
+
+// 进入新卡片时:有技巧图默认选中技巧图,并预加载原图与解析图
 watch(studyItem, (item) => {
   if (!item) return
-  studyView.value = item.category !== 'easy' && studyOriginalPath(item) ? 'original' : 'question'
+  studyView.value = 'question'
   const orig = studyOriginalPath(item)
   if (orig) new Image().src = orig
   item.details?.forEach((d) => {
@@ -967,6 +979,24 @@ body {
 .dot.amber { background: #f0a23c; }
 .dot.green { background: #4caf7d; }
 .dot.blue { background: #3f8ef7; }
+
+/* 首页四个色点:错落弹跳动效 */
+.dot {
+  animation: dot-bounce 2.5s ease-in-out infinite;
+}
+.dot:nth-child(2) { animation-delay: 0.15s; }
+.dot:nth-child(3) { animation-delay: 0.3s; }
+.dot:nth-child(4) { animation-delay: 0.45s; }
+
+@keyframes dot-bounce {
+  0%, 55%, 100% { transform: translateY(0); }
+  20% { transform: translateY(-7px); }
+  38% { transform: translateY(1px); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .dot { animation: none; }
+}
 
 .title {
   font-size: 34px;
@@ -1328,7 +1358,7 @@ body {
   border: 1px solid rgba(255, 255, 255, 0.7);
   border-radius: 22px;
   box-shadow: 0 18px 50px rgba(43, 76, 126, 0.12);
-  padding: 28px 26px 32px;
+  padding: 28px 22px 32px;
   text-align: center;
   animation: slide-in 0.28s ease;
 }
@@ -1344,11 +1374,12 @@ body {
   max-width: 500px;
   width: 100%;
   min-height: 200px;
-  border-radius: 14px;
+  border-radius: 5px;
   /* 图片加载中显示流光占位,加载完成后被图片覆盖 */
   background: linear-gradient(100deg, #edf1f6 40%, #f8fafc 50%, #edf1f6 60%);
   background-size: 200% 100%;
   animation: plate-shimmer 1.2s linear infinite;
+  overflow: hidden;
 }
 
 @keyframes plate-shimmer {
@@ -1359,7 +1390,7 @@ body {
 
 .plate-img {
   width: 100%;
-  border-radius: 14px;
+  /*border-radius: 14px;*/
   border: 1px solid #e6ebf1;
   box-shadow: 0 8px 24px rgba(43, 76, 126, 0.12);
   user-select: none;
@@ -1368,6 +1399,33 @@ body {
 
 .plate-img.zoomable {
   cursor: zoom-in;
+}
+
+/* 体检模拟:遮挡左下角自带的“图号/答案”角标(仅显示层覆盖,不改图片文件)。
+   plate-box 与图片完全等大,补丁定位严格限制在图片范围内 */
+.plate-box {
+  position: relative;
+}
+.answer-mask {
+  position: absolute;
+  left: 0;
+  bottom: 1px; /* 压在图片 1px 边框上沿,不越出图片 */
+  width: 40%;
+  height: 11%;
+  overflow: hidden;
+  border-bottom-left-radius: 14px;
+  pointer-events: none;
+}
+.answer-mask img {
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  width: 250%; /* 补丁宽为图宽的 40%,放大 2.5 倍即整图原比例宽度 */
+  max-width: none;
+  /* 取样同图右下角同一水平带并水平镜像:右缘白边翻到补丁左缘、底缘白边保持对齐,
+     补丁左右两侧的白边与原图自然衔接 */
+  transform: scaleX(-1);
+  user-select: none;
 }
 
 /* ---------- 图片放大查看层 ---------- */
