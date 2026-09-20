@@ -13,6 +13,7 @@
   "build": {
     "appId": "com.local.colorvisiontest",
     "productName": "色盲色弱助手",
+    "electronVersion": "26.2.0",
     "directories": {
       "output": "release"
     },
@@ -23,7 +24,8 @@
     "win": {
       "target": [
         "portable"
-      ]
+      ],
+      "executableName": "ColorVisionHelper"
     }
   },
   "dependencies": {
