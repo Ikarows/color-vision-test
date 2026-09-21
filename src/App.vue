@@ -27,7 +27,7 @@
           <span class="menu-desc">模拟体检自测<br/>固定顺序 · 随机 10 / 20 / 全部</span>
         </button>
       </div>
-      <p class="disclaimer">本测试仅供自测参考,不能替代专业医学诊断</p>
+      <p class="disclaimer">本软件仅供自测学习使用,不能替代专业医学诊断</p>
       <p class="copyright">@copyright Ikarows 2026 v1.2.0</p>
     </div>
 
@@ -243,13 +243,34 @@
           </div>
         </div>
 
+        <button v-if="statsSummary.count" class="wrongbook-entry" @click="stage = 'wrongBook'">
+          <span class="we-icon">
+            <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 9v4M12 17h.01"/><path d="M10.3 3.9L1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0z"/></svg>
+          </span>
+          <span class="we-text">
+            <span class="we-title">常错图</span>
+            <span class="we-desc">按答错次数排序,重点复习易错图</span>
+          </span>
+          <span class="we-count">{{ wrongPlateStats.length }}</span>
+          <svg class="we-arrow" viewBox="0 0 20 20" width="14" height="14"><path d="M7.5 4.5L13 10l-5.5 5.5" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+
         <div v-if="statsRecords.length" class="history">
           <h3>最近记录</h3>
           <div class="history-list">
-            <div v-for="(r, i) in statsRecords" :key="i" class="history-item">
-              <span class="h-time">{{ formatTime(r.ts) }}</span>
-              <span class="h-mode">{{ modeName(r.mode) }}</span>
-              <span class="h-score" :class="scoreClass(r)">{{ r.correct }}/{{ r.total }}</span>
+            <div
+              v-for="(r, i) in statsRecords"
+              :key="i"
+              class="history-item"
+              :class="{ clickable: r.wrong && r.wrong.length }"
+              @click="openRecord(r)"
+            >
+              <div class="h-main">
+                <span class="h-time">{{ formatTime(r.ts) }}</span>
+                <span class="h-sub">{{ modeName(r.mode) }} · 答对 {{ r.correct }}/{{ r.total }}<template v-if="r.wrong && r.wrong.length"> · 错 {{ r.wrong.length }} 题</template></span>
+              </div>
+              <span class="h-score" :class="scoreClass(r)">{{ recordScore(r) }}分</span>
+              <svg v-if="r.wrong && r.wrong.length" class="h-arrow" viewBox="0 0 20 20" width="14" height="14"><path d="M7.5 4.5L13 10l-5.5 5.5" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
             </div>
           </div>
         </div>
@@ -261,6 +282,81 @@
           :class="{ armed: resetArmed }"
           @click="confirmReset"
         >{{ resetArmed ? '再点一次确认清空' : '清空统计数据' }}</button>
+      </div>
+    </div>
+
+    <!-- ===================== 历史记录详情(回看答错的图) ===================== -->
+    <div v-else-if="stage === 'recordDetail'" class="screen record-screen">
+      <div class="back-bar">
+        <button class="back-link" @click="stage = 'stats'">
+          <svg viewBox="0 0 20 20" width="15" height="15"><path d="M12.5 4.5L7 10l5.5 5.5" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          返回统计
+        </button>
+      </div>
+      <div class="card record-card" v-if="activeRecord">
+        <h2>测试详情</h2>
+        <div class="rec-summary">
+          <div class="rec-score" :class="scoreClass(activeRecord)">
+            {{ recordScore(activeRecord) }}<span>分</span>
+          </div>
+          <div class="rec-meta">
+            <span class="rm-time">{{ formatTime(activeRecord.ts) }}</span>
+            <span>{{ modeName(activeRecord.mode) }} · 答对 {{ activeRecord.correct }}/{{ activeRecord.total }}</span>
+          </div>
+        </div>
+
+        <div v-if="activeWrong.length" class="wrong-section">
+          <h3>答错的图 · {{ activeWrong.length }}</h3>
+          <div class="wrong-list">
+            <div v-for="(w, i) in activeWrong" :key="i" class="wrong-item">
+              <img
+                :src="platePath(w.image)"
+                :alt="'错图 ' + (i + 1)"
+                class="zoomable"
+                draggable="false"
+                @error="retryImg"
+                @click="openZoom(platePath(w.image))"
+              />
+              <div class="wrong-info">
+                <span class="wrong-no">第 {{ w.no }} 题</span>
+                <span>你的选择:<em class="bad">{{ w.chosen ?? '超时未答' }}</em></span>
+                <span>正确答案:<em class="good">{{ w.answer }}</em></span>
+              </div>
+            </div>
+          </div>
+        </div>
+        <p v-else class="all-right">本次全部答对,没有错图</p>
+      </div>
+    </div>
+
+    <!-- ===================== 常错图排行 ===================== -->
+    <div v-else-if="stage === 'wrongBook'" class="screen wrongbook-screen">
+      <div class="back-bar">
+        <button class="back-link" @click="stage = 'stats'">
+          <svg viewBox="0 0 20 20" width="15" height="15"><path d="M12.5 4.5L7 10l5.5 5.5" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          返回统计
+        </button>
+      </div>
+      <div class="card wrongbook-card">
+        <h2>常错图</h2>
+        <p class="wb-desc">共 {{ wrongPlateStats.length }} 张易错图 · 按答错次数排序 · 点击图片可放大</p>
+        <div v-if="wrongPlateStats.length" class="wb-grid">
+          <div v-for="w in wrongPlateStats" :key="w.image" class="wb-item">
+            <div class="wb-imgwrap">
+              <img
+                :src="platePath(w.image)"
+                :alt="w.image"
+                class="zoomable"
+                draggable="false"
+                @error="retryImg"
+                @click="openZoom(platePath(w.image))"
+              />
+              <span class="wb-count">错 {{ w.count }} 次</span>
+            </div>
+            <span class="wb-answer">答案:{{ answerOf(w.image) }}</span>
+          </div>
+        </div>
+        <p v-else class="no-data">还没有答错的图,继续保持!</p>
       </div>
     </div>
 
@@ -421,7 +517,7 @@ const MODES = [
   { key: 'fixed',    name: '固定顺序', count: TOTAL_COUNT, desc: '按原书顺序作答' },
 ]
 
-const stage = ref('menu') // menu | start | study | quiz | result | stats
+const stage = ref('menu') // menu | start | study | quiz | result | stats | recordDetail | wrongBook
 const mode = ref('random10')
 const questions = ref([])
 const currentIndex = ref(0)
@@ -811,8 +907,15 @@ function choose(opt) {
       currentIndex.value++
       loadQuestion()
     } else {
-      // 测试完成,写入本地统计
-      addRecord(mode.value, total.value, correctCount.value)
+      // 测试完成,写入本地统计(含评分与错图明细)
+      const score = Math.round((correctCount.value / total.value) * 100)
+      const wrongPlates = wrongList.value.map((w) => ({
+        image: w.q.image,
+        chosen: w.chosen,
+        answer: w.q.answer,
+        no: w.index + 1,
+      }))
+      addRecord(mode.value, total.value, correctCount.value, score, wrongPlates)
       statsData.value = loadStats()
       stage.value = 'result'
     }
@@ -900,11 +1003,44 @@ function formatTime(ts) {
   })
 }
 
+// 记录评分(旧记录无 score 字段时按正确率折算),100 分上限
+function recordScore(r) {
+  return typeof r.score === 'number' ? r.score : Math.round((r.correct / r.total) * 100)
+}
+
 function scoreClass(r) {
-  const p = Math.round((r.correct / r.total) * 100)
+  const p = recordScore(r)
   if (p >= 95) return 'good'
   if (p >= 80) return 'mid'
   return 'bad'
+}
+
+// ---------- 历史记录详情 / 常错图 ----------
+const activeRecord = ref(null)
+const activeWrong = computed(() => activeRecord.value?.wrong ?? [])
+
+function openRecord(r) {
+  if (!r.wrong?.length) return // 无错图记录不可点
+  activeRecord.value = r
+  stage.value = 'recordDetail'
+}
+
+// 跨全部历史记录聚合每张图的答错次数,按次数降序
+const wrongPlateStats = computed(() => {
+  const map = new Map()
+  statsData.value.records.forEach((r) => {
+    ;(r.wrong ?? []).forEach((w) => {
+      const cur = map.get(w.image) ?? { image: w.image, count: 0, lastTs: 0 }
+      cur.count++
+      cur.lastTs = Math.max(cur.lastTs, r.ts)
+      map.set(w.image, cur)
+    })
+  })
+  return [...map.values()].sort((a, b) => b.count - a.count || b.lastTs - a.lastTs)
+})
+
+function answerOf(image) {
+  return QUESTIONS.find((q) => q.image === image)?.answer ?? ''
 }
 
 // ---------- 首次使用协议 ----------
@@ -2270,11 +2406,6 @@ em.good { color: #177a46; }
   color: #8a99ad;
 }
 
-.h-mode {
-  font-weight: 700;
-  color: #45556b;
-}
-
 .h-score {
   font-weight: 800;
 }
@@ -2282,6 +2413,226 @@ em.good { color: #177a46; }
 .h-score.good { color: #177a46; }
 .h-score.mid { color: #b7791f; }
 .h-score.bad { color: #c23b27; }
+
+/* 历史记录:可点击查看答错的图 */
+.history-item.clickable {
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.history-item.clickable:hover {
+  border-color: #b6ccf5;
+  background: #f2f7ff;
+}
+
+.h-main {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  flex: 1;
+  min-width: 0;
+}
+
+.h-sub {
+  font-size: 12px;
+  color: #8a99ad;
+}
+
+.h-score {
+  margin-left: 10px;
+  white-space: nowrap;
+}
+
+.h-arrow {
+  flex-shrink: 0;
+  margin-left: 6px;
+  color: #b7c2d0;
+}
+
+/* ---------- 常错图入口 ---------- */
+.wrongbook-entry {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  padding: 13px 16px;
+  margin-bottom: 22px;
+  border: 1px solid #f3d9d4;
+  background: #fdf6f5;
+  border-radius: 12px;
+  cursor: pointer;
+  text-align: left;
+  transition: all 0.18s ease;
+}
+
+.wrongbook-entry:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(224, 83, 61, 0.14);
+}
+
+.we-icon {
+  width: 38px;
+  height: 38px;
+  border-radius: 10px;
+  background: linear-gradient(135deg, #e0533d, #ef7a66);
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.we-text {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  flex: 1;
+  min-width: 0;
+}
+
+.we-title {
+  font-size: 15px;
+  font-weight: 800;
+  color: #22314a;
+}
+
+.we-desc {
+  font-size: 12px;
+  color: #8a99ad;
+}
+
+.we-count {
+  font-size: 18px;
+  font-weight: 800;
+  color: #e0533d;
+}
+
+.we-arrow {
+  flex-shrink: 0;
+  color: #d9a79e;
+}
+
+/* ---------- 历史记录详情 ---------- */
+.record-card {
+  max-width: 640px;
+}
+
+.record-card h2 {
+  font-size: 24px;
+  margin-bottom: 20px;
+  letter-spacing: 2px;
+}
+
+.rec-summary {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  background: #f4f7fb;
+  border-radius: 14px;
+  padding: 16px 20px;
+  margin-bottom: 22px;
+}
+
+.rec-score {
+  font-size: 40px;
+  font-weight: 800;
+  line-height: 1;
+}
+
+.rec-score span {
+  font-size: 15px;
+  font-weight: 700;
+  margin-left: 2px;
+}
+
+.rec-score.good { color: #177a46; }
+.rec-score.mid { color: #b7791f; }
+.rec-score.bad { color: #c23b27; }
+
+.rec-meta {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  font-size: 13.5px;
+  color: #5c6f84;
+  text-align: left;
+}
+
+.rm-time {
+  font-weight: 700;
+  color: #34455a;
+}
+
+/* ---------- 常错图排行 ---------- */
+.wrongbook-card {
+  max-width: 720px;
+}
+
+.wrongbook-card h2 {
+  font-size: 24px;
+  margin-bottom: 8px;
+  letter-spacing: 2px;
+}
+
+.wb-desc {
+  font-size: 12.5px;
+  color: #8a99ad;
+  margin-bottom: 20px;
+}
+
+.wb-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 14px;
+}
+
+@media (max-width: 560px) {
+  .wb-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+.wb-item {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  background: #f7f9fc;
+  border: 1px solid #e8edf4;
+  border-radius: 12px;
+  padding: 10px;
+}
+
+.wb-imgwrap {
+  position: relative;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.wb-imgwrap img {
+  width: 100%;
+  display: block;
+  border-radius: 8px;
+  border: 1px solid #e6ebf1;
+}
+
+.wb-count {
+  position: absolute;
+  top: 6px;
+  right: 6px;
+  background: rgba(224, 83, 61, 0.92);
+  color: #fff;
+  font-size: 11px;
+  font-weight: 700;
+  padding: 3px 8px;
+  border-radius: 99px;
+}
+
+.wb-answer {
+  font-size: 12.5px;
+  color: #45556b;
+  font-weight: 600;
+  text-align: center;
+}
 
 .no-data {
   color: #9aa8b8;

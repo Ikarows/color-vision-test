@@ -4,6 +4,7 @@ node_modules/
 # 构建产物
 dist/
 release/
+release2/
 色盲色弱助手.apk
 
 # Electron

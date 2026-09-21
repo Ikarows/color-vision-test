@@ -8,6 +8,7 @@ function createWindow() {
     height: 840,
     autoHideMenuBar: true,
     backgroundColor: '#eef2f8',
+    icon: path.join(__dirname, '..', 'dist', 'favicon.ico'),
     webPreferences: {
       contextIsolation: true,
       nodeIntegration: false,
