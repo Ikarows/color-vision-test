@@ -9,6 +9,35 @@ Add-Type -AssemblyName System.Drawing
 $root = 'D:\Ikarows\color-vision-test'
 $src = [System.Drawing.Image]::FromFile("$root\public\logo.png")
 
+# 裁掉 logo 四周透明边,取不透明内容的包围盒(黑色圆角方块本体)
+function Get-ContentTile([System.Drawing.Bitmap]$img) {
+  $rect = New-Object System.Drawing.Rectangle(0, 0, $img.Width, $img.Height)
+  $ld = $img.LockBits($rect, [System.Drawing.Imaging.ImageLockMode]::ReadOnly, [System.Drawing.Imaging.PixelFormat]::Format32bppArgb)
+  $stride = $ld.Stride
+  $raw = New-Object byte[] ($stride * $img.Height)
+  [System.Runtime.InteropServices.Marshal]::Copy($ld.Scan0, $raw, 0, $raw.Length)
+  $img.UnlockBits($ld)
+  $minX = $img.Width; $minY = $img.Height; $maxX = 0; $maxY = 0
+  for ($y = 0; $y -lt $img.Height; $y++) {
+    $row = $y * $stride
+    for ($x = 0; $x -lt $img.Width; $x++) {
+      if ($raw[$row + $x * 4 + 3] -gt 8) {
+        if ($x -lt $minX) { $minX = $x }
+        if ($x -gt $maxX) { $maxX = $x }
+        if ($y -lt $minY) { $minY = $y }
+        if ($y -gt $maxY) { $maxY = $y }
+      }
+    }
+  }
+  $w = $maxX - $minX + 1; $h = $maxY - $minY + 1
+  $tile = New-Object System.Drawing.Bitmap($w, $h, [System.Drawing.Imaging.PixelFormat]::Format32bppArgb)
+  $gt = [System.Drawing.Graphics]::FromImage($tile)
+  $gt.DrawImage($img, (New-Object System.Drawing.Rectangle(0, 0, $w, $h)), $minX, $minY, $w, $h, [System.Drawing.GraphicsUnit]::Pixel)
+  $gt.Dispose()
+  return $tile
+}
+$tile = Get-ContentTile $src
+
 # 高质量缩放到 n x n(边缘 TileFlipXY 消除双三次插值白边)
 function New-Sized([System.Drawing.Image]$img, [int]$n) {
   $bmp = New-Object System.Drawing.Bitmap($n, $n, [System.Drawing.Imaging.PixelFormat]::Format32bppArgb)
@@ -85,17 +114,27 @@ $big.Save("$root\build\icon.png", [System.Drawing.Imaging.ImageFormat]::Png)
 $big.Dispose()
 
 # ---------- 3. Android 启动图标 ----------
+# 旧式方形/圆形图标:铺满不透明深色底(避免启动器白底透出),再画满 logo 方块本体
 $keys = @('mdpi', 'hdpi', 'xhdpi', 'xxhdpi', 'xxxhdpi')
 $lens = @(48, 72, 96, 144, 192)
 for ($i = 0; $i -lt 5; $i++) {
   $n = $lens[$i]
   $dir = "$root\android\app\src\main\res\mipmap-" + $keys[$i]
-  $dst = New-Sized $src $n
+  $dst = New-Object System.Drawing.Bitmap($n, $n, [System.Drawing.Imaging.PixelFormat]::Format32bppArgb)
+  $gd = [System.Drawing.Graphics]::FromImage($dst)
+  $gd.InterpolationMode = [System.Drawing.Drawing2D.InterpolationMode]::HighQualityBicubic
+  $gd.SmoothingMode = [System.Drawing.Drawing2D.SmoothingMode]::AntiAlias
+  $gd.PixelOffsetMode = [System.Drawing.Drawing2D.PixelOffsetMode]::HighQuality
+  $gd.Clear([System.Drawing.Color]::FromArgb(255, 11, 11, 13))
+  $ia = New-Object System.Drawing.Imaging.ImageAttributes
+  $ia.SetWrapMode([System.Drawing.Drawing2D.WrapMode]::TileFlipXY)
+  $gd.DrawImage($tile, (New-Object System.Drawing.Rectangle(0, 0, $n, $n)), 0, 0, $tile.Width, $tile.Height, [System.Drawing.GraphicsUnit]::Pixel, $ia)
+  $gd.Dispose(); $ia.Dispose()
   $dst.Save("$dir\ic_launcher.png", [System.Drawing.Imaging.ImageFormat]::Png)
   $dst.Save("$dir\ic_launcher_round.png", [System.Drawing.Imaging.ImageFormat]::Png)
   $dst.Dispose()
 }
-# 自适应图标前景:108dp 画布,内容居中占约 2/3(安全区)
+# 自适应图标前景:108dp 画布,裁边后的方块直接铺满整张画布(无留边)
 $flens = @(108, 162, 216, 324, 432)
 for ($i = 0; $i -lt 5; $i++) {
   $n = $flens[$i]
@@ -106,16 +145,15 @@ for ($i = 0; $i -lt 5; $i++) {
   $gf.SmoothingMode = [System.Drawing.Drawing2D.SmoothingMode]::AntiAlias
   $gf.PixelOffsetMode = [System.Drawing.Drawing2D.PixelOffsetMode]::HighQuality
   $gf.Clear([System.Drawing.Color]::Transparent)
-  $inset = [int][math]::Round($n * 0.24)
-  $inner = [int]($n - ($inset * 2))
   $ia = New-Object System.Drawing.Imaging.ImageAttributes
   $ia.SetWrapMode([System.Drawing.Drawing2D.WrapMode]::TileFlipXY)
-  $destRect = New-Object System.Drawing.Rectangle($inset, $inset, $inner, $inner)
-  $gf.DrawImage($src, $destRect, 0, 0, $src.Width, $src.Height, [System.Drawing.GraphicsUnit]::Pixel, $ia)
+  $destRect = New-Object System.Drawing.Rectangle(0, 0, $n, $n)
+  $gf.DrawImage($tile, $destRect, 0, 0, $tile.Width, $tile.Height, [System.Drawing.GraphicsUnit]::Pixel, $ia)
   $gf.Dispose(); $ia.Dispose()
   $fg.Save("$dir\ic_launcher_foreground.png", [System.Drawing.Imaging.ImageFormat]::Png)
   $fg.Dispose()
 }
+$tile.Dispose()
 $src.Dispose()
 Write-Output "done: favicon.ico $((Get-Item "$root\public\favicon.ico").Length) bytes"
 } catch {

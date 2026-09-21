@@ -8,7 +8,7 @@
     "dev": "vite",
     "build": "vite build",
     "preview": "vite preview",
-    "app:build": "vite build && electron-builder"
+    "app:build": "vite build && electron-builder --publish never"
   },
   "build": {
     "appId": "com.local.colorvisiontest",
@@ -20,6 +20,7 @@
     "directories": {
       "output": "release"
     },
+    "afterPack": "scripts/afterPack.cjs",
     "files": [
       "dist/**/*",
       "electron/**/*"
@@ -28,10 +29,13 @@
       "target": [
         "nsis"
       ],
-      "executableName": "ColorVisionHelper"
+      "executableName": "ColorVisionHelper",
+      "signAndEditExecutable": false
     },
     "nsis": {
       "oneClick": false,
+      "perMachine": true,
+      "include": "build/installer.nsh",
       "allowToChangeInstallationDirectory": true,
       "createDesktopShortcut": true
     }
