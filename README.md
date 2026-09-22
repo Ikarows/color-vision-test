@@ -8,8 +8,8 @@
 </p>
 
 <p>
-  <a href="https://ta.ink/2b0dbe01a1388805"><img src="./public/badge-online.svg" alt="在线体验" valign="middle"></a>&nbsp;&nbsp;
-  <a href="https://semangseruozhushou-3qfb2wa.maozi.io/"><img src="./public/badge-backup.svg" alt="备用地址" valign="middle"></a>
+  <a href="https://ta.ink/2b0dbe01a1388805" target="_blank" rel="noopener noreferrer"><img src="./public/badge-online.svg" alt="在线体验" valign="middle"></a>&nbsp;&nbsp;
+  <a href="https://semangseruozhushou-3qfb2wa.maozi.io/" target="_blank" rel="noopener noreferrer"><img src="./public/badge-backup.svg" alt="备用地址" valign="middle"></a>
 </p>
 
 <p>
