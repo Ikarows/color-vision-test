@@ -23,10 +23,10 @@ function saveStats(stats) {
   }
 }
 
-// 记录一次完成的测试(含 0-100 评分与错图明细)
-export function addRecord(mode, total, correct, score, wrong = []) {
+// 记录一次完成的测试(含 0-100 评分、错图明细与答对图明细)
+export function addRecord(mode, total, correct, score, wrong = [], correctPlates = []) {
   const stats = loadStats()
-  stats.records.push({ ts: Date.now(), mode, total, correct, score, wrong })
+  stats.records.push({ ts: Date.now(), mode, total, correct, score, wrong, correctPlates })
   if (stats.records.length > MAX_RECORDS) {
     stats.records = stats.records.slice(-MAX_RECORDS)
   }

@@ -3,10 +3,11 @@
     <!-- ===================== 首页菜单 ===================== -->
     <div v-if="stage === 'menu'" class="screen menu-screen">
       <div class="brand">
-        <span class="dot red"></span>
+        <!-- <span class="dot red"></span>
         <span class="dot amber"></span>
         <span class="dot green"></span>
-        <span class="dot blue"></span>
+        <span class="dot blue"></span> -->
+        <img class="brand-logo" :src="BRAND_LOGO_SRC" alt="色盲色弱助手 logo" draggable="false" />
       </div>
       <h1 class="title">色盲色弱助手</h1>
       <p class="subtitle">基于《色盲检查图》第 6 版 · 共 {{ TOTAL_COUNT }} 题</p>
@@ -27,8 +28,8 @@
           <span class="menu-desc">模拟体检自测<br/>固定顺序 · 随机 10 / 20 / 全部</span>
         </button>
       </div>
-      <p class="disclaimer">本软件仅供自测学习使用,不能替代专业医学诊断</p>
-      <p class="copyright">@copyright Ikarows 2026 v1.2.0</p>
+      <p class="disclaimer">本软件仅供自测学习使用，不能替代专业医学诊断</p>
+      <p class="copyright">@Copyright 来杯橙汁/Ikarows 2026 v1.3.0</p>
     </div>
 
     <!-- ===================== 学习模式 ===================== -->
@@ -144,13 +145,13 @@
       </div>
       
       <div class="brand">
-        <span class="dot red"></span>
-        <span class="dot amber"></span>
-        <span class="dot green"></span>
-        <span class="dot blue"></span>
+        <img class="brand-logo" :src="BRAND_LOGO_SRC" alt="色盲色弱助手 logo" draggable="false" />
       </div>
       <h1 class="title">色盲色弱自测</h1>
       <p class="subtitle">基于《色盲检查图》第 6 版 · 共 {{ TOTAL_COUNT }} 题</p>
+
+      
+
       <button class="stats-brief" @click="openStats">
         <div class="sb-item">
           <span class="sb-num">{{ statsSummary.count }}</span>
@@ -168,6 +169,30 @@
         </div>
         <!-- <span class="sb-more">详情 ›</span> -->
       </button>
+
+      <div class="quick-entries">
+        <button class="stats-entry" @click="openStats">
+          <span class="se-icon">
+            <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 20V10M10 20V4M16 20v-7M22 20H2"/></svg>
+          </span>
+          <span class="se-text">
+            <span class="se-title">测试结果</span>
+            <span class="se-desc">查看历次成绩与答题统计</span>
+          </span>
+          <svg class="se-arrow" viewBox="0 0 20 20" width="14" height="14"><path d="M7.5 4.5L13 10l-5.5 5.5" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <button v-if="wrongPlateStats.length" class="stats-entry wb" @click="openWrongBook">
+          <span class="se-icon se-icon-warn">
+            <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 9v4M12 17h.01"/><path d="M10.3 3.9L1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0z"/></svg>
+          </span>
+          <span class="se-text">
+            <span class="se-title">常错图</span>
+            <span class="se-desc">{{ wrongPlateStats.length }} 张易错图待复习</span>
+          </span>
+          <svg class="se-arrow" viewBox="0 0 20 20" width="14" height="14"><path d="M7.5 4.5L13 10l-5.5 5.5" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+      </div>
+
       <div class="card start-card">
         <p class="section-label">选择出题模式</p>
         <div class="mode-grid">
@@ -197,19 +222,20 @@
           </button>
         </div>
 
-        <div class="intro">
+        
+
+        <!-- <div class="intro">
           <p>请在自然光线下、距离屏幕约 60–80 厘米处作答。</p>
           <p>每张图下方有 <strong>6 个选项</strong>,凭第一直觉选择你看到的内容。</p>
-        </div>
+        </div> -->
 
         <button class="btn btn-primary btn-lg" @click="startTest">
           开始测试
           <svg viewBox="0 0 20 20" width="18" height="18"><path d="M4 10h11M11 5l5 5-5 5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
         </button>
-        <button class="stats-entry" @click="openStats">
-          <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 20V10M10 20V4M16 20v-7M22 20H2"/></svg>
-          测试统计
-        </button>
+
+        
+        
         <p class="disclaimer">本测试仅供自测参考,不能替代专业医学诊断</p>
       </div>
     </div>
@@ -243,7 +269,7 @@
           </div>
         </div>
 
-        <button v-if="statsSummary.count" class="wrongbook-entry" @click="stage = 'wrongBook'">
+        <button v-if="statsSummary.count" class="wrongbook-entry" @click="wrongBookBack = 'stats'; stage = 'wrongBook'">
           <span class="we-icon">
             <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 9v4M12 17h.01"/><path d="M10.3 3.9L1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0z"/></svg>
           </span>
@@ -257,10 +283,10 @@
 
         <div v-if="statsRecords.length" class="history">
           <h3>最近记录</h3>
-          <div class="history-list">
+          <div class="history-list" :key="historyPage">
             <div
-              v-for="(r, i) in statsRecords"
-              :key="i"
+              v-for="r in pagedRecords"
+              :key="r.ts"
               class="history-item"
               :class="{ clickable: r.wrong && r.wrong.length }"
               @click="openRecord(r)"
@@ -272,6 +298,11 @@
               <span class="h-score" :class="scoreClass(r)">{{ recordScore(r) }}分</span>
               <svg v-if="r.wrong && r.wrong.length" class="h-arrow" viewBox="0 0 20 20" width="14" height="14"><path d="M7.5 4.5L13 10l-5.5 5.5" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
             </div>
+          </div>
+          <div v-if="historyTotalPages > 1" class="history-pager">
+            <button class="pager-btn" :disabled="historyPage <= 1" @click="setPage(historyPage - 1)">上一页</button>
+            <span class="pager-info">{{ historyPage }} / {{ historyTotalPages }}</span>
+            <button class="pager-btn" :disabled="historyPage >= historyTotalPages" @click="setPage(historyPage + 1)">下一页</button>
           </div>
         </div>
         <p v-else class="no-data">暂无测试记录,快去完成一次测试吧</p>
@@ -332,14 +363,18 @@
     <!-- ===================== 常错图排行 ===================== -->
     <div v-else-if="stage === 'wrongBook'" class="screen wrongbook-screen">
       <div class="back-bar">
-        <button class="back-link" @click="stage = 'stats'">
+        <button class="back-link" @click="stage = wrongBookBack">
           <svg viewBox="0 0 20 20" width="15" height="15"><path d="M12.5 4.5L7 10l5.5 5.5" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
-          返回统计
+          {{ wrongBookBack === 'start' ? '返回菜单' : '返回统计' }}
         </button>
       </div>
       <div class="card wrongbook-card">
         <h2>常错图</h2>
-        <p class="wb-desc">共 {{ wrongPlateStats.length }} 张易错图 · 按答错次数排序 · 点击图片可放大</p>
+        <p class="wb-desc">共 {{ wrongPlateStats.length }} 张易错图 · 按答错次数排序 · 连对 2 次自动移出</p>
+        <button v-if="wrongPlateStats.length" class="btn drill-btn" @click="startWrongDrill">
+          错图针对测试
+          <svg viewBox="0 0 20 20" width="15" height="15"><path d="M4 10h11M11 5l5 5-5 5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
         <div v-if="wrongPlateStats.length" class="wb-grid">
           <div v-for="w in wrongPlateStats" :key="w.image" class="wb-item">
             <div class="wb-imgwrap">
@@ -465,12 +500,12 @@
       <div class="agreement-dialog">
         <h2 class="agreement-title">使用协议</h2>
         <div class="agreement-body">
-          <p>欢迎使用「色弱速记与自测」,使用前请仔细阅读以下内容:</p>
-          <p>1. 本软件提供色觉速记学习与自测功能,仅供个人学习参考,不能替代专业医学诊断。</p>
-          <p>2. 软件内的图片和答案均由网络收集整理,图片素材等版权归素材原作者所有。</p>
-          <p>3. 本软件完全免费,软件版权归作者所有,仅限个人自测使用,禁止转卖或用于任何商业用途。</p>
+          <p>欢迎使用「色盲色弱助手」，使用前请仔细阅读以下内容:</p>
+          <p><strong>1. 软件版权归开发者本人（来杯橙汁/Ikarows）所有，仅限个人自测使用，禁止转卖或用于任何商业用途，否则将追究相关责任。</strong></p>
+          <p>2. 本软件提供色觉速记学习与自测功能，仅供个人学习。</p>
+          <p>3. 软件内的第六版辨色图由收集整理，图片素材等版权归图片原作者所有。</p>
           <p>4. 最后祝大家逢检必过。</p>
-          <p>5. 点击「同意并继续」或继续使用本软件,即表示您已阅读并同意本协议的全部内容。</p>
+          <p>5. 点击「同意并继续」或继续使用本软件，即表示您已阅读并同意本协议的全部内容。</p>
         </div>
         <button class="btn btn-primary agreement-btn" @click="acceptAgreement">同意并继续</button>
       </div>
@@ -503,12 +538,15 @@
 </template>
 
 <script setup>
-import { ref, computed, watch } from 'vue'
+import { ref, computed, watch, nextTick } from 'vue'
 import { QUESTIONS, buildOptions, shuffle } from './data/questions.js'
 import { STUDY_CATEGORIES, STUDY_ITEMS } from './data/study.js'
 import { loadStats, addRecord, resetStats } from './data/stats.js'
 
 const TOTAL_COUNT = QUESTIONS.length
+
+// 品牌 logo:项目自带图标
+const BRAND_LOGO_SRC = import.meta.env.BASE_URL + 'logo.png'
 
 const MODES = [
   { key: 'random10', name: '随机 10 题', count: 10, desc: '快速自测' },
@@ -582,6 +620,12 @@ const FEATURE_SUBS = [
   { key: 'animal', name: '动物' },
   { key: 'other', name: '其它' },
 ]
+
+// 每次切换页面(或学习页子视图)后回到顶部
+watch([stage, studyView], () => {
+  nextTick(() => window.scrollTo(0, 0))
+})
+
 const zoomScale = ref(1)
 const zoomTx = ref(0)
 const zoomTy = ref(0)
@@ -849,7 +893,9 @@ function nextStudy() {
 
 const total = computed(() => questions.value.length)
 const currentQuestion = computed(() => questions.value[currentIndex.value])
-const currentModeName = computed(() => MODES.find((m) => m.key === mode.value)?.name ?? '')
+const currentModeName = computed(() =>
+  drillMode.value ? '错图针对测试' : MODES.find((m) => m.key === mode.value)?.name ?? ''
+)
 const plateSrc = computed(() => platePath(currentQuestion.value.image))
 const progressPercent = computed(
   () => ((currentIndex.value + (answered.value ? 1 : 0)) / total.value) * 100
@@ -877,6 +923,26 @@ function startTest() {
   currentIndex.value = 0
   correctCount.value = 0
   records.value = []
+  drillMode.value = false
+  loadQuestion()
+  stage.value = 'quiz'
+}
+
+// 错图针对测试:只考常错图(按答错次数优先,最多 20 题)
+const drillMode = ref(false)
+function startWrongDrill() {
+  const qs = shuffle(
+    wrongPlateStats.value
+      .slice(0, 20)
+      .map((w) => QUESTIONS.find((q) => q.image === w.image))
+      .filter(Boolean)
+  )
+  if (!qs.length) return
+  questions.value = qs
+  currentIndex.value = 0
+  correctCount.value = 0
+  records.value = []
+  drillMode.value = true
   loadQuestion()
   stage.value = 'quiz'
 }
@@ -907,7 +973,7 @@ function choose(opt) {
       currentIndex.value++
       loadQuestion()
     } else {
-      // 测试完成,写入本地统计(含评分与错图明细)
+      // 测试完成,写入本地统计(含评分、错图与答对图明细)
       const score = Math.round((correctCount.value / total.value) * 100)
       const wrongPlates = wrongList.value.map((w) => ({
         image: w.q.image,
@@ -915,7 +981,10 @@ function choose(opt) {
         answer: w.q.answer,
         no: w.index + 1,
       }))
-      addRecord(mode.value, total.value, correctCount.value, score, wrongPlates)
+      const correctPlates = records.value
+        .filter((r) => r.correct)
+        .map((r) => questions.value[r.index].image)
+      addRecord(drillMode.value ? 'wrongDrill' : mode.value, total.value, correctCount.value, score, wrongPlates, correctPlates)
       statsData.value = loadStats()
       stage.value = 'result'
     }
@@ -973,10 +1042,31 @@ const statsSummary = computed(() => {
 
 const statsRecords = computed(() => [...statsData.value.records].reverse().slice(0, 30))
 
+// 最近记录分页:每页 10 条
+const HISTORY_PAGE_SIZE = 10
+const historyPage = ref(1)
+const historyTotalPages = computed(() => Math.max(1, Math.ceil(statsRecords.value.length / HISTORY_PAGE_SIZE)))
+const pagedRecords = computed(() =>
+  statsRecords.value.slice((historyPage.value - 1) * HISTORY_PAGE_SIZE, historyPage.value * HISTORY_PAGE_SIZE)
+)
+
+function setPage(p) {
+  historyPage.value = Math.min(Math.max(1, p), historyTotalPages.value)
+}
+
 function openStats() {
   resetArmed.value = false
   statsData.value = loadStats()
+  historyPage.value = 1
   stage.value = 'stats'
+}
+
+const wrongBookBack = ref('stats')
+function openWrongBook() {
+  resetArmed.value = false
+  statsData.value = loadStats()
+  wrongBookBack.value = 'start'
+  stage.value = 'wrongBook'
 }
 
 function confirmReset() {
@@ -991,6 +1081,7 @@ function confirmReset() {
 }
 
 function modeName(key) {
+  if (key === 'wrongDrill') return '错图针对测试'
   return MODES.find((m) => m.key === key)?.name ?? key
 }
 
@@ -1026,17 +1117,27 @@ function openRecord(r) {
 }
 
 // 跨全部历史记录聚合每张图的答错次数,按次数降序
+// 同一张图累计连对 2 次(期间没再答错)即移出常错图;之后再答错则重新计算
+const WRONG_CLEAR_STREAK = 2
 const wrongPlateStats = computed(() => {
-  const map = new Map()
+  const map = new Map() // image -> { image, count, lastTs, streak }
+  // records 按时间正序回放,保证"连对"判断正确
   statsData.value.records.forEach((r) => {
     ;(r.wrong ?? []).forEach((w) => {
-      const cur = map.get(w.image) ?? { image: w.image, count: 0, lastTs: 0 }
+      const cur = map.get(w.image) ?? { image: w.image, count: 0, lastTs: 0, streak: 0 }
       cur.count++
-      cur.lastTs = Math.max(cur.lastTs, r.ts)
+      cur.lastTs = r.ts
+      cur.streak = 0
       map.set(w.image, cur)
     })
+    ;(r.correctPlates ?? []).forEach((img) => {
+      const cur = map.get(img)
+      if (cur) cur.streak++
+    })
   })
-  return [...map.values()].sort((a, b) => b.count - a.count || b.lastTs - a.lastTs)
+  return [...map.values()]
+    .filter((w) => w.streak < WRONG_CLEAR_STREAK)
+    .sort((a, b) => b.count - a.count || b.lastTs - a.lastTs)
 })
 
 function answerOf(image) {
@@ -1092,7 +1193,7 @@ body {
   border: 1px solid rgba(255, 255, 255, 0.7);
   border-radius: 22px;
   box-shadow: 0 18px 50px rgba(43, 76, 126, 0.12);
-  padding: 34px 32px;
+  padding: 30px 25px;
   width: 100%;
   text-align: center;
 }
@@ -1100,38 +1201,18 @@ body {
 /* ---------- 开始页 ---------- */
 .brand {
   display: flex;
-  gap: 9px;
-  margin-bottom: 16px;
+  justify-content: center;
+  margin-bottom: 14px;
 }
 
-.dot {
-  width: 14px;
-  height: 14px;
-  border-radius: 50%;
-  box-shadow: inset -2px -3px 4px rgba(0, 0, 0, 0.15);
-}
-
-.dot.red { background: #e0533d; }
-.dot.amber { background: #f0a23c; }
-.dot.green { background: #4caf7d; }
-.dot.blue { background: #3f8ef7; }
-
-/* 首页四个色点:错落弹跳动效 */
-.dot {
-  animation: dot-bounce 2.5s ease-in-out infinite;
-}
-.dot:nth-child(2) { animation-delay: 0.15s; }
-.dot:nth-child(3) { animation-delay: 0.3s; }
-.dot:nth-child(4) { animation-delay: 0.45s; }
-
-@keyframes dot-bounce {
-  0%, 55%, 100% { transform: translateY(0); }
-  20% { transform: translateY(-7px); }
-  38% { transform: translateY(1px); }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .dot { animation: none; }
+/* 品牌 logo:项目自带图标(黑色圆角方块) */
+.brand-logo {
+  width: 64px;
+  height: 64px;
+  display: block;
+  border-radius: 16px;
+  box-shadow: 0 8px 20px rgba(15, 23, 42, 0.28);
+  user-select: none;
 }
 
 .title {
@@ -1288,7 +1369,7 @@ body {
 }
 
 .ts-desc {
-  font-size: 12.5px;
+  font-size: 12.501px;
   color: #8494a7;
 }
 
@@ -1972,7 +2053,7 @@ em.good { color: #177a46; }
 
 .study-header .back-link,
 .quiz-header .back-link {
-  margin-bottom: 25px;
+  margin-bottom: 20px;
 }
 
 .study-tabs {
@@ -2021,7 +2102,7 @@ em.good { color: #177a46; }
 .sub-tab {
   padding: 7px 16px;
   border-radius: 999px;
-  border: 1.5px solid #e2e8f0;
+  border: 1.501px solid #e2e8f0;
   background: rgba(255, 255, 255, 0.85);
   color: #64748b;
   font-size: 13px;
@@ -2149,28 +2230,28 @@ em.good { color: #177a46; }
   }
 
   .study-tab em {
-    font-size: 10.5px;
+    font-size: 10.501px;
     margin-left: 1px;
   }
 
   .sub-tab {
     padding: 6px 12px;
-    font-size: 12.5px;
+    font-size: 12.501px;
   }
 
   .sub-tab em {
-    font-size: 10.5px;
+    font-size: 10.501px;
   }
 
   .view-switch {
-    padding: 0.19rem;
+    padding: 3.04px;
   }
 
   .vs-btn {
     flex-shrink: 0;
     white-space: nowrap;
-    padding: 0.375rem 0.69rem;
-    font-size: 0.78rem;
+    padding: 6px 11.04px;
+    font-size: 12.48px;
   }
 
   .study-info {
@@ -2253,24 +2334,99 @@ em.good { color: #177a46; }
 }
 
 /* ---------- 测试统计 ---------- */
+.quick-entries {
+  display: flex;
+  gap: 12px;
+  width: 100%;
+  max-width: 660px;
+  margin-bottom: 18px;
+}
+
+.quick-entries .stats-entry {
+  flex: 1;
+  min-width: 0;
+  margin: 0;
+}
+
 .stats-entry {
-  /*display: inline-flex;*/
+  display: flex;
   align-items: center;
-  gap: 6px;
-  margin-top: 16px;
-  border: none;
-  background: none;
-  color: #2f6fed;
-  font-size: 14px;
-  font-weight: 700;
+  gap: 12px;
+  width: 100%;
+  padding: 13px 20px;
+  border: 1px solid rgba(255, 255, 255, 0.7);
+  background: rgba(255, 255, 255, 0.88);
+  border-radius: 14px;
+  box-shadow: 0 8px 24px rgba(43, 76, 126, 0.08);
   cursor: pointer;
-  display: block;
-  text-align: center;
-  margin: 20px auto;
+  text-align: left;
+  transition: all 0.18s ease;
 }
 
 .stats-entry:hover {
-  text-decoration: underline;
+  transform: translateY(-2px);
+  box-shadow: 0 10px 28px rgba(47, 111, 237, 0.2);
+}
+
+.stats-entry.wb:hover {
+  box-shadow: 0 10px 28px rgba(224, 83, 61, 0.22);
+}
+
+.se-icon {
+  width: 38px;
+  height: 38px;
+  border-radius: 10px;
+  background: linear-gradient(135deg, #2f6fed, #4f8cf7);
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.se-icon-warn {
+  background: linear-gradient(135deg, #e0533d, #ef7a66);
+}
+
+.se-text {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  flex: 1;
+  min-width: 0;
+}
+
+.se-title {
+  font-size: 15px;
+  font-weight: 700;
+  color: #233247;
+}
+
+.se-desc {
+  font-size: 12px;
+  color: #7b8aa0;
+}
+
+.se-arrow {
+  color: #9aa9bf;
+  flex-shrink: 0;
+}
+
+@media (max-width: 520px) {
+  .quick-entries .stats-entry {
+    padding: 11px 12px;
+    gap: 8px;
+  }
+
+  .quick-entries .se-icon {
+    width: 32px;
+    height: 32px;
+    border-radius: 9px;
+  }
+
+  .quick-entries .se-desc {
+    display: none;
+  }
 }
 
 /* 模式选择页顶部统计速览条 */
@@ -2389,6 +2545,45 @@ em.good { color: #177a46; }
   max-height: 300px;
   overflow-y: auto;
   padding-right: 4px;
+}
+
+.history-pager {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 14px;
+  margin-top: 12px;
+}
+
+.pager-btn {
+  padding: 6px 16px;
+  border: 1px solid #dde5f0;
+  border-radius: 999px;
+  background: #fff;
+  color: #45556b;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.18s ease;
+}
+
+.pager-btn:hover:not(:disabled) {
+  color: #2f6fed;
+  border-color: #b6ccf5;
+  box-shadow: 0 4px 12px rgba(47, 111, 237, 0.12);
+}
+
+.pager-btn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.pager-info {
+  font-size: 13px;
+  font-weight: 700;
+  color: #6b7a90;
+  min-width: 52px;
+  text-align: center;
 }
 
 .history-item {
@@ -2553,7 +2748,7 @@ em.good { color: #177a46; }
   display: flex;
   flex-direction: column;
   gap: 5px;
-  font-size: 13.5px;
+  font-size: 13.501px;
   color: #5c6f84;
   text-align: left;
 }
@@ -2575,9 +2770,31 @@ em.good { color: #177a46; }
 }
 
 .wb-desc {
-  font-size: 12.5px;
+  font-size: 12.501px;
   color: #8a99ad;
   margin-bottom: 20px;
+}
+
+.drill-btn {
+  width: 100%;
+  justify-content: center;
+  gap: 7px;
+  padding: 10px 20px;
+  margin-bottom: 22px;
+  font-size: 14px;
+  border-radius: 10px;
+  background: #f0f5ff;
+  color: #2f6fed;
+  border: 1px solid #d9e4fb;
+  box-shadow: none;
+  transition: all 0.18s ease;
+}
+
+.drill-btn:hover {
+  background: #e3edff;
+  border-color: #b6ccf5;
+  transform: translateY(-1px);
+  box-shadow: 0 6px 16px rgba(47, 111, 237, 0.12);
 }
 
 .wb-grid {
@@ -2628,7 +2845,7 @@ em.good { color: #177a46; }
 }
 
 .wb-answer {
-  font-size: 12.5px;
+  font-size: 12.501px;
   color: #45556b;
   font-weight: 600;
   text-align: center;
@@ -2698,7 +2915,7 @@ em.good { color: #177a46; }
   background: #f4f7fb;
   border-radius: 12px;
   padding: 14px 16px;
-  font-size: 13.5px;
+  font-size: 13.501px;
   line-height: 2;
   color: #45556b;
   text-align: left;

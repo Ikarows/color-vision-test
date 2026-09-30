@@ -8,6 +8,12 @@
     <link rel="apple-touch-icon" href="./logo.png" />
     <meta name="author" content="Ikarows" />
     <title>色盲色弱助手</title>
+    <style>
+      /* App 适配：根字号随视口宽度缩放（390px 设计稿 @16px，缩放范围 0.85~1.15） */
+      html {
+        font-size: clamp(13.6px, 4.1026vw, 18.4px);
+      }
+    </style>
   </head>
   <body>
     <div id="app"></div>

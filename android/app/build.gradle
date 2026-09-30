@@ -13,8 +13,8 @@ android {
         applicationId "com.local.colorvisiontest"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
-        versionCode 2
-        versionName "1.2.0"
+        versionCode 3
+        versionName "1.3.0"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         aaptOptions {
              // Files and dirs to omit from the packaged assets dir, modified to accommodate modern web apps.
@@ -35,6 +35,12 @@ android {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
             signingConfig signingConfigs.release
+        }
+    }
+    // 统一 APK 命名:应用名称 + 版本号(与 Windows 安装包格式对齐)
+    applicationVariants.all { variant ->
+        variant.outputs.all {
+            outputFileName = "色盲色弱助手 ${variant.versionName}.apk"
         }
     }
 }
