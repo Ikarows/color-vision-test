@@ -31,13 +31,17 @@
 ## 应用预览
 
 <div align="center">
-  <img src="public/preview/QQ20260918-142127.jpg" width="30%" alt="应用预览 1">&nbsp;
-  <img src="public/preview/QQ20260918-161005.jpg" width="30%" alt="应用预览 2">&nbsp;
-  <img src="public/preview/QQ20260918-161015.jpg" width="30%" alt="应用预览 3">
+  <img src="public/preview/1.jpg" width="30%" alt="应用预览 1">&nbsp;
+  <img src="public/preview/2.jpg" width="30%" alt="应用预览 2">&nbsp;
+  <img src="public/preview/3.jpg" width="30%" alt="应用预览 3">
   <br><br>
-  <img src="public/preview/QQ20260918-142336.jpg" width="30%" alt="应用预览 4">&nbsp;
-  <img src="public/preview/QQ20260918-142354.jpg" width="30%" alt="应用预览 5">&nbsp;
-  <img src="public/preview/QQ20260918-142405.jpg" width="30%" alt="应用预览 6">
+  <img src="public/preview/4.jpg" width="30%" alt="应用预览 4">&nbsp;
+  <img src="public/preview/5.jpg" width="30%" alt="应用预览 5">&nbsp;
+  <img src="public/preview/6.jpg" width="30%" alt="应用预览 6">
+  <br><br>
+  <img src="public/preview/7.jpg" width="30%" alt="应用预览 7">&nbsp;
+  <img src="public/preview/8.jpg" width="30%" alt="应用预览 8">&nbsp;
+  <img src="public/preview/9.jpg" width="30%" alt="应用预览 9">
 </div>
 
 ## 功能特性
