@@ -65,12 +65,13 @@
 
 四个学习分类，卡片式浏览，每次随机排序：
 
-| 分类 | 数量 | 内容 |
-| :------------ | :---------: | :------------------------------------ |
-| 简单易看 | 13 | 无需背诵，看不出来的说明色觉异常（仅技巧图） |
-| 特征对应 | 26 | 子分类切换：全部 26 / 数字 14 / 动物 8 / 其它 4 |
-| 数字对应 | 若干 | 数字型检查图逐图记忆 |
-| 总结复习 | 3 | 《第六版背图技巧》PDF 末尾三页总结（已去除水印），含“熟悉各图特性”“特征速查图”“备考建议” |
+<table>
+<tr><th width="110" align="left">分类</th><th width="70" align="center">数量</th><th align="left">内容</th></tr>
+<tr><td nowrap>简单易看</td><td nowrap align="center">13</td><td>无需背诵，看不出来的说明色觉异常（仅技巧图）</td></tr>
+<tr><td nowrap>特征对应</td><td nowrap align="center">26</td><td>子分类切换：全部 26 / 数字 14 / 动物 8 / 其它 4</td></tr>
+<tr><td nowrap>数字对应</td><td nowrap align="center">若干</td><td>数字型检查图逐图记忆</td></tr>
+<tr><td nowrap>总结复习</td><td nowrap align="center">3</td><td>《第六版背图技巧》PDF 末尾三页总结（已去除水印），含“熟悉各图特性”“特征速查图”“备考建议”</td></tr>
+</table>
 
 - **三视图切换**：原图 / 技巧图 / 答案解析图（进入卡片默认展示技巧图；原图与解析图缺失时按钮自动隐藏）
 - **图片放大**：点击全屏查看，支持滚轮缩放、拖动平移、双击放大复位、移动端双指捏合，点击空白或 × 关闭
@@ -149,7 +150,7 @@ npm run app:build # 构建 Windows 桌面程序（输出到 release/）
 
 3. 产物位于 `android/app/build/outputs/apk/release/`。
 
-> **签名说明**：签名信息配置在 `android/key.properties`（指向 `android/keystore/color-vision.jks`）。密钥库与密码丢失后将无法为同一应用发布更新，请务必备份。两者均已加入 `.gitignore`，不会进入版本库。
+> **签名说明**：签名信息配置在 `android/key.properties`（指向 `android/keystore/color-vision.jks`）。
 
 ## 数据文件说明
 
