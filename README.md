@@ -69,8 +69,8 @@
 <tr><th width="110" align="left">分类</th><th width="70" align="center">数量</th><th align="left">内容</th></tr>
 <tr><td nowrap>简单易看</td><td nowrap align="center">13</td><td>无需背诵，看不出来的说明色觉异常（仅技巧图）</td></tr>
 <tr><td nowrap>特征对应</td><td nowrap align="center">26</td><td>子分类切换：全部 26 / 数字 14 / 动物 8 / 其它 4</td></tr>
-<tr><td nowrap>数字对应</td><td nowrap align="center">若干</td><td>数字型检查图逐图记忆</td></tr>
-<tr><td nowrap>总结复习</td><td nowrap align="center">3</td><td>《第六版背图技巧》PDF 末尾三页总结（已去除水印），含“熟悉各图特性”“特征速查图”“备考建议”</td></tr>
+<tr><td nowrap>数字对应</td><td nowrap align="center">9</td><td>数字型检查图逐图记忆</td></tr>
+<tr><td nowrap>总结复习</td><td nowrap align="center">3</td><td>“熟悉各图特性”“特征速查图”“备考建议”</td></tr>
 </table>
 
 - **三视图切换**：原图 / 技巧图 / 答案解析图（进入卡片默认展示技巧图；原图与解析图缺失时按钮自动隐藏）
