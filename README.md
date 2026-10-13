@@ -8,7 +8,7 @@
 </p>
 
 <p>
-  <a href="https://semangseruozhushou-3qfb2wa.maozi.io/" target="_blank" rel="noopener noreferrer"><img src="./public/badge-online.svg" alt="在线体验" valign="middle"></a>&nbsp;&nbsp;
+  <a href="https://semangseruozhushou-3qfb2wa.maozi.io/" target="_blank" rel="noopener noreferrer"><img src="./docs/badge-online.svg" alt="在线体验" valign="middle"></a>&nbsp;&nbsp;
 </p>
 
 <p>
@@ -30,17 +30,17 @@
 ## 应用预览
 
 <div align="center">
-  <img src="public/preview/1.jpg" width="30%" alt="应用预览 1">&nbsp;
-  <img src="public/preview/2.jpg" width="30%" alt="应用预览 2">&nbsp;
-  <img src="public/preview/3.jpg" width="30%" alt="应用预览 3">
+  <img src="docs/preview/1.jpg" width="30%" alt="应用预览 1">&nbsp;
+  <img src="docs/preview/2.jpg" width="30%" alt="应用预览 2">&nbsp;
+  <img src="docs/preview/3.jpg" width="30%" alt="应用预览 3">
   <br><br>
-  <img src="public/preview/4.jpg" width="30%" alt="应用预览 4">&nbsp;
-  <img src="public/preview/5.jpg" width="30%" alt="应用预览 5">&nbsp;
-  <img src="public/preview/6.jpg" width="30%" alt="应用预览 6">
+  <img src="docs/preview/4.jpg" width="30%" alt="应用预览 4">&nbsp;
+  <img src="docs/preview/5.jpg" width="30%" alt="应用预览 5">&nbsp;
+  <img src="docs/preview/6.jpg" width="30%" alt="应用预览 6">
   <br><br>
-  <img src="public/preview/7.jpg" width="30%" alt="应用预览 7">&nbsp;
-  <img src="public/preview/8.jpg" width="30%" alt="应用预览 8">&nbsp;
-  <img src="public/preview/9.jpg" width="30%" alt="应用预览 9">
+  <img src="docs/preview/7.jpg" width="30%" alt="应用预览 7">&nbsp;
+  <img src="docs/preview/8.jpg" width="30%" alt="应用预览 8">&nbsp;
+  <img src="docs/preview/9.jpg" width="30%" alt="应用预览 9">
 </div>
 
 ## 功能特性

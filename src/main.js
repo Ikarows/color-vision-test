@@ -1,4 +1,9 @@
 import { createApp } from 'vue'
 import App from './App.vue'
 
+// 安卓 App 内（Capacitor 原生桥注入 window.Capacitor）给根元素打类，供 CSS 区分平台样式
+if (window.Capacitor?.isNativePlatform?.()) {
+  document.documentElement.classList.add('android-app')
+}
+
 createApp(App).mount('#app')

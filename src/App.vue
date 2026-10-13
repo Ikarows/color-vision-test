@@ -29,7 +29,7 @@
         </button>
       </div>
       <p class="disclaimer">本软件仅供自测学习使用，不能替代专业医学诊断</p>
-      <p class="copyright">@Copyright 来杯橙汁/Ikarows 2026 v1.3.0</p>
+      <p class="copyright">@Copyright 来杯橙汁/Ikarows 2026 v1.4.0</p>
     </div>
 
     <!-- ===================== 学习模式 ===================== -->
@@ -2028,6 +2028,7 @@ em.good { color: #177a46; }
   display: inline-flex;
   align-items: center;
   gap: 5px;
+  margin-top: 0px; /* web 顶部 0px，安卓 App 内 15px（见下方覆盖） */
   border: 1px solid rgba(255, 255, 255, 0.8);
   background: rgba(255, 255, 255, 0.85);
   color: #45556b;
@@ -2049,6 +2050,10 @@ em.good { color: #177a46; }
 
 .back-link svg {
   flex-shrink: 0;
+}
+
+html.android-app .back-link {
+  margin-top: 30px;
 }
 
 .study-header .back-link,

@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- 仅 debug 构建合并：允许 WebView 加载 http 明文地址（Vite 热调试），release 不受影响 -->
+<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+    <application android:usesCleartextTraffic="true">
+    </application>
+</manifest>
