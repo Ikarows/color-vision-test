@@ -31,8 +31,8 @@ export const QUESTIONS = [
   { image: 'image26.jpeg', answer: '兔子', type: 'animal' },
   { image: 'image27.jpeg', answer: '蝴蝶', type: 'animal' },
   { image: 'image28.jpeg', answer: '圆形、剪刀', type: 'shape' },
-  { image: 'image29.jpeg', answer: '上排 899，下排 022', type: 'rows' },
-  { image: 'image30.jpeg', answer: '上排 621，下排 989', type: 'rows' },
+  { image: 'image29.jpeg', answer: '899、022', type: 'rows' },
+  { image: 'image30.jpeg', answer: '621、989', type: 'rows' },
   { image: 'image31.jpeg', answer: '红色', type: 'color' },
   { image: 'image32.jpeg', answer: '黄色', type: 'color' },
   { image: 'image33.jpeg', answer: '蓝色', type: 'color' },
@@ -72,9 +72,9 @@ const POOLS = {
   ],
   color: ['红色', '黄色', '蓝色', '绿色', '紫色', '橙色', '粉色', '黑色', '棕色', '灰色'],
   rows: [
-    '上排 899，下排 022', '上排 621，下排 989', '上排 699，下排 028',
-    '上排 826，下排 988', '上排 689，下排 022', '上排 621，下排 968',
-    '上排 896，下排 020', '上排 627，下排 986',
+    '899、022', '621、989', '699、028',
+    '826、988', '689、022', '621、968',
+    '896、020', '627、986',
   ],
   object: ['茶壶', '水杯', '花瓶', '闹钟', '剪刀', '眼镜', '雨伞'],
 }

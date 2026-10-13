@@ -395,68 +395,61 @@
       </div>
     </div>
 
-    <!-- ===================== 答题界面 ===================== -->
+    <!-- ===================== 答题界面（仿真体检机·左右全屏） ===================== -->
     <div v-else-if="stage === 'quiz'" class="screen quiz-screen">
-      <header class="quiz-header">
-        <button class="back-link" @click="quitQuiz">
+      <!-- 返回按钮:吸顶悬浮在体检机上方,滚动时始终可见 -->
+      <!-- <div class="quiz-top">
+        <button class="back-link" @click="stage = drillMode ? 'wrongBook' : 'start'">
           <svg viewBox="0 0 20 20" width="15" height="15"><path d="M12.5 4.5L7 10l5.5 5.5" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
-          退出测试
+          返回
         </button>
-        <div class="progress-info">
-          <span class="q-index">
-            <span class="q-current">{{ currentIndex + 1 }}</span>
-            <span class="q-total"> / {{ total }}</span>
-          </span>
-          <span class="q-mode">{{ currentModeName }}</span>
-        </div>
-        <div class="progress-bar">
-          <div class="progress-fill" :style="{ width: progressPercent + '%' }"></div>
-        </div>
-        <div v-if="timerEnabled" class="quiz-timer" :class="{ urgent: timeLeft <= 5 }">
-          <span class="timer-num">{{ timeLeft }}s</span>
-          <div class="timer-track">
-            <div class="timer-fill" :style="{ width: (timeLeft / QUIZ_TIME) * 100 + '%' }"></div>
-          </div>
-        </div>
-      </header>
-
-      <main class="quiz-main" :key="currentIndex">
-        <div class="plate-wrap" :class="{ shake: shaking }">
-          <div class="plate-box">
-            <img
-              :src="plateSrc"
-              :alt="'色盲检查图 第' + (currentIndex + 1) + '题'"
-              class="plate-img"
-              draggable="false"
-            />
-            <div class="answer-mask" aria-hidden="true">
-              <img :src="plateSrc" alt="" draggable="false" />
+      </div> -->
+      <div class="tjj">
+        <!-- 体检机头部：屏幕内显示检查图，"请在"后为 15s 黄色倒计时 -->
+        <div class="tjj-head">
+          <img class="tjj-img" :src="tjjHeadImg" alt="" draggable="false" />
+          <div v-if="timerEnabled" class="tjj-head-count" :class="{ urgent: timeLeft <= 5 }">{{ timeLeft }}S</div>
+          <div class="tjj-screen">
+            <div class="plate-wrap tjj-plate" :class="{ shake: shaking }" :key="currentIndex">
+              <div class="plate-box">
+                <img
+                  :src="plateSrc"
+                  :alt="'色盲检查图 第' + (currentIndex + 1) + '题'"
+                  class="plate-img"
+                  draggable="false"
+                />
+                <div class="answer-mask" aria-hidden="true">
+                  <img :src="plateSrc" alt="" draggable="false" />
+                </div>
+              </div>
+              <transition name="fade">
+                <div v-if="answered" class="plate-badge" :class="lastCorrect ? 'ok' : 'no'">
+                  {{ lastCorrect ? '✓ 正确' : '✗ 正确答案:' + ' ' + currentQuestion.answer }}
+                </div>
+              </transition>
             </div>
           </div>
-          <transition name="fade">
-            <div v-if="answered" class="plate-badge" :class="lastCorrect ? 'ok' : 'no'">
-              {{ lastCorrect ? '✓ 正确' : '✗ 正确答案:' + ' ' + currentQuestion.answer }}
-            </div>
-          </transition>
         </div>
 
-        <p class="question-text">请选出你在图中看到的内容</p>
-
-        <div class="options-grid">
-          <button
-            v-for="opt in currentOptions"
-            :key="opt"
-            class="option-btn"
-            :class="optionClass(opt)"
-            :disabled="answered"
-            @click="choose(opt)"
-          >
-            {{ opt }}
-          </button>
+        <!-- 体检机机身：闹钟图标后为倒计时，六个蓝色选项为答案（仅文字,卡片由机身图提供） -->
+        <div class="tjj-body">
+          <img class="tjj-img" :src="tjjBodyImg" alt="" draggable="false" />
+          <div v-if="timerEnabled" class="tjj-body-count" :class="{ urgent: timeLeft <= 5 }">{{ timeLeft }}S</div>
+          <button class="tjj-stop" aria-label="停止检测" @click="quitQuiz"></button>
+          <div class="tjj-options">
+            <button
+              v-for="opt in currentOptions"
+              :key="opt"
+              class="tjj-option"
+              :class="optionClass(opt)"
+              :disabled="answered"
+              @click="choose(opt)"
+            >
+              {{ opt }}
+            </button>
+          </div>
         </div>
-      </main>
-
-      <footer class="quiz-footer">已答对 {{ correctCount }} 题</footer>
+      </div>
     </div>
 
     <!-- ===================== 结果界面 ===================== -->
@@ -501,7 +494,7 @@
         <h2 class="agreement-title">使用协议</h2>
         <div class="agreement-body">
           <p>欢迎使用「色盲色弱助手」，使用前请仔细阅读以下内容:</p>
-          <p><strong>1. 软件版权归开发者本人（来杯橙汁/Ikarows）所有，仅限个人自测使用，禁止转卖或用于任何商业用途，否则将追究相关责任。</strong></p>
+          <p><strong>1. 软件版权归开发者本人（来杯橙汁/Ikarows）所有，仅限个人自测使用，禁止转卖或用于任何商业用途，否则将追究相关法律责任。</strong></p>
           <p>2. 本软件提供色觉速记学习与自测功能，仅供个人学习。</p>
           <p>3. 软件内的第六版辨色图由收集整理，图片素材等版权归图片原作者所有。</p>
           <p>4. 最后祝大家逢检必过。</p>
@@ -547,6 +540,9 @@ const TOTAL_COUNT = QUESTIONS.length
 
 // 品牌 logo:项目自带图标
 const BRAND_LOGO_SRC = import.meta.env.BASE_URL + 'logo.png'
+// 仿真体检机界面素材（头部屏幕 + 机身双图拼接）
+import tjjHeadImg from './assets/img/tjj_head.png'
+import tjjBodyImg from './assets/img/tjj_body.jpg'
 
 const MODES = [
   { key: 'random10', name: '随机 10 题', count: 10, desc: '快速自测' },
@@ -893,13 +889,7 @@ function nextStudy() {
 
 const total = computed(() => questions.value.length)
 const currentQuestion = computed(() => questions.value[currentIndex.value])
-const currentModeName = computed(() =>
-  drillMode.value ? '错图针对测试' : MODES.find((m) => m.key === mode.value)?.name ?? ''
-)
 const plateSrc = computed(() => platePath(currentQuestion.value.image))
-const progressPercent = computed(
-  () => ((currentIndex.value + (answered.value ? 1 : 0)) / total.value) * 100
-)
 
 function platePath(name) {
   return import.meta.env.BASE_URL + 'plates/' + name
@@ -1470,103 +1460,176 @@ body {
 
 /* ---------- 答题页 ---------- */
 .quiz-screen {
-  max-width: 740px;
-  margin: 0 auto;
-  width: 100%;
-}
-
-.quiz-header {
-  width: 100%;
-  margin-bottom: 20px;
-}
-
-.progress-info {
+  align-self: stretch;
+  width: auto;
+  max-width: none;
+  margin: 0;
+  padding: 0; /* 机身图左右上下全部贴边 */
   display: flex;
-  justify-content: space-between;
-  align-items: baseline;
-  margin-bottom: 10px;
+  flex-direction: column;
 }
 
-.q-current {
-  font-size: 26px;
-  font-weight: 800;
-  color: #22314a;
+/* 返回按钮:吸顶悬浮,页面滚动时始终可见 */
+.quiz-top {
+  position: sticky;
+  top: 0;
+  z-index: 20;
+  padding: 10px 14px 8px;
 }
 
-.q-total {
-  font-size: 15px;
-  color: #8a99ad;
-  font-weight: 600;
+.quiz-top .back-link {
+  margin-top: 0;
 }
 
-.q-mode {
-  font-size: 13px;
-  color: #2f6fed;
-  background: #e6efff;
-  border-radius: 99px;
-  padding: 4px 12px;
-  font-weight: 600;
+/* 安卓 App 内的全局返回胶囊 15px 顶距在此不适用(吸顶已避开状态栏) */
+html.android-app .quiz-top .back-link {
+  margin-top: 0;
 }
 
-.progress-bar {
-  height: 10px;
-  background: #dde5ee;
-  border-radius: 99px;
-  overflow: hidden;
-  box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.06);
+/* ---------- 仿真体检机答题界面（头屏 + 机身双图,浮层按各图百分比定位） ---------- */
+.tjj {
+  width: 100%;
+  margin: 0;
+  flex: 1; /* 占满返回栏以下的剩余高度 */
+  display: flex;
+  flex-direction: column;
 }
 
-.progress-fill {
-  height: 100%;
-  background: linear-gradient(90deg, #2f6fed, #63b3ff);
-  border-radius: 99px;
-  transition: width 0.35s ease;
+.tjj-head,
+.tjj-body {
+  position: relative;
+  container-type: inline-size;
 }
 
-/* ---------- 答题倒计时条 ---------- */
-.quiz-timer {
+.tjj-head {
+  margin: auto 0; /* 头屏上下 auto 均分富余空间 → 垂直居中 */
+}
+/* 机身是末尾元素,自然贴住 tjj 底边=屏幕最底部 */
+
+.tjj-img {
+  display: block;
+  width: 100%;
+  user-select: none;
+  -webkit-user-drag: none;
+}
+
+/* 头部屏幕区域（透明覆盖层,仅承载检查图,保留机身印刷的提示文字） */
+.tjj-screen {
+  position: absolute;
+  left: 21.5%;
+  top: 6.9%;
+  width: 57.5%;
+  height: 38.4%;
+  pointer-events: none;
+}
+
+/* "请在 __S 内进行选择" 黄色倒计时（覆盖在机身上预留的空位处） */
+.tjj-head-count {
+  position: absolute;
+  left: 30.1%;
+  top: 10.7%;
+  width: 8%;
+  height: 3.9%;
   display: flex;
   align-items: center;
-  gap: 10px;
-  margin-top: 10px;
-}
-
-.timer-num {
-  flex-shrink: 0;
-  min-width: 34px;
-  font-size: 14px;
+  justify-content: center;
+  font-size: 13px;
   font-weight: 800;
-  color: #0d9488;
+  color: #ffc400;
   font-variant-numeric: tabular-nums;
 }
 
-.timer-track {
-  flex: 1;
-  height: 8px;
-  background: #dde5ee;
-  border-radius: 99px;
-  overflow: hidden;
+/* 蓝条闹钟图标后的倒计时（白色,位于闹钟与"停止检测"按钮之间） */
+.tjj-body-count {
+  position: absolute;
+  left: 71.5%;
+  top: 5.2%;
+  width: 9%;
+  height: 6%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+  font-weight: 800;
+  color: #fff;
+  font-variant-numeric: tabular-nums;
 }
 
-.timer-fill {
-  height: 100%;
-  background: linear-gradient(90deg, #14b8a6, #2dd4bf);
-  border-radius: 99px;
-  transition: width 0.95s linear;
+/* 倒计时 ≤5s 时闪烁提醒 */
+.tjj-head-count.urgent,
+.tjj-body-count.urgent {
+  animation: tjj-blink 1s infinite;
 }
 
-.quiz-timer.urgent .timer-num {
-  color: #e11d48;
-  animation: timer-blink 1s infinite;
-}
-
-.quiz-timer.urgent .timer-fill {
-  background: linear-gradient(90deg, #e11d48, #fb7185);
-}
-
-@keyframes timer-blink {
+@keyframes tjj-blink {
   0%, 100% { opacity: 1; }
-  50% { opacity: 0.45; }
+  50% { opacity: 0.35; }
+}
+
+/* 机身上印刷的"停止检测"按钮热区（点击退出测试） */
+.tjj-stop {
+  position: absolute;
+  left: 80%;
+  top: 4.5%;
+  width: 15.5%;
+  height: 7.5%;
+  background: transparent;
+  border: 0;
+  padding: 0;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.tjj-stop:active {
+  background: rgba(255, 255, 255, 0.3);
+}
+
+/* 六个答案选项(仅蓝色文字,新机身图已无印刷卡片,底色边框圆角全部由 CSS 呈现) */
+.tjj-options {
+  position: absolute;
+  left: 21%;
+  top: 39%;
+  width: 58%;
+  height: 40%;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  grid-template-rows: repeat(2, 1fr);
+  column-gap: 6.5%;
+  row-gap: 10%;
+}
+
+.tjj-option {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2%;
+  text-align: center;
+  background: #cfd8e3; /* 卡片底色(与机身印刷卡片内里一致,待抹掉图中印刷边框后由 CSS 整体呈现) */
+  border: 1.5px solid #5b7ce6; /* 蓝色卡片边框 */
+  border-radius: 8px;
+  color: #2b52e0;
+  font-family: inherit;
+  font-weight: 800;
+  font-size: 14px;
+  line-height: 1.2;
+  cursor: pointer;
+  transition: all 0.18s ease;
+}
+
+.tjj-option:disabled {
+  cursor: default;
+}
+
+.tjj-option.is-correct {
+  color: #177a46;
+}
+
+.tjj-option.is-wrong {
+  color: #c23b27;
+}
+
+.tjj-option.is-dim {
+  opacity: 0.45;
 }
 
 .quiz-main {
@@ -1643,6 +1706,40 @@ body {
      补丁左右两侧的白边与原图自然衔接 */
   transform: scaleX(-1);
   user-select: none;
+}
+
+/* 体检机头部屏幕内的检查图:白色底覆盖机身印刷的示例图,
+   容器Queries(cqw/cqh)约束图片不超出屏幕区域,plate-box 紧贴图片保证遮罩对齐 */
+.tjj-plate {
+  position: absolute;
+  left: 15.9%;
+  top: 20.2%;
+  width: 73.5%;
+  height: 74%;
+  max-width: none;
+  min-height: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #fff;
+  animation: none;
+  container-type: size;
+}
+
+.tjj-plate .plate-box {
+  position: relative;
+  display: flex;
+  max-width: 100cqw;
+  max-height: 100cqh;
+}
+
+.tjj-plate .plate-img {
+  width: auto;
+  height: auto;
+  max-width: 100cqw;
+  max-height: 100cqh;
+  border: 0;
+  box-shadow: none;
 }
 
 /* ---------- 图片放大查看层 ---------- */
@@ -1724,66 +1821,6 @@ body {
 .fade-enter-active { transition: opacity 0.2s ease, transform 0.2s ease; }
 .fade-enter-from { opacity: 0; transform: translateY(-6px); }
 
-.question-text {
-  margin: 22px 0 16px;
-  font-size: 16px;
-  font-weight: 700;
-  color: #34455a;
-  letter-spacing: 1px;
-}
-
-.options-grid {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 12px;
-}
-
-@media (max-width: 560px) {
-  .options-grid {
-    grid-template-columns: repeat(2, 1fr);
-  }
-}
-
-.option-btn {
-  padding: 15px 10px;
-  font-size: 16px;
-  border-radius: 12px;
-  border: 2px solid #e2e8f0;
-  background: #f8fafc;
-  color: #2b3a4d;
-  cursor: pointer;
-  transition: all 0.18s ease;
-  font-weight: 600;
-  text-align: center;
-}
-
-.option-btn:hover:not(:disabled) {
-  border-color: #2f6fed;
-  background: #eef4ff;
-  transform: translateY(-2px);
-  box-shadow: 0 6px 14px rgba(47, 111, 237, 0.15);
-}
-
-.option-btn:disabled {
-  cursor: default;
-}
-
-.option-btn.is-correct {
-  border-color: #22a15f;
-  background: #e8f7ee;
-  color: #177a46;
-}
-
-.option-btn.is-wrong {
-  border-color: #e0533d;
-  background: #fdecea;
-  color: #c23b27;
-}
-
-.option-btn.is-dim {
-  opacity: 0.45;
-}
-
 .shake {
   animation: shake 0.4s;
 }
@@ -1793,13 +1830,6 @@ body {
   25% { transform: translateX(-6px); }
   50% { transform: translateX(6px); }
   75% { transform: translateX(-4px); }
-}
-
-.quiz-footer {
-  margin-top: 16px;
-  font-size: 14px;
-  color: #7a8a99;
-  font-weight: 600;
 }
 
 /* ---------- 结果页 ---------- */
