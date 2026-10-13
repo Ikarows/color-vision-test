@@ -7,25 +7,65 @@
         <span class="dot amber"></span>
         <span class="dot green"></span>
         <span class="dot blue"></span> -->
-        <img class="brand-logo" :src="BRAND_LOGO_SRC" alt="色盲色弱助手 logo" draggable="false" />
+        <img
+          class="brand-logo"
+          :src="BRAND_LOGO_SRC"
+          alt="色盲色弱助手 logo"
+          draggable="false"
+        />
       </div>
       <h1 class="title">色盲色弱助手</h1>
-      <p class="subtitle">基于《色盲检查图》第 6 版 · 共 {{ TOTAL_COUNT }} 题</p>
+      <p class="subtitle">
+        基于《色盲检查图》第 6 版 · 共 {{ TOTAL_COUNT }} 题
+      </p>
 
       <div class="menu-cards">
         <button class="menu-card study" @click="enterStudy">
           <span class="menu-icon">
-            <svg viewBox="0 0 24 24" width="30" height="30" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20V4H6.5A2.5 2.5 0 0 0 4 6.5v13z"/><path d="M4 19.5A2.5 2.5 0 0 0 6.5 22H20v-5"/><path d="M9 8h7M9 12h5"/></svg>
+            <svg
+              viewBox="0 0 24 24"
+              width="30"
+              height="30"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="1.8"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            >
+              <path
+                d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20V4H6.5A2.5 2.5 0 0 0 4 6.5v13z"
+              />
+              <path d="M4 19.5A2.5 2.5 0 0 0 6.5 22H20v-5" />
+              <path d="M9 8h7M9 12h5" />
+            </svg>
           </span>
           <span class="menu-name">技巧记图</span>
-          <span class="menu-desc">逐图记忆技巧讲解<br/>简单 13 · 特征 26 · 数字 9</span>
+          <span class="menu-desc"
+            >逐图记忆技巧讲解<br />简单 13 · 特征 26 · 数字 9</span
+          >
         </button>
         <button class="menu-card quiz" @click="stage = 'start'">
           <span class="menu-icon">
-            <svg viewBox="0 0 24 24" width="30" height="30" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
+            <svg
+              viewBox="0 0 24 24"
+              width="30"
+              height="30"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="1.8"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            >
+              <path d="M9 11l3 3L22 4" />
+              <path
+                d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"
+              />
+            </svg>
           </span>
           <span class="menu-name">体检模拟</span>
-          <span class="menu-desc">模拟体检自测<br/>固定顺序 · 随机 10 / 20 / 全部</span>
+          <span class="menu-desc"
+            >模拟体检自测<br />固定顺序 · 随机 10 / 20 / 全部</span
+          >
         </button>
       </div>
       <p class="disclaimer">本软件仅供自测学习使用，不能替代专业医学诊断</p>
@@ -36,7 +76,16 @@
     <div v-else-if="stage === 'study'" class="screen study-screen">
       <header class="study-header">
         <button class="back-link" @click="stage = 'menu'">
-          <svg viewBox="0 0 20 20" width="15" height="15"><path d="M12.5 4.5L7 10l5.5 5.5" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          <svg viewBox="0 0 20 20" width="15" height="15">
+            <path
+              d="M12.5 4.5L7 10l5.5 5.5"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2.2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            />
+          </svg>
           返回菜单
         </button>
         <div class="study-tabs">
@@ -58,29 +107,40 @@
             class="sub-tab"
             :class="{ active: studySubCat === s.key }"
             @click="setSubCat(s.key)"
-          >{{ s.name }} <em>{{ subCount(s.key) }}</em></button>
+          >
+            {{ s.name }} <em>{{ subCount(s.key) }}</em>
+          </button>
         </div>
       </header>
 
       <main class="quiz-main study-main" :key="studyCat + '-' + studyIndex">
-        <div v-if="hasStudyOriginal || studyItem.details?.length" class="view-switch">
+        <div
+          v-if="hasStudyOriginal || studyItem.details?.length"
+          class="view-switch"
+        >
           <button
             v-if="hasStudyOriginal"
             class="vs-btn"
             :class="{ active: studyView === 'original' }"
             @click="studyView = 'original'"
-          >原图</button>
+          >
+            原图
+          </button>
           <button
             class="vs-btn"
             :class="{ active: studyView === 'question' }"
             @click="studyView = 'question'"
-          >技巧图</button>
+          >
+            技巧图
+          </button>
           <button
             v-if="studyItem.details?.length"
             class="vs-btn"
             :class="{ active: studyView === 'detail' }"
             @click="studyView = 'detail'"
-          >答案解析图</button>
+          >
+            答案解析图
+          </button>
         </div>
 
         <div class="plate-wrap" v-if="studyView === 'question'">
@@ -93,7 +153,10 @@
             @click="openZoom(studyQuestionSrc)"
           />
         </div>
-        <div class="plate-wrap" v-else-if="studyView === 'original' && hasStudyOriginal">
+        <div
+          class="plate-wrap"
+          v-else-if="studyView === 'original' && hasStudyOriginal"
+        >
           <img
             :src="studyOriginalPath(studyItem)"
             :alt="'原图'"
@@ -103,7 +166,10 @@
             @click="openZoom(studyOriginalPath(studyItem))"
           />
         </div>
-        <div class="plate-wrap detail-wrap" v-else-if="studyView === 'detail' && studyItem.details?.length">
+        <div
+          class="plate-wrap detail-wrap"
+          v-else-if="studyView === 'detail' && studyItem.details?.length"
+        >
           <img
             v-for="d in studyItem.details"
             :key="d"
@@ -123,14 +189,28 @@
           </div>
           <div class="study-tip">
             <span class="study-label">技巧</span>
-            <p>{{ studyItem.tip || '一眼就能看出,无需背诵。' }}</p>
+            <p>{{ studyItem.tip || "一眼就能看出,无需背诵。" }}</p>
           </div>
         </div>
 
         <div class="study-nav">
-          <button class="btn btn-ghost nav-btn" :disabled="studyIndex === 0" @click="prevStudy">‹ 上一张</button>
-          <span class="study-progress">{{ studyIndex + 1 }} / {{ studyList.length }}</span>
-          <button class="btn btn-primary nav-btn" :disabled="studyIndex === studyList.length - 1" @click="nextStudy">下一张 ›</button>
+          <button
+            class="btn btn-ghost nav-btn"
+            :disabled="studyIndex === 0"
+            @click="prevStudy"
+          >
+            ‹ 上一张
+          </button>
+          <span class="study-progress"
+            >{{ studyIndex + 1 }} / {{ studyList.length }}</span
+          >
+          <button
+            class="btn btn-primary nav-btn"
+            :disabled="studyIndex === studyList.length - 1"
+            @click="nextStudy"
+          >
+            下一张 ›
+          </button>
         </div>
       </main>
     </div>
@@ -139,18 +219,32 @@
     <div v-else-if="stage === 'start'" class="screen start-screen">
       <div class="back-bar">
         <button class="back-link" @click="stage = 'menu'">
-          <svg viewBox="0 0 20 20" width="15" height="15"><path d="M12.5 4.5L7 10l5.5 5.5" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          <svg viewBox="0 0 20 20" width="15" height="15">
+            <path
+              d="M12.5 4.5L7 10l5.5 5.5"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2.2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            />
+          </svg>
           返回菜单
         </button>
       </div>
-      
+
       <div class="brand">
-        <img class="brand-logo" :src="BRAND_LOGO_SRC" alt="色盲色弱助手 logo" draggable="false" />
+        <img
+          class="brand-logo"
+          :src="BRAND_LOGO_SRC"
+          alt="色盲色弱助手 logo"
+          draggable="false"
+        />
       </div>
       <h1 class="title">色盲色弱自测</h1>
-      <p class="subtitle">基于《色盲检查图》第 6 版 · 共 {{ TOTAL_COUNT }} 题</p>
-
-      
+      <p class="subtitle">
+        基于《色盲检查图》第 6 版 · 共 {{ TOTAL_COUNT }} 题
+      </p>
 
       <button class="stats-brief" @click="openStats">
         <div class="sb-item">
@@ -173,23 +267,71 @@
       <div class="quick-entries">
         <button class="stats-entry" @click="openStats">
           <span class="se-icon">
-            <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 20V10M10 20V4M16 20v-7M22 20H2"/></svg>
+            <svg
+              viewBox="0 0 24 24"
+              width="20"
+              height="20"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+            >
+              <path d="M4 20V10M10 20V4M16 20v-7M22 20H2" />
+            </svg>
           </span>
           <span class="se-text">
             <span class="se-title">测试结果</span>
             <span class="se-desc">查看历次成绩与答题统计</span>
           </span>
-          <svg class="se-arrow" viewBox="0 0 20 20" width="14" height="14"><path d="M7.5 4.5L13 10l-5.5 5.5" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          <svg class="se-arrow" viewBox="0 0 20 20" width="14" height="14">
+            <path
+              d="M7.5 4.5L13 10l-5.5 5.5"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2.2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            />
+          </svg>
         </button>
-        <button v-if="wrongPlateStats.length" class="stats-entry wb" @click="openWrongBook">
+        <button
+          v-if="wrongPlateStats.length"
+          class="stats-entry wb"
+          @click="openWrongBook"
+        >
           <span class="se-icon se-icon-warn">
-            <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 9v4M12 17h.01"/><path d="M10.3 3.9L1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0z"/></svg>
+            <svg
+              viewBox="0 0 24 24"
+              width="20"
+              height="20"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            >
+              <path d="M12 9v4M12 17h.01" />
+              <path
+                d="M10.3 3.9L1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0z"
+              />
+            </svg>
           </span>
           <span class="se-text">
             <span class="se-title">常错图</span>
-            <span class="se-desc">{{ wrongPlateStats.length }} 张易错图待复习</span>
+            <span class="se-desc"
+              >{{ wrongPlateStats.length }} 张易错图待复习</span
+            >
           </span>
-          <svg class="se-arrow" viewBox="0 0 20 20" width="14" height="14"><path d="M7.5 4.5L13 10l-5.5 5.5" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          <svg class="se-arrow" viewBox="0 0 20 20" width="14" height="14">
+            <path
+              d="M7.5 4.5L13 10l-5.5 5.5"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2.2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            />
+          </svg>
         </button>
       </div>
 
@@ -204,7 +346,16 @@
             @click="mode = m.key"
           >
             <span class="mode-check" v-if="mode === m.key">
-              <svg viewBox="0 0 20 20" width="14" height="14"><path d="M3 10.5l4.5 4.5L17 5.5" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              <svg viewBox="0 0 20 20" width="14" height="14">
+                <path
+                  d="M3 10.5l4.5 4.5L17 5.5"
+                  fill="none"
+                  stroke="#fff"
+                  stroke-width="3"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                />
+              </svg>
             </span>
             <span class="mode-name">{{ m.name }}</span>
             <span class="mode-count">{{ m.count }} 题</span>
@@ -215,14 +366,21 @@
         <div class="timer-setting">
           <div class="ts-text">
             <span class="ts-title">倒计时模式</span>
-            <span class="ts-desc">{{ timerEnabled ? '每题限时 15 秒,超时视为答错' : '关闭时不限时,慢慢作答' }}</span>
+            <span class="ts-desc">{{
+              timerEnabled
+                ? "每题限时 15 秒,超时视为答错"
+                : "关闭时不限时,慢慢作答"
+            }}</span>
           </div>
-          <button class="toggle" :class="{ on: timerEnabled }" aria-label="倒计时开关" @click="toggleTimer">
+          <button
+            class="toggle"
+            :class="{ on: timerEnabled }"
+            aria-label="倒计时开关"
+            @click="toggleTimer"
+          >
             <span class="toggle-knob"></span>
           </button>
         </div>
-
-        
 
         <!-- <div class="intro">
           <p>请在自然光线下、距离屏幕约 60–80 厘米处作答。</p>
@@ -231,11 +389,18 @@
 
         <button class="btn btn-primary btn-lg" @click="startTest">
           开始测试
-          <svg viewBox="0 0 20 20" width="18" height="18"><path d="M4 10h11M11 5l5 5-5 5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          <svg viewBox="0 0 20 20" width="18" height="18">
+            <path
+              d="M4 10h11M11 5l5 5-5 5"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            />
+          </svg>
         </button>
 
-        
-        
         <p class="disclaimer">本测试仅供自测参考,不能替代专业医学诊断</p>
       </div>
     </div>
@@ -244,7 +409,16 @@
     <div v-else-if="stage === 'stats'" class="screen stats-screen">
       <div class="back-bar">
         <button class="back-link" @click="stage = 'start'">
-          <svg viewBox="0 0 20 20" width="15" height="15"><path d="M12.5 4.5L7 10l5.5 5.5" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          <svg viewBox="0 0 20 20" width="15" height="15">
+            <path
+              d="M12.5 4.5L7 10l5.5 5.5"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2.2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            />
+          </svg>
           返回
         </button>
       </div>
@@ -269,16 +443,46 @@
           </div>
         </div>
 
-        <button v-if="statsSummary.count" class="wrongbook-entry" @click="wrongBookBack = 'stats'; stage = 'wrongBook'">
+        <button
+          v-if="statsSummary.count"
+          class="wrongbook-entry"
+          @click="
+            wrongBookBack = 'stats';
+            stage = 'wrongBook';
+          "
+        >
           <span class="we-icon">
-            <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 9v4M12 17h.01"/><path d="M10.3 3.9L1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0z"/></svg>
+            <svg
+              viewBox="0 0 24 24"
+              width="20"
+              height="20"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            >
+              <path d="M12 9v4M12 17h.01" />
+              <path
+                d="M10.3 3.9L1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0z"
+              />
+            </svg>
           </span>
           <span class="we-text">
             <span class="we-title">常错图</span>
             <span class="we-desc">按答错次数排序,重点复习易错图</span>
           </span>
           <span class="we-count">{{ wrongPlateStats.length }}</span>
-          <svg class="we-arrow" viewBox="0 0 20 20" width="14" height="14"><path d="M7.5 4.5L13 10l-5.5 5.5" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          <svg class="we-arrow" viewBox="0 0 20 20" width="14" height="14">
+            <path
+              d="M7.5 4.5L13 10l-5.5 5.5"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2.2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            />
+          </svg>
         </button>
 
         <div v-if="statsRecords.length" class="history">
@@ -293,16 +497,52 @@
             >
               <div class="h-main">
                 <span class="h-time">{{ formatTime(r.ts) }}</span>
-                <span class="h-sub">{{ modeName(r.mode) }} · 答对 {{ r.correct }}/{{ r.total }}<template v-if="r.wrong && r.wrong.length"> · 错 {{ r.wrong.length }} 题</template></span>
+                <span class="h-sub"
+                  >{{ modeName(r.mode) }} · 答对 {{ r.correct }}/{{ r.total
+                  }}<template v-if="r.wrong && r.wrong.length">
+                    · 错 {{ r.wrong.length }} 题</template
+                  ></span
+                >
               </div>
-              <span class="h-score" :class="scoreClass(r)">{{ recordScore(r) }}分</span>
-              <svg v-if="r.wrong && r.wrong.length" class="h-arrow" viewBox="0 0 20 20" width="14" height="14"><path d="M7.5 4.5L13 10l-5.5 5.5" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              <span class="h-score" :class="scoreClass(r)"
+                >{{ recordScore(r) }}分</span
+              >
+              <svg
+                v-if="r.wrong && r.wrong.length"
+                class="h-arrow"
+                viewBox="0 0 20 20"
+                width="14"
+                height="14"
+              >
+                <path
+                  d="M7.5 4.5L13 10l-5.5 5.5"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2.2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                />
+              </svg>
             </div>
           </div>
           <div v-if="historyTotalPages > 1" class="history-pager">
-            <button class="pager-btn" :disabled="historyPage <= 1" @click="setPage(historyPage - 1)">上一页</button>
-            <span class="pager-info">{{ historyPage }} / {{ historyTotalPages }}</span>
-            <button class="pager-btn" :disabled="historyPage >= historyTotalPages" @click="setPage(historyPage + 1)">下一页</button>
+            <button
+              class="pager-btn"
+              :disabled="historyPage <= 1"
+              @click="setPage(historyPage - 1)"
+            >
+              上一页
+            </button>
+            <span class="pager-info"
+              >{{ historyPage }} / {{ historyTotalPages }}</span
+            >
+            <button
+              class="pager-btn"
+              :disabled="historyPage >= historyTotalPages"
+              @click="setPage(historyPage + 1)"
+            >
+              下一页
+            </button>
           </div>
         </div>
         <p v-else class="no-data">暂无测试记录,快去完成一次测试吧</p>
@@ -312,7 +552,9 @@
           class="btn btn-danger"
           :class="{ armed: resetArmed }"
           @click="confirmReset"
-        >{{ resetArmed ? '再点一次确认清空' : '清空统计数据' }}</button>
+        >
+          {{ resetArmed ? "再点一次确认清空" : "清空统计数据" }}
+        </button>
       </div>
     </div>
 
@@ -320,7 +562,16 @@
     <div v-else-if="stage === 'recordDetail'" class="screen record-screen">
       <div class="back-bar">
         <button class="back-link" @click="stage = 'stats'">
-          <svg viewBox="0 0 20 20" width="15" height="15"><path d="M12.5 4.5L7 10l5.5 5.5" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          <svg viewBox="0 0 20 20" width="15" height="15">
+            <path
+              d="M12.5 4.5L7 10l5.5 5.5"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2.2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            />
+          </svg>
           返回统计
         </button>
       </div>
@@ -332,7 +583,10 @@
           </div>
           <div class="rec-meta">
             <span class="rm-time">{{ formatTime(activeRecord.ts) }}</span>
-            <span>{{ modeName(activeRecord.mode) }} · 答对 {{ activeRecord.correct }}/{{ activeRecord.total }}</span>
+            <span
+              >{{ modeName(activeRecord.mode) }} · 答对
+              {{ activeRecord.correct }}/{{ activeRecord.total }}</span
+            >
           </div>
         </div>
 
@@ -346,12 +600,18 @@
                 class="zoomable"
                 draggable="false"
                 @error="retryImg"
-                @click="openZoom(platePath(w.image))"
+                @click="openQuizZoom(w.image)"
               />
               <div class="wrong-info">
                 <span class="wrong-no">第 {{ w.no }} 题</span>
-                <span>你的选择:<em class="bad">{{ w.chosen ?? '超时未答' }}</em></span>
-                <span>正确答案:<em class="good">{{ w.answer }}</em></span>
+                <span
+                  >你的选择:<em class="bad">{{
+                    w.chosen ?? "超时未答"
+                  }}</em></span
+                >
+                <span
+                  >正确答案:<em class="good">{{ w.answer }}</em></span
+                >
               </div>
             </div>
           </div>
@@ -364,16 +624,41 @@
     <div v-else-if="stage === 'wrongBook'" class="screen wrongbook-screen">
       <div class="back-bar">
         <button class="back-link" @click="stage = wrongBookBack">
-          <svg viewBox="0 0 20 20" width="15" height="15"><path d="M12.5 4.5L7 10l5.5 5.5" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg>
-          {{ wrongBookBack === 'start' ? '返回菜单' : '返回统计' }}
+          <svg viewBox="0 0 20 20" width="15" height="15">
+            <path
+              d="M12.5 4.5L7 10l5.5 5.5"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2.2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            />
+          </svg>
+          {{ wrongBookBack === "start" ? "返回菜单" : "返回统计" }}
         </button>
       </div>
       <div class="card wrongbook-card">
         <h2>常错图</h2>
-        <p class="wb-desc">共 {{ wrongPlateStats.length }} 张易错图 · 按答错次数排序 · 连对 2 次自动移出</p>
-        <button v-if="wrongPlateStats.length" class="btn drill-btn" @click="startWrongDrill">
+        <p class="wb-desc">
+          共 {{ wrongPlateStats.length }} 张易错图 · 按答错次数排序 · 连对 2
+          次自动移出
+        </p>
+        <button
+          v-if="wrongPlateStats.length"
+          class="btn drill-btn"
+          @click="startWrongDrill"
+        >
           错图针对测试
-          <svg viewBox="0 0 20 20" width="15" height="15"><path d="M4 10h11M11 5l5 5-5 5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          <svg viewBox="0 0 20 20" width="15" height="15">
+            <path
+              d="M4 10h11M11 5l5 5-5 5"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            />
+          </svg>
         </button>
         <div v-if="wrongPlateStats.length" class="wb-grid">
           <div v-for="w in wrongPlateStats" :key="w.image" class="wb-item">
@@ -384,7 +669,7 @@
                 class="zoomable"
                 draggable="false"
                 @error="retryImg"
-                @click="openZoom(platePath(w.image))"
+                @click="openQuizZoom(w.image)"
               />
               <span class="wb-count">错 {{ w.count }} 次</span>
             </div>
@@ -405,37 +690,97 @@
         </button>
       </div> -->
       <div class="tjj">
-        <!-- 体检机头部：屏幕内显示检查图，"请在"后为 15s 黄色倒计时 -->
+        <!-- 体检机头部：左右机翼 + 中间机身底色蓝框屏幕(题目文字+检查图) + 底部摄像头区,样式参照真机照片 -->
         <div class="tjj-head">
-          <img class="tjj-img" :src="tjjHeadImg" alt="" draggable="false" />
-          <div v-if="timerEnabled" class="tjj-head-count" :class="{ urgent: timeLeft <= 5 }">{{ timeLeft }}S</div>
-          <div class="tjj-screen">
-            <div class="plate-wrap tjj-plate" :class="{ shake: shaking }" :key="currentIndex">
-              <div class="plate-box">
-                <img
-                  :src="plateSrc"
-                  :alt="'色盲检查图 第' + (currentIndex + 1) + '题'"
-                  class="plate-img"
-                  draggable="false"
-                />
-                <div class="answer-mask" aria-hidden="true">
-                  <img :src="plateSrc" alt="" draggable="false" />
+          <div class="tjj-head-machine">
+            <img
+              class="tjj-head-wing wing-left"
+              :src="tjjHeadLeftImg"
+              alt=""
+              draggable="false"
+            />
+            <div class="tjj-head-mid">
+              <div class="tjj-head-panel-frame">
+                <div class="tjj-head-panel">
+                  <div class="tjj-head-panel-in">
+                    <p class="tjj-head-question">
+                      请在
+                      <strong
+                        v-if="timerEnabled"
+                        class="tjj-head-sec"
+                        :class="{ urgent: timeLeft <= 5 }"
+                        >{{ timeLeft }}S</strong
+                      >
+                      <em v-else class="tjj-head-blank" aria-hidden="true"></em>
+                      内进行选择，否则视为检测失败
+                    </p>
+                    <div
+                      class="plate-wrap tjj-plate"
+                      :class="{ shake: shaking }"
+                      :key="currentIndex"
+                    >
+                      <div class="plate-box">
+                        <img
+                          :src="plateSrc"
+                          :alt="'色盲检查图 第' + (currentIndex + 1) + '题'"
+                          class="plate-img"
+                          draggable="false"
+                        />
+                        <div class="answer-mask" aria-hidden="true">
+                          <img :src="plateSrc" alt="" draggable="false" />
+                        </div>
+                      </div>
+                      <transition name="fade">
+                        <div
+                          v-if="answered"
+                          class="plate-badge"
+                          :class="lastCorrect ? 'ok' : 'no'"
+                        >
+                          {{
+                            lastCorrect
+                              ? "✓ 正确"
+                              : "✗ 正确答案:" + " " + currentQuestion.answer
+                          }}
+                        </div>
+                      </transition>
+                    </div>
+                  </div>
                 </div>
               </div>
-              <transition name="fade">
-                <div v-if="answered" class="plate-badge" :class="lastCorrect ? 'ok' : 'no'">
-                  {{ lastCorrect ? '✓ 正确' : '✗ 正确答案:' + ' ' + currentQuestion.answer }}
-                </div>
-              </transition>
+              <img
+                class="tjj-head-foot"
+                :src="tjjHeadBottomImg"
+                alt=""
+                draggable="false"
+              />
             </div>
+            <img
+              class="tjj-head-wing wing-right"
+              :src="tjjHeadRightImg"
+              alt=""
+              draggable="false"
+            />
           </div>
         </div>
 
-        <!-- 体检机机身：闹钟图标后为倒计时，六个蓝色选项为答案（仅文字,卡片由机身图提供） -->
+        <!-- 体检机机身：屏幕照片，蓝条秒表图标后为倒计时，六个蓝色选项为答案（仅文字,卡片由 CSS 呈现） -->
         <div class="tjj-body">
           <img class="tjj-img" :src="tjjBodyImg" alt="" draggable="false" />
-          <div v-if="timerEnabled" class="tjj-body-count" :class="{ urgent: timeLeft <= 5 }">{{ timeLeft }}S</div>
-          <button class="tjj-stop" aria-label="停止检测" @click="quitQuiz"></button>
+          <div
+            v-if="timerEnabled"
+            class="tjj-body-count"
+            :class="{ urgent: timeLeft <= 5 }"
+          >
+            {{ timeLeft }}S
+          </div>
+          <button class="tjj-exit" type="button" @click="quitQuiz">
+            退出测试
+          </button>
+          <button
+            class="tjj-stop"
+            aria-label="停止检测"
+            @click="quitQuiz"
+          ></button>
           <div class="tjj-options">
             <button
               v-for="opt in currentOptions"
@@ -462,18 +807,29 @@
             <span class="score-total">/ {{ total }}</span>
           </div>
         </div>
-        <p class="score-percent">正确率 {{ Math.round((correctCount / total) * 100) }}%</p>
+        <p class="score-percent">
+          正确率 {{ Math.round((correctCount / total) * 100) }}%
+        </p>
         <p class="verdict">{{ verdictText }}</p>
 
         <div v-if="wrongList.length" class="wrong-section">
           <h3>答错的题目 · {{ wrongList.length }}</h3>
           <div class="wrong-list">
             <div v-for="item in wrongList" :key="item.index" class="wrong-item">
-              <img :src="platePath(item.q.image)" :alt="'第' + (item.index + 1) + '题'" />
+              <img
+                :src="platePath(item.q.image)"
+                :alt="'第' + (item.index + 1) + '题'"
+              />
               <div class="wrong-info">
                 <span class="wrong-no">第 {{ item.index + 1 }} 题</span>
-                <span>你的选择:<em class="bad">{{ item.chosen ?? '超时未答' }}</em></span>
-                <span>正确答案:<em class="good">{{ item.q.answer }}</em></span>
+                <span
+                  >你的选择:<em class="bad">{{
+                    item.chosen ?? "超时未答"
+                  }}</em></span
+                >
+                <span
+                  >正确答案:<em class="good">{{ item.q.answer }}</em></span
+                >
               </div>
             </div>
           </div>
@@ -494,13 +850,25 @@
         <h2 class="agreement-title">使用协议</h2>
         <div class="agreement-body">
           <p>欢迎使用「色盲色弱助手」，使用前请仔细阅读以下内容:</p>
-          <p><strong>1. 软件版权归开发者本人（来杯橙汁/Ikarows）所有，仅限个人自测使用，禁止转卖或用于任何商业用途，否则将追究相关法律责任。</strong></p>
+          <p>
+            <strong
+              >1.
+              软件版权归开发者本人（来杯橙汁/Ikarows）所有，仅限个人自测使用，禁止转卖或用于任何商业用途，否则将追究相关法律责任。</strong
+            >
+          </p>
           <p>2. 本软件提供色觉速记学习与自测功能，仅供个人学习。</p>
-          <p>3. 软件内的第六版辨色图由收集整理，图片素材等版权归图片原作者所有。</p>
+          <p>
+            3. 软件内的第六版辨色图由收集整理，图片素材等版权归图片原作者所有。
+          </p>
           <p>4. 最后祝大家逢检必过。</p>
-          <p>5. 点击「同意并继续」或继续使用本软件，即表示您已阅读并同意本协议的全部内容。</p>
+          <p>
+            5.
+            点击「同意并继续」或继续使用本软件，即表示您已阅读并同意本协议的全部内容。
+          </p>
         </div>
-        <button class="btn btn-primary agreement-btn" @click="acceptAgreement">同意并继续</button>
+        <button class="btn btn-primary agreement-btn" @click="acceptAgreement">
+          同意并继续
+        </button>
       </div>
     </div>
 
@@ -516,205 +884,254 @@
         @pointercancel="onZoomPointerUp"
         @wheel.prevent="onZoomWheel"
       >
+        <!-- 学习关联切换:错题图放大时可切原图/技巧图/解析图 -->
+        <div v-if="zoomStudyItem" class="zoom-tabs" @click.stop>
+          <button
+            v-for="t in zoomTabs"
+            :key="t.key"
+            class="zoom-tab"
+            :class="{ active: zoomView === t.key }"
+            @click="zoomShowView(t.key)"
+          >
+            {{ t.label }}
+          </button>
+        </div>
         <img
           ref="zoomImgEl"
           :src="studyZoomSrc"
           class="zoom-img"
-          :style="{ transform: `translate(${zoomTx}px, ${zoomTy}px) scale(${zoomScale})` }"
+          :style="{
+            transform: `translate(${zoomTx}px, ${zoomTy}px) scale(${zoomScale})`,
+          }"
           alt="放大查看"
           draggable="false"
         />
-        <button class="zoom-close" aria-label="关闭放大" @click.stop="closeZoom">×</button>
+        <!-- 关联学习条目的答案与记忆技巧 -->
+        <div v-if="zoomStudyItem" class="zoom-tip">
+          <span class="zoom-tip-answer">答案:{{ zoomStudyItem.answer }}</span>
+          <p v-if="zoomStudyItem.tip">{{ zoomStudyItem.tip }}</p>
+        </div>
+        <button
+          class="zoom-close"
+          aria-label="关闭放大"
+          @click.stop="closeZoom"
+        >
+          ×
+        </button>
       </div>
     </transition>
   </div>
 </template>
 
 <script setup>
-import { ref, computed, watch, nextTick } from 'vue'
-import { QUESTIONS, buildOptions, shuffle } from './data/questions.js'
-import { STUDY_CATEGORIES, STUDY_ITEMS } from './data/study.js'
-import { loadStats, addRecord, resetStats } from './data/stats.js'
+import { ref, computed, watch, nextTick } from "vue";
+import { QUESTIONS, buildOptions, shuffle } from "./data/questions.js";
+import { STUDY_CATEGORIES, STUDY_ITEMS } from "./data/study.js";
+import { loadStats, addRecord, resetStats } from "./data/stats.js";
 
-const TOTAL_COUNT = QUESTIONS.length
+const TOTAL_COUNT = QUESTIONS.length;
 
 // 品牌 logo:项目自带图标
-const BRAND_LOGO_SRC = import.meta.env.BASE_URL + 'logo.png'
-// 仿真体检机界面素材（头部屏幕 + 机身双图拼接）
-import tjjHeadImg from './assets/img/tjj_head.png'
-import tjjBodyImg from './assets/img/tjj_body.jpg'
+const BRAND_LOGO_SRC = import.meta.env.BASE_URL + "logo.png";
+// 仿真体检机界面素材（头部机翼/底部摄像头区 + 机身图拼接）
+import tjjHeadLeftImg from "./assets/img/tjj_head_left.png";
+import tjjHeadRightImg from "./assets/img/tjj_head_right.png";
+import tjjHeadBottomImg from "./assets/img/tjj_head_bottom.png";
+import tjjBodyImg from "./assets/img/tjj_body.jpg";
 
 const MODES = [
-  { key: 'random10', name: '随机 10 题', count: 10, desc: '快速自测' },
-  { key: 'random20', name: '随机 20 题', count: 20, desc: '标准自测' },
-  { key: 'randomAll', name: '随机全部', count: TOTAL_COUNT, desc: '打乱顺序作答' },
-  { key: 'fixed',    name: '固定顺序', count: TOTAL_COUNT, desc: '按原书顺序作答' },
-]
+  { key: "random10", name: "随机 10 题", count: 10, desc: "快速自测" },
+  { key: "random20", name: "随机 20 题", count: 20, desc: "标准自测" },
+  {
+    key: "randomAll",
+    name: "随机全部",
+    count: TOTAL_COUNT,
+    desc: "打乱顺序作答",
+  },
+  {
+    key: "fixed",
+    name: "固定顺序",
+    count: TOTAL_COUNT,
+    desc: "按原书顺序作答",
+  },
+];
 
-const stage = ref('menu') // menu | start | study | quiz | result | stats | recordDetail | wrongBook
-const mode = ref('random10')
-const questions = ref([])
-const currentIndex = ref(0)
-const correctCount = ref(0)
-const answered = ref(false)
-const lastCorrect = ref(false)
-const chosenOption = ref(null)
-const shaking = ref(false)
-const currentOptions = ref([])
-const records = ref([]) // { index, chosen, correct }
+const stage = ref("menu"); // menu | start | study | quiz | result | stats | recordDetail | wrongBook
+const mode = ref("random10");
+const questions = ref([]);
+const currentIndex = ref(0);
+const correctCount = ref(0);
+const answered = ref(false);
+const lastCorrect = ref(false);
+const chosenOption = ref(null);
+const shaking = ref(false);
+const currentOptions = ref([]);
+const records = ref([]); // { index, chosen, correct }
 
 // ---------- 倒计时 ----------
-const QUIZ_TIME = 15 // 每题限时(秒)
-const timerEnabled = ref(localStorage.getItem('cv_timer') === '1')
-const timeLeft = ref(QUIZ_TIME)
-let timerId = null
+const QUIZ_TIME = 15; // 每题限时(秒)
+const timerEnabled = ref(localStorage.getItem("cv_timer") === "1");
+const timeLeft = ref(QUIZ_TIME);
+let timerId = null;
 
 function stopTimer() {
   if (timerId) {
-    clearInterval(timerId)
-    timerId = null
+    clearInterval(timerId);
+    timerId = null;
   }
 }
 
 function startTimer() {
-  stopTimer()
-  if (!timerEnabled.value) return
-  timeLeft.value = QUIZ_TIME
+  stopTimer();
+  if (!timerEnabled.value) return;
+  timeLeft.value = QUIZ_TIME;
   timerId = setInterval(() => {
     if (answered.value) {
-      stopTimer()
-      return
+      stopTimer();
+      return;
     }
-    timeLeft.value--
+    timeLeft.value--;
     if (timeLeft.value <= 0) {
-      stopTimer()
-      if (!answered.value) choose(null) // 超时按答错处理
+      stopTimer();
+      if (!answered.value) choose(null); // 超时按答错处理
     }
-  }, 1000)
+  }, 1000);
 }
 
 function quitQuiz() {
-  stopTimer()
-  stage.value = 'start'
+  stopTimer();
+  stage.value = "start";
 }
 
 function toggleTimer() {
-  timerEnabled.value = !timerEnabled.value
-  localStorage.setItem('cv_timer', timerEnabled.value ? '1' : '0')
+  timerEnabled.value = !timerEnabled.value;
+  localStorage.setItem("cv_timer", timerEnabled.value ? "1" : "0");
 }
 
 // ---------- 学习模式 ----------
-const studyCat = ref('easy')
-const studyIndex = ref(0)
-const studyView = ref('question') // question | original | detail
-const studyList = ref([]) // 每次进入/切换分类时随机排序
-const studyZoomSrc = ref('') // 点击放大的图片地址,空 = 关闭
-const studySubCat = ref('all') // 特征对应子分类: all | num | animal | other
+const studyCat = ref("easy");
+const studyIndex = ref(0);
+const studyView = ref("question"); // question | original | detail
+const studyList = ref([]); // 每次进入/切换分类时随机排序
+const studyZoomSrc = ref(""); // 点击放大的图片地址,空 = 关闭
+const studySubCat = ref("all"); // 特征对应子分类: all | num | animal | other
 const FEATURE_SUBS = [
-  { key: 'all', name: '全部' },
-  { key: 'num', name: '数字' },
-  { key: 'animal', name: '动物' },
-  { key: 'other', name: '其它' },
-]
+  { key: "all", name: "全部" },
+  { key: "num", name: "数字" },
+  { key: "animal", name: "动物" },
+  { key: "other", name: "其它" },
+];
 
 // 每次切换页面(或学习页子视图)后回到顶部
 watch([stage, studyView], () => {
-  nextTick(() => window.scrollTo(0, 0))
-})
+  nextTick(() => window.scrollTo(0, 0));
+});
 
-const zoomScale = ref(1)
-const zoomTx = ref(0)
-const zoomTy = ref(0)
-const zoomImgEl = ref(null)
-const zoomPointers = new Map() // pointerId -> {x,y}
-let zoomDragBase = null // 单指拖动基准 {px,py,tx,ty}
-let zoomPinchBase = null // 双指捏合基准 {dist,mx,my,s,tx,ty}
-let zoomMoved = false // 本次手势是否移动过,抑制误触关闭
-let zoomLastTap = 0
-let zoomLastTapX = 0
-let zoomLastTapY = 0
+const zoomStudyItem = ref(null); // zoom 层关联的学习条目,非空时提供原图/技巧图/解析图切换
+const zoomView = ref("original");
+const zoomScale = ref(1);
+const zoomTx = ref(0);
+const zoomTy = ref(0);
+const zoomImgEl = ref(null);
+const zoomPointers = new Map(); // pointerId -> {x,y}
+let zoomDragBase = null; // 单指拖动基准 {px,py,tx,ty}
+let zoomPinchBase = null; // 双指捏合基准 {dist,mx,my,s,tx,ty}
+let zoomMoved = false; // 本次手势是否移动过,抑制误触关闭
+let zoomLastTap = 0;
+let zoomLastTapX = 0;
+let zoomLastTapY = 0;
 
 function zoomReset() {
-  zoomScale.value = 1
-  zoomTx.value = 0
-  zoomTy.value = 0
-  zoomPointers.clear()
-  zoomDragBase = null
-  zoomPinchBase = null
-  zoomMoved = false
+  zoomScale.value = 1;
+  zoomTx.value = 0;
+  zoomTy.value = 0;
+  zoomPointers.clear();
+  zoomDragBase = null;
+  zoomPinchBase = null;
+  zoomMoved = false;
 }
 
 function openZoom(src) {
-  zoomReset()
-  studyZoomSrc.value = src
+  zoomReset();
+  zoomStudyItem.value = null;
+  studyZoomSrc.value = src;
 }
 
 function closeZoom() {
-  studyZoomSrc.value = ''
-  zoomReset()
+  studyZoomSrc.value = "";
+  zoomReset();
+  zoomStudyItem.value = null;
 }
 
 function clampScale(s) {
-  return Math.min(5, Math.max(1, s))
+  return Math.min(5, Math.max(1, s));
 }
 
 function clampPan() {
-  const el = zoomImgEl.value
-  if (!el) return
+  const el = zoomImgEl.value;
+  if (!el) return;
   if (zoomScale.value <= 1) {
-    zoomTx.value = 0
-    zoomTy.value = 0
-    return
+    zoomTx.value = 0;
+    zoomTy.value = 0;
+    return;
   }
-  const r = el.getBoundingClientRect()
-  const maxX = Math.max(0, (r.width - window.innerWidth) / 2)
-  const maxY = Math.max(0, (r.height - window.innerHeight) / 2)
-  zoomTx.value = Math.min(maxX, Math.max(-maxX, zoomTx.value))
-  zoomTy.value = Math.min(maxY, Math.max(-maxY, zoomTy.value))
+  const r = el.getBoundingClientRect();
+  const maxX = Math.max(0, (r.width - window.innerWidth) / 2);
+  const maxY = Math.max(0, (r.height - window.innerHeight) / 2);
+  zoomTx.value = Math.min(maxX, Math.max(-maxX, zoomTx.value));
+  zoomTy.value = Math.min(maxY, Math.max(-maxY, zoomTy.value));
 }
 
 // 围绕屏幕点 (cx,cy) 缩放到 s
 function applyZoomAround(s, cx, cy) {
-  const kk = s / zoomScale.value
-  const vwHalf = window.innerWidth / 2
-  const vhHalf = window.innerHeight / 2
-  zoomScale.value = s
-  zoomTx.value = cx - vwHalf - kk * (cx - vwHalf - zoomTx.value)
-  zoomTy.value = cy - vhHalf - kk * (cy - vhHalf - zoomTy.value)
-  clampPan()
+  const kk = s / zoomScale.value;
+  const vwHalf = window.innerWidth / 2;
+  const vhHalf = window.innerHeight / 2;
+  zoomScale.value = s;
+  zoomTx.value = cx - vwHalf - kk * (cx - vwHalf - zoomTx.value);
+  zoomTy.value = cy - vhHalf - kk * (cy - vhHalf - zoomTy.value);
+  clampPan();
 }
 
 function toggleZoomAt(cx, cy) {
   if (zoomScale.value > 1.2) {
-    zoomScale.value = 1
-    zoomTx.value = 0
-    zoomTy.value = 0
+    zoomScale.value = 1;
+    zoomTx.value = 0;
+    zoomTy.value = 0;
   } else {
-    applyZoomAround(2.5, cx, cy)
+    applyZoomAround(2.5, cx, cy);
   }
 }
 
 function onZoomPointerDown(e) {
   try {
-    e.currentTarget.setPointerCapture?.(e.pointerId)
+    e.currentTarget.setPointerCapture?.(e.pointerId);
   } catch {}
-  zoomPointers.set(e.pointerId, { x: e.clientX, y: e.clientY })
-  zoomMoved = false
-  const now = performance.now()
-  if (now - zoomLastTap < 300 && Math.hypot(e.clientX - zoomLastTapX, e.clientY - zoomLastTapY) < 30) {
-    toggleZoomAt(e.clientX, e.clientY)
-    zoomMoved = true
-    zoomLastTap = 0
+  zoomPointers.set(e.pointerId, { x: e.clientX, y: e.clientY });
+  zoomMoved = false;
+  const now = performance.now();
+  if (
+    now - zoomLastTap < 300 &&
+    Math.hypot(e.clientX - zoomLastTapX, e.clientY - zoomLastTapY) < 30
+  ) {
+    toggleZoomAt(e.clientX, e.clientY);
+    zoomMoved = true;
+    zoomLastTap = 0;
   } else {
-    zoomLastTap = now
-    zoomLastTapX = e.clientX
-    zoomLastTapY = e.clientY
+    zoomLastTap = now;
+    zoomLastTapX = e.clientX;
+    zoomLastTapY = e.clientY;
   }
   if (zoomPointers.size === 1) {
-    zoomDragBase = { px: e.clientX, py: e.clientY, tx: zoomTx.value, ty: zoomTy.value }
-    zoomPinchBase = null
+    zoomDragBase = {
+      px: e.clientX,
+      py: e.clientY,
+      tx: zoomTx.value,
+      ty: zoomTy.value,
+    };
+    zoomPinchBase = null;
   } else if (zoomPointers.size === 2) {
-    const [a, b] = [...zoomPointers.values()]
+    const [a, b] = [...zoomPointers.values()];
     zoomPinchBase = {
       dist: Math.hypot(a.x - b.x, a.y - b.y),
       mx: (a.x + b.x) / 2,
@@ -722,425 +1139,520 @@ function onZoomPointerDown(e) {
       s: zoomScale.value,
       tx: zoomTx.value,
       ty: zoomTy.value,
-    }
-    zoomDragBase = null
-    zoomMoved = true
+    };
+    zoomDragBase = null;
+    zoomMoved = true;
   }
 }
 
 function onZoomPointerMove(e) {
-  if (!zoomPointers.has(e.pointerId)) return
-  zoomPointers.set(e.pointerId, { x: e.clientX, y: e.clientY })
+  if (!zoomPointers.has(e.pointerId)) return;
+  zoomPointers.set(e.pointerId, { x: e.clientX, y: e.clientY });
   if (zoomPointers.size === 1 && zoomDragBase) {
-    const dx = e.clientX - zoomDragBase.px
-    const dy = e.clientY - zoomDragBase.py
-    if (Math.abs(dx) > 3 || Math.abs(dy) > 3) zoomMoved = true
-    zoomTx.value = zoomDragBase.tx + dx
-    zoomTy.value = zoomDragBase.ty + dy
-    clampPan()
+    const dx = e.clientX - zoomDragBase.px;
+    const dy = e.clientY - zoomDragBase.py;
+    if (Math.abs(dx) > 3 || Math.abs(dy) > 3) zoomMoved = true;
+    zoomTx.value = zoomDragBase.tx + dx;
+    zoomTy.value = zoomDragBase.ty + dy;
+    clampPan();
   } else if (zoomPointers.size >= 2 && zoomPinchBase) {
-    const [a, b] = [...zoomPointers.values()]
-    const dist = Math.hypot(a.x - b.x, a.y - b.y)
-    const mx = (a.x + b.x) / 2
-    const my = (a.y + b.y) / 2
+    const [a, b] = [...zoomPointers.values()];
+    const dist = Math.hypot(a.x - b.x, a.y - b.y);
+    const mx = (a.x + b.x) / 2;
+    const my = (a.y + b.y) / 2;
     if (zoomPinchBase.dist > 0 && dist > 0) {
-      const s = clampScale((zoomPinchBase.s * dist) / zoomPinchBase.dist)
-      const kk = s / zoomPinchBase.s
-      const vwHalf = window.innerWidth / 2
-      const vhHalf = window.innerHeight / 2
-      zoomScale.value = s
-      zoomTx.value = mx - vwHalf - kk * (zoomPinchBase.mx - vwHalf - zoomPinchBase.tx)
-      zoomTy.value = my - vhHalf - kk * (zoomPinchBase.my - vhHalf - zoomPinchBase.ty)
-      clampPan()
+      const s = clampScale((zoomPinchBase.s * dist) / zoomPinchBase.dist);
+      const kk = s / zoomPinchBase.s;
+      const vwHalf = window.innerWidth / 2;
+      const vhHalf = window.innerHeight / 2;
+      zoomScale.value = s;
+      zoomTx.value =
+        mx - vwHalf - kk * (zoomPinchBase.mx - vwHalf - zoomPinchBase.tx);
+      zoomTy.value =
+        my - vhHalf - kk * (zoomPinchBase.my - vhHalf - zoomPinchBase.ty);
+      clampPan();
     }
   }
 }
 
 function onZoomPointerUp(e) {
-  zoomPointers.delete(e.pointerId)
+  zoomPointers.delete(e.pointerId);
   if (zoomPointers.size === 1) {
-    const [p] = [...zoomPointers.values()]
-    zoomDragBase = { px: p.x, py: p.y, tx: zoomTx.value, ty: zoomTy.value }
-    zoomPinchBase = null
+    const [p] = [...zoomPointers.values()];
+    zoomDragBase = { px: p.x, py: p.y, tx: zoomTx.value, ty: zoomTy.value };
+    zoomPinchBase = null;
   } else if (zoomPointers.size === 0) {
-    zoomDragBase = null
-    zoomPinchBase = null
+    zoomDragBase = null;
+    zoomPinchBase = null;
   }
 }
 
 function onZoomWheel(e) {
-  const s = clampScale(zoomScale.value * (e.deltaY < 0 ? 1.15 : 1 / 1.15))
-  applyZoomAround(s, e.clientX, e.clientY)
-  zoomMoved = true
+  const s = clampScale(zoomScale.value * (e.deltaY < 0 ? 1.15 : 1 / 1.15));
+  applyZoomAround(s, e.clientX, e.clientY);
+  zoomMoved = true;
 }
 
 function onZoomOverlayClick() {
   if (zoomMoved) {
-    zoomMoved = false
-    return
+    zoomMoved = false;
+    return;
   }
-  closeZoom()
+  closeZoom();
 }
 
 function shuffleStudy() {
-  let list = STUDY_ITEMS.filter((i) => i.category === studyCat.value)
-  if (studyCat.value === 'feature' && studySubCat.value !== 'all') {
-    list = list.filter((i) => i.sub === studySubCat.value)
+  let list = STUDY_ITEMS.filter((i) => i.category === studyCat.value);
+  if (studyCat.value === "feature" && studySubCat.value !== "all") {
+    list = list.filter((i) => i.sub === studySubCat.value);
   }
-  studyList.value = shuffle(list)
+  studyList.value = shuffle(list);
 }
-const studyItem = computed(() => studyList.value[studyIndex.value])
+const studyItem = computed(() => studyList.value[studyIndex.value]);
 
 function studyPath(name) {
-  return import.meta.env.BASE_URL + 'study/' + name
+  return import.meta.env.BASE_URL + "study/" + name;
 }
 
 // 速记题目图 q_imageN.png → 测试原图 plates/imageN.jpeg
 function studyOriginalPath(item) {
-  const m = item.image.match(/^q_(image\d+)\.png$/)
-  return m ? platePath(m[1] + '.jpeg') : null
+  const m = item.image.match(/^q_(image\d+)\.png$/);
+  return m ? platePath(m[1] + ".jpeg") : null;
+}
+
+// 学习条目索引:imageN → STUDY_ITEMS 条目(供错题图放大时匹配)
+const studyByImage = computed(() => {
+  const map = {};
+  for (const it of STUDY_ITEMS) {
+    const m = it.image.match(/^q_(image\d+)\.png$/);
+    if (m) map[m[1]] = it;
+  }
+  return map;
+});
+
+// 错题图放大时的视图切换列表:原图 / 技巧图 / 解析图(多张时带序号)
+const zoomTabs = computed(() => {
+  const item = zoomStudyItem.value;
+  if (!item) return [];
+  const orig = studyOriginalPath(item);
+  const tabs = [];
+  if (orig) tabs.push({ key: "original", label: "原图" });
+  // 简单一眼出的技巧图就是原图,不重复提供
+  const qsrc = item.category === "easy" && orig ? orig : studyPath(item.image);
+  if (qsrc !== orig) tabs.push({ key: "question", label: "技巧图" });
+  const details = item.details || [];
+  details.forEach((d, i) => {
+    tabs.push({
+      key: "detail:" + i,
+      label: "解析图" + (details.length > 1 ? i + 1 : ""),
+    });
+  });
+  return tabs;
+});
+
+// 切换 zoom 层视图并重置缩放状态
+function zoomShowView(key) {
+  const item = zoomStudyItem.value;
+  if (!item) return;
+  zoomView.value = key;
+  zoomReset();
+  if (key === "original") {
+    studyZoomSrc.value = studyOriginalPath(item) || studyPath(item.image);
+  } else if (key === "question") {
+    studyZoomSrc.value =
+      item.category === "easy" && studyOriginalPath(item)
+        ? studyOriginalPath(item)
+        : studyPath(item.image);
+  } else if (key.startsWith("detail:")) {
+    const d = (item.details || [])[Number(key.slice(7))];
+    if (d) studyZoomSrc.value = studyPath(d);
+  }
+}
+
+// 答题错图放大:按题号匹配学习库条目,可在原图/技巧图/解析图间切换;未收录则纯原图放大
+function openQuizZoom(image) {
+  const m = String(image).match(/^(image\d+)\.(?:jpe?g|png)$/i);
+  const item = m ? studyByImage.value[m[1]] : null;
+  openZoom(
+    item ? studyOriginalPath(item) || platePath(image) : platePath(image),
+  );
+  if (item) {
+    zoomStudyItem.value = item;
+    zoomView.value = "original";
+  }
 }
 
 // 简单一眼出的图无需对照原图,不提供原图视图
 const hasStudyOriginal = computed(
-  () => studyItem.value?.category !== 'easy' && !!studyOriginalPath(studyItem.value)
-)
+  () =>
+    studyItem.value?.category !== "easy" &&
+    !!studyOriginalPath(studyItem.value),
+);
 
 // 简单一眼出分类直接展示 plates 原图(与测试图一致),其余分类展示技巧题目图
 const studyQuestionSrc = computed(() => {
-  const item = studyItem.value
-  if (item?.category === 'easy' && studyOriginalPath(item)) return studyOriginalPath(item)
-  return studyPath(item.image)
-})
+  const item = studyItem.value;
+  if (item?.category === "easy" && studyOriginalPath(item))
+    return studyOriginalPath(item);
+  return studyPath(item.image);
+});
 
 // 进入新卡片时:有技巧图默认选中技巧图,并预加载原图与解析图
 watch(studyItem, (item) => {
-  if (!item) return
-  studyView.value = 'question'
-  const orig = studyOriginalPath(item)
-  if (orig) new Image().src = orig
+  if (!item) return;
+  studyView.value = "question";
+  const orig = studyOriginalPath(item);
+  if (orig) new Image().src = orig;
   item.details?.forEach((d) => {
-    new Image().src = studyPath(d)
-  })
-})
+    new Image().src = studyPath(d);
+  });
+});
 
 // 进入某分类时,延迟在后台预加载该分类全部图片,彻底消除翻卡等待
 watch(studyCat, (cat) => {
-  if (stage.value !== 'study') return
+  if (stage.value !== "study") return;
   setTimeout(() => {
     STUDY_ITEMS.filter((i) => i.category === cat).forEach((item) => {
-      new Image().src = studyPath(item.image)
-      const orig = studyOriginalPath(item)
-      if (orig) new Image().src = orig
+      new Image().src = studyPath(item.image);
+      const orig = studyOriginalPath(item);
+      if (orig) new Image().src = orig;
       item.details?.forEach((d) => {
-        new Image().src = studyPath(d)
-      })
-    })
-  }, 400)
-})
+        new Image().src = studyPath(d);
+      });
+    });
+  }, 400);
+});
 
 // 图片加载失败自动重试一次(加时间戳绕过失败缓存)
 function retryImg(e) {
-  const img = e.target
-  if (img.dataset.retried) return
-  img.dataset.retried = '1'
-  img.src = img.src + (img.src.includes('?') ? '&' : '?') + 'retry=1'
+  const img = e.target;
+  if (img.dataset.retried) return;
+  img.dataset.retried = "1";
+  img.src = img.src + (img.src.includes("?") ? "&" : "?") + "retry=1";
 }
 
 function subCount(sub) {
-  return STUDY_ITEMS.filter((i) => i.category === 'feature' && (sub === 'all' || i.sub === sub)).length
+  return STUDY_ITEMS.filter(
+    (i) => i.category === "feature" && (sub === "all" || i.sub === sub),
+  ).length;
 }
 
 function setSubCat(sub) {
-  studySubCat.value = sub
-  studyIndex.value = 0
-  shuffleStudy()
+  studySubCat.value = sub;
+  studyIndex.value = 0;
+  shuffleStudy();
 }
 
 function categoryCount(key) {
-  return STUDY_ITEMS.filter((i) => i.category === key).length
+  return STUDY_ITEMS.filter((i) => i.category === key).length;
 }
 
 function switchCategory(key) {
-  studyCat.value = key
-  studySubCat.value = 'all'
-  studyIndex.value = 0
-  shuffleStudy()
+  studyCat.value = key;
+  studySubCat.value = "all";
+  studyIndex.value = 0;
+  shuffleStudy();
 }
 
 function enterStudy() {
-  studyCat.value = 'easy'
-  studyIndex.value = 0
-  shuffleStudy()
-  stage.value = 'study'
+  studyCat.value = "easy";
+  studyIndex.value = 0;
+  shuffleStudy();
+  stage.value = "study";
 }
 
 function prevStudy() {
   if (studyIndex.value > 0) {
-    studyIndex.value--
+    studyIndex.value--;
   }
 }
 
 function nextStudy() {
   if (studyIndex.value < studyList.value.length - 1) {
-    studyIndex.value++
+    studyIndex.value++;
   }
 }
 
-const total = computed(() => questions.value.length)
-const currentQuestion = computed(() => questions.value[currentIndex.value])
-const plateSrc = computed(() => platePath(currentQuestion.value.image))
+const total = computed(() => questions.value.length);
+const currentQuestion = computed(() => questions.value[currentIndex.value]);
+const plateSrc = computed(() => platePath(currentQuestion.value.image));
 
 function platePath(name) {
-  return import.meta.env.BASE_URL + 'plates/' + name
+  return import.meta.env.BASE_URL + "plates/" + name;
 }
 
 function buildQuestionSet() {
   switch (mode.value) {
-    case 'random10':
-      return shuffle(QUESTIONS).slice(0, 10)
-    case 'random20':
-      return shuffle(QUESTIONS).slice(0, 20)
-    case 'randomAll':
-      return shuffle(QUESTIONS)
+    case "random10":
+      return shuffle(QUESTIONS).slice(0, 10);
+    case "random20":
+      return shuffle(QUESTIONS).slice(0, 20);
+    case "randomAll":
+      return shuffle(QUESTIONS);
     default:
-      return [...QUESTIONS]
+      return [...QUESTIONS];
   }
 }
 
 function startTest() {
-  questions.value = buildQuestionSet()
-  currentIndex.value = 0
-  correctCount.value = 0
-  records.value = []
-  drillMode.value = false
-  loadQuestion()
-  stage.value = 'quiz'
+  questions.value = buildQuestionSet();
+  currentIndex.value = 0;
+  correctCount.value = 0;
+  records.value = [];
+  drillMode.value = false;
+  loadQuestion();
+  stage.value = "quiz";
 }
 
 // 错图针对测试:只考常错图(按答错次数优先,最多 20 题)
-const drillMode = ref(false)
+const drillMode = ref(false);
 function startWrongDrill() {
   const qs = shuffle(
     wrongPlateStats.value
       .slice(0, 20)
       .map((w) => QUESTIONS.find((q) => q.image === w.image))
-      .filter(Boolean)
-  )
-  if (!qs.length) return
-  questions.value = qs
-  currentIndex.value = 0
-  correctCount.value = 0
-  records.value = []
-  drillMode.value = true
-  loadQuestion()
-  stage.value = 'quiz'
+      .filter(Boolean),
+  );
+  if (!qs.length) return;
+  questions.value = qs;
+  currentIndex.value = 0;
+  correctCount.value = 0;
+  records.value = [];
+  drillMode.value = true;
+  loadQuestion();
+  stage.value = "quiz";
 }
 
 function loadQuestion() {
-  answered.value = false
-  lastCorrect.value = false
-  chosenOption.value = null
-  currentOptions.value = buildOptions(currentQuestion.value)
-  startTimer()
+  answered.value = false;
+  lastCorrect.value = false;
+  chosenOption.value = null;
+  currentOptions.value = buildOptions(currentQuestion.value);
+  startTimer();
 }
 
 function choose(opt) {
-  if (answered.value) return
-  answered.value = true
-  stopTimer()
-  chosenOption.value = opt
-  const correct = opt === currentQuestion.value.answer
-  lastCorrect.value = correct
-  if (correct) correctCount.value++
-  records.value.push({ index: currentIndex.value, chosen: opt, correct })
+  if (answered.value) return;
+  answered.value = true;
+  stopTimer();
+  chosenOption.value = opt;
+  const correct = opt === currentQuestion.value.answer;
+  lastCorrect.value = correct;
+  if (correct) correctCount.value++;
+  records.value.push({ index: currentIndex.value, chosen: opt, correct });
   if (!correct) {
-    shaking.value = true
-    setTimeout(() => (shaking.value = false), 400)
+    shaking.value = true;
+    setTimeout(() => (shaking.value = false), 400);
   }
-  setTimeout(() => {
-    if (currentIndex.value < total.value - 1) {
-      currentIndex.value++
-      loadQuestion()
-    } else {
-      // 测试完成,写入本地统计(含评分、错图与答对图明细)
-      const score = Math.round((correctCount.value / total.value) * 100)
-      const wrongPlates = wrongList.value.map((w) => ({
-        image: w.q.image,
-        chosen: w.chosen,
-        answer: w.q.answer,
-        no: w.index + 1,
-      }))
-      const correctPlates = records.value
-        .filter((r) => r.correct)
-        .map((r) => questions.value[r.index].image)
-      addRecord(drillMode.value ? 'wrongDrill' : mode.value, total.value, correctCount.value, score, wrongPlates, correctPlates)
-      statsData.value = loadStats()
-      stage.value = 'result'
-    }
-  }, correct ? 550 : 1400)
+  setTimeout(
+    () => {
+      if (currentIndex.value < total.value - 1) {
+        currentIndex.value++;
+        loadQuestion();
+      } else {
+        // 测试完成,写入本地统计(含评分、错图与答对图明细)
+        const score = Math.round((correctCount.value / total.value) * 100);
+        const wrongPlates = wrongList.value.map((w) => ({
+          image: w.q.image,
+          chosen: w.chosen,
+          answer: w.q.answer,
+          no: w.index + 1,
+        }));
+        const correctPlates = records.value
+          .filter((r) => r.correct)
+          .map((r) => questions.value[r.index].image);
+        addRecord(
+          drillMode.value ? "wrongDrill" : mode.value,
+          total.value,
+          correctCount.value,
+          score,
+          wrongPlates,
+          correctPlates,
+        );
+        statsData.value = loadStats();
+        stage.value = "result";
+      }
+    },
+    correct ? 550 : 1400,
+  );
 }
 
 function optionClass(opt) {
-  if (!answered.value) return ''
-  if (opt === currentQuestion.value.answer) return 'is-correct'
-  if (opt === chosenOption.value) return 'is-wrong'
-  return 'is-dim'
+  if (!answered.value) return "";
+  if (opt === currentQuestion.value.answer) return "is-correct";
+  if (opt === chosenOption.value) return "is-wrong";
+  return "is-dim";
 }
 
 const wrongList = computed(() =>
   records.value
     .filter((r) => !r.correct)
-    .map((r) => ({ ...r, q: questions.value[r.index] }))
-)
+    .map((r) => ({ ...r, q: questions.value[r.index] })),
+);
 
 const scoreLevel = computed(() => {
-  const p = correctCount.value / total.value
-  if (p >= 0.95) return 'lv-good'
-  if (p >= 0.8) return 'lv-mid'
-  return 'lv-bad'
-})
+  const p = correctCount.value / total.value;
+  if (p >= 0.95) return "lv-good";
+  if (p >= 0.8) return "lv-mid";
+  return "lv-bad";
+});
 
 const verdictText = computed(() => {
-  const p = correctCount.value / total.value
-  if (p === 1) return '太棒了!全部答对,辨色力正常。'
-  if (p >= 0.95) return '表现优秀,辨色力基本正常。'
-  if (p >= 0.8) return '少量图案辨认有误,建议休息后复测。'
-  if (p >= 0.6) return '部分图案辨认困难,可能存在色弱倾向,建议复查。'
-  return '较多图案无法正确辨认,建议尽快到专业机构检查色觉。'
-})
+  const p = correctCount.value / total.value;
+  if (p === 1) return "太棒了!全部答对,辨色力正常。";
+  if (p >= 0.95) return "表现优秀,辨色力基本正常。";
+  if (p >= 0.8) return "少量图案辨认有误,建议休息后复测。";
+  if (p >= 0.6) return "部分图案辨认困难,可能存在色弱倾向,建议复查。";
+  return "较多图案无法正确辨认,建议尽快到专业机构检查色觉。";
+});
 
 function restart() {
-  startTest()
+  startTest();
 }
 
 // ---------- 测试统计 ----------
-const statsData = ref(loadStats())
-const resetArmed = ref(false)
+const statsData = ref(loadStats());
+const resetArmed = ref(false);
 
 const statsSummary = computed(() => {
-  const rs = statsData.value.records
-  const totalQ = rs.reduce((s, r) => s + r.total, 0)
-  const correctQ = rs.reduce((s, r) => s + r.correct, 0)
+  const rs = statsData.value.records;
+  const totalQ = rs.reduce((s, r) => s + r.total, 0);
+  const correctQ = rs.reduce((s, r) => s + r.correct, 0);
   return {
     count: rs.length,
     totalQ,
     accuracy: totalQ ? Math.round((correctQ / totalQ) * 100) : 0,
-    best: rs.length ? Math.max(...rs.map((r) => Math.round((r.correct / r.total) * 100))) : 0,
-  }
-})
+    best: rs.length
+      ? Math.max(...rs.map((r) => Math.round((r.correct / r.total) * 100)))
+      : 0,
+  };
+});
 
-const statsRecords = computed(() => [...statsData.value.records].reverse().slice(0, 30))
+const statsRecords = computed(() =>
+  [...statsData.value.records].reverse().slice(0, 30),
+);
 
 // 最近记录分页:每页 10 条
-const HISTORY_PAGE_SIZE = 10
-const historyPage = ref(1)
-const historyTotalPages = computed(() => Math.max(1, Math.ceil(statsRecords.value.length / HISTORY_PAGE_SIZE)))
+const HISTORY_PAGE_SIZE = 10;
+const historyPage = ref(1);
+const historyTotalPages = computed(() =>
+  Math.max(1, Math.ceil(statsRecords.value.length / HISTORY_PAGE_SIZE)),
+);
 const pagedRecords = computed(() =>
-  statsRecords.value.slice((historyPage.value - 1) * HISTORY_PAGE_SIZE, historyPage.value * HISTORY_PAGE_SIZE)
-)
+  statsRecords.value.slice(
+    (historyPage.value - 1) * HISTORY_PAGE_SIZE,
+    historyPage.value * HISTORY_PAGE_SIZE,
+  ),
+);
 
 function setPage(p) {
-  historyPage.value = Math.min(Math.max(1, p), historyTotalPages.value)
+  historyPage.value = Math.min(Math.max(1, p), historyTotalPages.value);
 }
 
 function openStats() {
-  resetArmed.value = false
-  statsData.value = loadStats()
-  historyPage.value = 1
-  stage.value = 'stats'
+  resetArmed.value = false;
+  statsData.value = loadStats();
+  historyPage.value = 1;
+  stage.value = "stats";
 }
 
-const wrongBookBack = ref('stats')
+const wrongBookBack = ref("stats");
 function openWrongBook() {
-  resetArmed.value = false
-  statsData.value = loadStats()
-  wrongBookBack.value = 'start'
-  stage.value = 'wrongBook'
+  resetArmed.value = false;
+  statsData.value = loadStats();
+  wrongBookBack.value = "start";
+  stage.value = "wrongBook";
 }
 
 function confirmReset() {
   if (!resetArmed.value) {
-    resetArmed.value = true
-    setTimeout(() => (resetArmed.value = false), 3000)
-    return
+    resetArmed.value = true;
+    setTimeout(() => (resetArmed.value = false), 3000);
+    return;
   }
-  resetStats()
-  statsData.value = { records: [] }
-  resetArmed.value = false
+  resetStats();
+  statsData.value = { records: [] };
+  resetArmed.value = false;
 }
 
 function modeName(key) {
-  if (key === 'wrongDrill') return '错图针对测试'
-  return MODES.find((m) => m.key === key)?.name ?? key
+  if (key === "wrongDrill") return "错图针对测试";
+  return MODES.find((m) => m.key === key)?.name ?? key;
 }
 
 function formatTime(ts) {
-  return new Date(ts).toLocaleString('zh-CN', {
-    month: '2-digit',
-    day: '2-digit',
-    hour: '2-digit',
-    minute: '2-digit',
-  })
+  return new Date(ts).toLocaleString("zh-CN", {
+    month: "2-digit",
+    day: "2-digit",
+    hour: "2-digit",
+    minute: "2-digit",
+  });
 }
 
 // 记录评分(旧记录无 score 字段时按正确率折算),100 分上限
 function recordScore(r) {
-  return typeof r.score === 'number' ? r.score : Math.round((r.correct / r.total) * 100)
+  return typeof r.score === "number"
+    ? r.score
+    : Math.round((r.correct / r.total) * 100);
 }
 
 function scoreClass(r) {
-  const p = recordScore(r)
-  if (p >= 95) return 'good'
-  if (p >= 80) return 'mid'
-  return 'bad'
+  const p = recordScore(r);
+  if (p >= 95) return "good";
+  if (p >= 80) return "mid";
+  return "bad";
 }
 
 // ---------- 历史记录详情 / 常错图 ----------
-const activeRecord = ref(null)
-const activeWrong = computed(() => activeRecord.value?.wrong ?? [])
+const activeRecord = ref(null);
+const activeWrong = computed(() => activeRecord.value?.wrong ?? []);
 
 function openRecord(r) {
-  if (!r.wrong?.length) return // 无错图记录不可点
-  activeRecord.value = r
-  stage.value = 'recordDetail'
+  if (!r.wrong?.length) return; // 无错图记录不可点
+  activeRecord.value = r;
+  stage.value = "recordDetail";
 }
 
 // 跨全部历史记录聚合每张图的答错次数,按次数降序
 // 同一张图累计连对 2 次(期间没再答错)即移出常错图;之后再答错则重新计算
-const WRONG_CLEAR_STREAK = 2
+const WRONG_CLEAR_STREAK = 2;
 const wrongPlateStats = computed(() => {
-  const map = new Map() // image -> { image, count, lastTs, streak }
+  const map = new Map(); // image -> { image, count, lastTs, streak }
   // records 按时间正序回放,保证"连对"判断正确
   statsData.value.records.forEach((r) => {
-    ;(r.wrong ?? []).forEach((w) => {
-      const cur = map.get(w.image) ?? { image: w.image, count: 0, lastTs: 0, streak: 0 }
-      cur.count++
-      cur.lastTs = r.ts
-      cur.streak = 0
-      map.set(w.image, cur)
-    })
-    ;(r.correctPlates ?? []).forEach((img) => {
-      const cur = map.get(img)
-      if (cur) cur.streak++
-    })
-  })
+    (r.wrong ?? []).forEach((w) => {
+      const cur = map.get(w.image) ?? {
+        image: w.image,
+        count: 0,
+        lastTs: 0,
+        streak: 0,
+      };
+      cur.count++;
+      cur.lastTs = r.ts;
+      cur.streak = 0;
+      map.set(w.image, cur);
+    });
+    (r.correctPlates ?? []).forEach((img) => {
+      const cur = map.get(img);
+      if (cur) cur.streak++;
+    });
+  });
   return [...map.values()]
     .filter((w) => w.streak < WRONG_CLEAR_STREAK)
-    .sort((a, b) => b.count - a.count || b.lastTs - a.lastTs)
-})
+    .sort((a, b) => b.count - a.count || b.lastTs - a.lastTs);
+});
 
 function answerOf(image) {
-  return QUESTIONS.find((q) => q.image === image)?.answer ?? ''
+  return QUESTIONS.find((q) => q.image === image)?.answer ?? "";
 }
 
 // ---------- 首次使用协议 ----------
-const AGREEMENT_KEY = 'cv_agreement_v1'
-const showAgreement = ref(!localStorage.getItem(AGREEMENT_KEY))
+const AGREEMENT_KEY = "cv_agreement_v1";
+const showAgreement = ref(!localStorage.getItem(AGREEMENT_KEY));
 
 function acceptAgreement() {
-  localStorage.setItem(AGREEMENT_KEY, '1')
-  showAgreement.value = false
+  localStorage.setItem(AGREEMENT_KEY, "1");
+  showAgreement.value = false;
 }
 </script>
 
@@ -1153,9 +1665,12 @@ function acceptAgreement() {
 
 html,
 body {
-  font-family: 'PingFang SC', 'Microsoft YaHei', 'Helvetica Neue', sans-serif;
+  font-family: "PingFang SC", "Microsoft YaHei", "Helvetica Neue", sans-serif;
   color: #1f2d3d;
   -webkit-font-smoothing: antialiased;
+  /* 禁用安卓 WebView 字体自动放大,避免小字号文本被撑大导致布局溢出 */
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
 }
 
 .app {
@@ -1417,7 +1932,9 @@ body {
   display: inline-flex;
   align-items: center;
   gap: 8px;
-  transition: transform 0.15s ease, box-shadow 0.15s ease;
+  transition:
+    transform 0.15s ease,
+    box-shadow 0.15s ease;
 }
 
 .btn:active {
@@ -1461,9 +1978,9 @@ body {
 /* ---------- 答题页 ---------- */
 .quiz-screen {
   align-self: stretch;
-  width: auto;
-  max-width: none;
-  margin: 0;
+  width: 100%;
+  max-width: 740px; /* 与学习模式一致的最大宽度 */
+  margin: 0 auto;
   padding: 0; /* 机身图左右上下全部贴边 */
   display: flex;
   flex-direction: column;
@@ -1493,16 +2010,17 @@ html.android-app .quiz-top .back-link {
   flex: 1; /* 占满返回栏以下的剩余高度 */
   display: flex;
   flex-direction: column;
+  justify-content: space-between; /* 头部贴顶,机身贴底,富余空间留在中间 */
+  background: #cad6d4;
 }
 
 .tjj-head,
 .tjj-body {
   position: relative;
-  container-type: inline-size;
 }
 
 .tjj-head {
-  margin: auto 0; /* 头屏上下 auto 均分富余空间 → 垂直居中 */
+  margin: 0 2%; /* 头屏贴顶(临时试验) */
 }
 /* 机身是末尾元素,自然贴住 tjj 底边=屏幕最底部 */
 
@@ -1513,66 +2031,202 @@ html.android-app .quiz-top .back-link {
   -webkit-user-drag: none;
 }
 
-/* 头部屏幕区域（透明覆盖层,仅承载检查图,保留机身印刷的提示文字） */
-.tjj-screen {
-  position: absolute;
-  left: 21.5%;
-  top: 6.9%;
-  width: 57.5%;
-  height: 38.4%;
-  pointer-events: none;
-}
-
-/* "请在 __S 内进行选择" 黄色倒计时（覆盖在机身上预留的空位处） */
-.tjj-head-count {
-  position: absolute;
-  left: 30.1%;
-  top: 10.7%;
-  width: 8%;
-  height: 3.9%;
+/* ---------- 头部拼接结构：左右机翼照片 + 中间机身底色蓝框屏幕 + 底部摄像头区 ---------- */
+/* 素材 PNG 为透明背景:机身轮廓在机翼照片内,透明区露出页面背景(如参考图的墙面);
+   机身正面底色 #32434d 仅由中间列(tjj-head-mid)提供,贯穿屏幕区与底部摄像头区 */
+.tjj-head-machine {
   display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 13px;
-  font-weight: 800;
-  color: #ffc400;
-  font-variant-numeric: tabular-nums;
+  align-items: stretch;
 }
 
-/* 蓝条闹钟图标后的倒计时（白色,位于闹钟与"停止检测"按钮之间） */
+/* 机翼拉伸至整个头部高度(含底部摄像头区),与 foot 底边齐平 */
+.tjj-head-wing {
+  display: block;
+  align-self: stretch;
+  height: auto;
+  object-fit: fill;
+  user-select: none;
+  -webkit-user-drag: none;
+}
+
+/* 机翼等宽,中间列居中(新素材左右翼尺寸接近,等宽最对称) */
+.wing-left {
+  width: 12%;
+}
+
+.wing-right {
+  width: 12%;
+}
+
+/* 中间机身底色区域(#32434d):上方蓝框屏幕面板,下方摄像头区,总高由内容撑开 */
+.tjj-head-mid {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  padding: 4% 1% 6%;
+  /* 上层:左右两侧保持纯色#32434d(与机翼照片机身色无缝),中段渐隐露出下层光影;
+     下层:纵向受光渐变(顶部稍亮,底部渐暗) —— 两边不渐变,仅中间渐变,过渡自然 */
+  background:
+    linear-gradient(
+      90deg,
+      #32434d 0%,
+      #32434d 15%,
+      rgba(50, 67, 77, 0) 40%,
+      rgba(50, 67, 77, 0) 60%,
+      #32434d 85%,
+      #32434d 100%
+    ),
+    linear-gradient(180deg, #32434d 0%, #3d515e 15%, #32434d 48%, #2b3a44 100%);
+  border-bottom-left-radius: 5%;
+  border-bottom-right-radius: 5%;
+  margin: auto -1px;
+}
+
+/* 屏幕面板最外层:仅左侧和上侧 2px 黑色边框 */
+.tjj-head-panel-frame {
+  width: 100%;
+  border-left: 3px solid #000;
+  border-top: 2px solid #000;
+}
+
+/* 白底蓝框屏幕面板(参照真机:蓝色边框直角,白色屏幕底圆角) */
+.tjj-head-panel {
+  width: 100%;
+  background: #007ce2;
+  border-radius: 0;
+  border-top: 5px solid #112c57;
+  padding: 8px;
+  display: flex;
+}
+
+/* 面板内的屏幕区(浅蓝灰底,圆角;参照真机屏幕非纯白) */
+.tjj-head-panel-in {
+  width: 100%;
+  background: #c3dde4;
+  border-radius: 8px;
+  padding: 3.5% 2% 4%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+/* 题目文字行("请在 __S 内进行选择,否则视为检测失败") */
+.tjj-head-question {
+  margin: 0 0 2.5%;
+  font-size: 12px;
+  font-weight: 700;
+  color: #42474d;
+  text-align: center;
+  line-height: 1.35;
+  white-space: nowrap;
+}
+
+/* 倒计时数字(黄色,与真机一致);固定宽高,数字位数变化时不引起行内布局晃动 */
+.tjj-head-sec {
+  display: inline-block;
+  min-width: 2.2em;
+  height: 1.35em;
+  line-height: 1.35;
+  text-align: center;
+  vertical-align: baseline;
+  color: #ffc400;
+  font-weight: 800;
+  font-variant-numeric: tabular-nums;
+  padding: 0 0.25em;
+}
+
+/* 关闭倒计时模式时显示的填空下划线 */
+.tjj-head-blank {
+  display: inline-block;
+  width: 2em;
+  margin: 0 0.15em;
+  border-bottom: 2px solid #9aa1a9;
+}
+
+/* 底部摄像头区照片(居中,底边与机翼下端齐平) */
+.tjj-head-foot {
+  display: block;
+  width: 30%;
+  margin: 3.5% 0 0;
+  user-select: none;
+  -webkit-user-drag: none;
+}
+
+/* 蓝条秒表图标右侧的倒计时（白色,紧贴图标,字号随机身图宽度自适应;
+   图标位于图片宽度 61.2%~63.9%,倒计时盒子左缘 63%,文字中心约在图标右缘 +3%） */
 .tjj-body-count {
   position: absolute;
-  left: 71.5%;
-  top: 5.2%;
-  width: 9%;
-  height: 6%;
+  left: 63%;
+  top: 19.7%;
+  width: 8%;
+  height: 5%;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 12px;
+  font-size: 11px;
   font-weight: 800;
-  color: #fff;
+  color: rgba(255, 255, 255, 0.8);
   font-variant-numeric: tabular-nums;
 }
 
-/* 倒计时 ≤5s 时闪烁提醒 */
-.tjj-head-count.urgent,
-.tjj-body-count.urgent {
+/* 倒计时右侧的退出测试按钮(与倒计时文字同尺度的小胶囊,垂直对齐倒计时行;
+   以蓝条右端为锚点向左排布——蓝条在图片宽度约 86.5% 处结束,
+   按钮右边缘固定在 85.5%,文字再宽也只向左生长,不会压出条带/机身) */
+.tjj-exit {
+  position: absolute;
+  right: 14.5%;
+  top: 22.2%;
+  transform: translateY(-50%);
+  padding: 2px 8px;
+  font-size: 11px;
+  font-weight: 700;
+  line-height: 1;
+  color: rgba(255, 255, 255, 0.85);
+  background: rgba(255, 255, 255, 0.12);
+  border: 1px solid rgba(255, 255, 255, 0.55);
+  border-radius: 999px;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+/* 窄屏:蓝条可用宽度变窄,压缩按钮字号与内边距,避免向左生长时碰到倒计时数字 */
+@media (max-width: 420px) {
+  .tjj-exit {
+    padding: 2px 6px;
+    font-size: 10px;
+  }
+}
+
+.tjj-exit:active {
+  background: rgba(255, 255, 255, 0.3);
+}
+
+/* 头屏倒计时 ≤5s 时闪烁提醒（机身倒计时不闪烁） */
+.tjj-head-sec.urgent {
   animation: tjj-blink 1s infinite;
 }
 
 @keyframes tjj-blink {
-  0%, 100% { opacity: 1; }
-  50% { opacity: 0.35; }
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.35;
+  }
 }
 
-/* 机身上印刷的"停止检测"按钮热区（点击退出测试） */
+/* 蓝条秒表图标热区（点击退出测试,新机身图仅此处可作锚点;
+   包住图标 61.2%~63.9% 并各留约 1% 余量） */
 .tjj-stop {
   position: absolute;
-  left: 80%;
-  top: 4.5%;
-  width: 15.5%;
-  height: 7.5%;
+  left: 60.2%;
+  top: 18.4%;
+  width: 4.7%;
+  height: 8%;
   background: transparent;
   border: 0;
   padding: 0;
@@ -1584,18 +2238,18 @@ html.android-app .quiz-top .back-link {
   background: rgba(255, 255, 255, 0.3);
 }
 
-/* 六个答案选项(仅蓝色文字,新机身图已无印刷卡片,底色边框圆角全部由 CSS 呈现) */
+/* 六个答案选项(仅文字,机身图屏幕照片的白色区域,白底蓝边框卡片全部由 CSS 呈现,比例参照真机照片) */
 .tjj-options {
   position: absolute;
-  left: 21%;
-  top: 39%;
-  width: 58%;
-  height: 40%;
+  left: 22%;
+  top: 47.9%;
+  width: 56%;
+  height: 47.5%;
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   grid-template-rows: repeat(2, 1fr);
-  column-gap: 6.5%;
-  row-gap: 10%;
+  column-gap: 6.1%;
+  row-gap: 17.9%;
 }
 
 .tjj-option {
@@ -1604,7 +2258,7 @@ html.android-app .quiz-top .back-link {
   justify-content: center;
   padding: 2%;
   text-align: center;
-  background: #cfd8e3; /* 卡片底色(与机身印刷卡片内里一致,待抹掉图中印刷边框后由 CSS 整体呈现) */
+  background: #cfd8e3; /* 卡片底色保持不变 */
   border: 1.5px solid #5b7ce6; /* 蓝色卡片边框 */
   border-radius: 8px;
   color: #2b52e0;
@@ -1644,8 +2298,14 @@ html.android-app .quiz-top .back-link {
 }
 
 @keyframes slide-in {
-  from { opacity: 0; transform: translateY(10px); }
-  to { opacity: 1; transform: translateY(0); }
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 .plate-wrap {
@@ -1708,36 +2368,31 @@ html.android-app .quiz-top .back-link {
   user-select: none;
 }
 
-/* 体检机头部屏幕内的检查图:白色底覆盖机身印刷的示例图,
-   容器Queries(cqw/cqh)约束图片不超出屏幕区域,plate-box 紧贴图片保证遮罩对齐 */
+/* 头部屏幕面板内的检查图:流式布局,宽度撑满面板,plate-box 紧贴图片保证遮罩对齐 */
 .tjj-plate {
-  position: absolute;
-  left: 15.9%;
-  top: 20.2%;
-  width: 73.5%;
-  height: 74%;
+  position: relative;
+  width: 96%;
   max-width: none;
   min-height: 0;
   display: flex;
   align-items: center;
   justify-content: center;
-  background: #fff;
+  background: transparent;
   animation: none;
-  container-type: size;
 }
 
 .tjj-plate .plate-box {
   position: relative;
-  display: flex;
-  max-width: 100cqw;
-  max-height: 100cqh;
+  width: 100%;
+  /* 题图宽高比不一(1.28~1.36)且切题时节点重建存在解码空档,
+     固定图框宽高比预留空间,消除切题时面板先塌陷再弹回的晃动 */
+  aspect-ratio: 1.3;
 }
 
 .tjj-plate .plate-img {
-  width: auto;
-  height: auto;
-  max-width: 100cqw;
-  max-height: 100cqh;
+  width: 100%;
+  height: 100%;
+  object-fit: fill; /* 各图比例差异 ≤6%,拉伸不可感知 */
   border: 0;
   box-shadow: none;
 }
@@ -1793,6 +2448,67 @@ html.android-app .quiz-top .back-link {
   background: rgba(255, 255, 255, 0.28);
 }
 
+/* zoom 层顶部学习切换 tab:原图/技巧图/解析图 */
+.zoom-tabs {
+  position: absolute;
+  top: 14px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 2;
+  display: flex;
+  gap: 4px;
+  padding: 4px;
+  background: rgba(15, 23, 42, 0.6);
+  border-radius: 999px;
+  backdrop-filter: blur(6px);
+  max-width: 92%;
+}
+
+.zoom-tab {
+  border: 0;
+  padding: 6px 14px;
+  font-size: 13px;
+  font-weight: 600;
+  color: rgba(255, 255, 255, 0.75);
+  background: transparent;
+  border-radius: 999px;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.zoom-tab.active {
+  color: #fff;
+  background: #2f6fed;
+}
+
+/* zoom 层底部答案/记忆技巧提示(不可交互,点击穿透到遮罩关闭) */
+.zoom-tip {
+  position: absolute;
+  left: 50%;
+  bottom: 18px;
+  transform: translateX(-50%);
+  z-index: 2;
+  max-width: min(86%, 560px);
+  padding: 8px 14px;
+  background: rgba(15, 23, 42, 0.6);
+  border-radius: 12px;
+  color: #fff;
+  backdrop-filter: blur(6px);
+  pointer-events: none;
+  font-size: 13px;
+  line-height: 1.6;
+  text-align: center;
+}
+
+.zoom-tip .zoom-tip-answer {
+  font-weight: 700;
+  color: #7dd3fc;
+}
+
+.zoom-tip p {
+  margin: 2px 0 0;
+}
+
 .zoom-fade-enter-active,
 .zoom-fade-leave-active {
   transition: opacity 0.18s ease;
@@ -1815,21 +2531,41 @@ html.android-app .quiz-top .back-link {
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
 }
 
-.plate-badge.ok { background: #22a15f; }
-.plate-badge.no { background: #e0533d; }
+.plate-badge.ok {
+  background: #22a15f;
+}
+.plate-badge.no {
+  background: #e0533d;
+}
 
-.fade-enter-active { transition: opacity 0.2s ease, transform 0.2s ease; }
-.fade-enter-from { opacity: 0; transform: translateY(-6px); }
+.fade-enter-active {
+  transition:
+    opacity 0.2s ease,
+    transform 0.2s ease;
+}
+.fade-enter-from {
+  opacity: 0;
+  transform: translateY(-6px);
+}
 
 .shake {
   animation: shake 0.4s;
 }
 
 @keyframes shake {
-  0%, 100% { transform: translateX(0); }
-  25% { transform: translateX(-6px); }
-  50% { transform: translateX(6px); }
-  75% { transform: translateX(-4px); }
+  0%,
+  100% {
+    transform: translateX(0);
+  }
+  25% {
+    transform: translateX(-6px);
+  }
+  50% {
+    transform: translateX(6px);
+  }
+  75% {
+    transform: translateX(-4px);
+  }
 }
 
 /* ---------- 结果页 ---------- */
@@ -1855,9 +2591,15 @@ html.android-app .quiz-top .back-link {
   box-shadow: 0 12px 28px rgba(0, 0, 0, 0.18);
 }
 
-.score-circle.lv-good { background: linear-gradient(135deg, #22a15f, #5fce7f); }
-.score-circle.lv-mid { background: linear-gradient(135deg, #f0a23c, #f7c46c); }
-.score-circle.lv-bad { background: linear-gradient(135deg, #e0533d, #ef7a66); }
+.score-circle.lv-good {
+  background: linear-gradient(135deg, #22a15f, #5fce7f);
+}
+.score-circle.lv-mid {
+  background: linear-gradient(135deg, #f0a23c, #f7c46c);
+}
+.score-circle.lv-bad {
+  background: linear-gradient(135deg, #e0533d, #ef7a66);
+}
 
 .score-inner {
   display: flex;
@@ -1948,8 +2690,12 @@ html.android-app .quiz-top .back-link {
   font-weight: 700;
 }
 
-em.bad { color: #c23b27; }
-em.good { color: #177a46; }
+em.bad {
+  color: #c23b27;
+}
+em.good {
+  color: #177a46;
+}
 
 .result-actions {
   margin-top: 16px;
@@ -2640,9 +3386,15 @@ html.android-app .back-link {
   font-weight: 800;
 }
 
-.h-score.good { color: #177a46; }
-.h-score.mid { color: #b7791f; }
-.h-score.bad { color: #c23b27; }
+.h-score.good {
+  color: #177a46;
+}
+.h-score.mid {
+  color: #b7791f;
+}
+.h-score.bad {
+  color: #c23b27;
+}
 
 /* 历史记录:可点击查看答错的图 */
 .history-item.clickable {
@@ -2775,9 +3527,15 @@ html.android-app .back-link {
   margin-left: 2px;
 }
 
-.rec-score.good { color: #177a46; }
-.rec-score.mid { color: #b7791f; }
-.rec-score.bad { color: #c23b27; }
+.rec-score.good {
+  color: #177a46;
+}
+.rec-score.mid {
+  color: #b7791f;
+}
+.rec-score.bad {
+  color: #c23b27;
+}
 
 .rec-meta {
   display: flex;
@@ -2933,8 +3691,14 @@ html.android-app .back-link {
 }
 
 @keyframes pop-in {
-  from { opacity: 0; transform: scale(0.92); }
-  to { opacity: 1; transform: scale(1); }
+  from {
+    opacity: 0;
+    transform: scale(0.92);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
 }
 
 .agreement-title {
