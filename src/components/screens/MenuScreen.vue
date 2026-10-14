@@ -29,7 +29,12 @@
             @click="pickEdition(e.id)"
           >
             <span>{{ e.source }}{{ e.edition }}</span>
-            <svg v-if="edition.id === e.id" viewBox="0 0 20 20" width="14" height="14">
+            <svg
+              v-if="edition.id === e.id"
+              viewBox="0 0 20 20"
+              width="14"
+              height="14"
+            >
               <path
                 d="M3 10.5l4.5 4.5L17 5.5"
                 fill="none"
@@ -254,7 +259,7 @@ onBeforeUnmount(() => document.removeEventListener("click", onDocClick));
   gap: 12px;
   width: 100%;
   max-width: 620px;
-  margin-top: 10px;
+  margin-top: 13px;
   padding: 9px 16px;
   border-radius: 14px;
   border: 1px solid rgba(255, 255, 255, 0.7);
