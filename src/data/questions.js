@@ -1,57 +1,5 @@
-// 色盲检查图第6版 - 48 道测试题
-// 答案已按文档逐题核对（图 → 答案映射经图片内容抽查验证）
-// 2026-09-20 全量更换高清图版后逐张复核：图1 新图方向读 606，与旧图（旋转 180° 呈 909）方向相反，答案仍沿用 909
-
-export const QUESTIONS = [
-  { image: 'image1.jpeg',  answer: '909',  type: 'number' },
-  { image: 'image2.jpeg',  answer: '29',   type: 'number' },
-  { image: 'image3.jpeg',  answer: '69',   type: 'number' },
-  { image: 'image4.jpeg',  answer: '88',   type: 'number' },
-  { image: 'image5.jpeg',  answer: '60',   type: 'number' },
-  { image: 'image6.jpeg',  answer: '162',  type: 'number' },
-  { image: 'image7.jpeg',  answer: '916',  type: 'number' },
-  { image: 'image8.jpeg',  answer: '56',   type: 'number' },
-  { image: 'image9.jpeg',  answer: '628',  type: 'number' },
-  { image: 'image10.jpeg', answer: '602',  type: 'number' },
-  { image: 'image11.jpeg', answer: '268',  type: 'number' },
-  { image: 'image12.jpeg', answer: '985',  type: 'number' },
-  { image: 'image13.jpeg', answer: '6289', type: 'number' },
-  { image: 'image14.jpeg', answer: '6098', type: 'number' },
-  { image: 'image15.jpeg', answer: '2901', type: 'number' },
-  { image: 'image16.jpeg', answer: '8609', type: 'number' },
-  { image: 'image17.jpeg', answer: '熊猫', type: 'animal' },
-  { image: 'image18.jpeg', answer: '三角形、圆形', type: 'shape' },
-  { image: 'image19.jpeg', answer: '大圆', type: 'shape' },
-  { image: 'image20.jpeg', answer: '牛',   type: 'animal' },
-  { image: 'image21.jpeg', answer: '蜻蜓', type: 'animal' },
-  { image: 'image22.jpeg', answer: '鹅',   type: 'animal' },
-  { image: 'image23.jpeg', answer: '金鱼', type: 'animal' },
-  { image: 'image24.jpeg', answer: '燕子', type: 'animal' },
-  { image: 'image25.jpeg', answer: '羊',   type: 'animal' },
-  { image: 'image26.jpeg', answer: '兔子', type: 'animal' },
-  { image: 'image27.jpeg', answer: '蝴蝶', type: 'animal' },
-  { image: 'image28.jpeg', answer: '圆形、剪刀', type: 'shape' },
-  { image: 'image29.jpeg', answer: '899、022', type: 'rows' },
-  { image: 'image30.jpeg', answer: '621、989', type: 'rows' },
-  { image: 'image31.jpeg', answer: '红色', type: 'color' },
-  { image: 'image32.jpeg', answer: '黄色', type: 'color' },
-  { image: 'image33.jpeg', answer: '蓝色', type: 'color' },
-  { image: 'image34.jpeg', answer: '绿色', type: 'color' },
-  { image: 'image35.jpeg', answer: '紫色', type: 'color' },
-  { image: 'image36.jpeg', answer: '2个五角星', type: 'shape' },
-  { image: 'image37.jpeg', answer: '522',  type: 'number' },
-  { image: 'image38.jpeg', answer: '825',  type: 'number' },
-  { image: 'image39.jpeg', answer: '5 和 8', type: 'number' },
-  { image: 'image40.jpeg', answer: '0 和 9', type: 'number' },
-  { image: 'image41.jpeg', answer: '三角形、正方形', type: 'shape' },
-  { image: 'image42.jpeg', answer: '86',   type: 'number' },
-  { image: 'image43.jpeg', answer: '茶壶', type: 'object' },
-  { image: 'image44.jpeg', answer: '21',   type: 'number' },
-  { image: 'image45.jpeg', answer: '52',   type: 'number' },
-  { image: 'image46.jpeg', answer: '69',   type: 'number' },
-  { image: 'image47.jpeg', answer: '2个圆', type: 'shape' },
-  { image: 'image48.jpeg', answer: '正方形、三角形', type: 'shape' },
-]
+// 出题引擎(版本无关):干扰项池 + 选项生成 + 洗牌
+// 各版本题库在 data/editions/ 下作为数据包挂载,本文件只保留共用逻辑
 
 // 各类型干扰项池
 const POOLS = {

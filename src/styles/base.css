@@ -1,0 +1,323 @@
+/* 全局共享基础样式。
+   由 main.js 在 import App 之前最先导入:组件样式后注入,
+   同特异性下组件可正常覆盖此处共享类(与原 App.vue 单文件时代方向一致)。 */
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html,
+body {
+  font-family: "PingFang SC", "Microsoft YaHei", "Helvetica Neue", sans-serif;
+  color: #1f2d3d;
+  -webkit-font-smoothing: antialiased;
+  /* 禁用安卓 WebView 字体自动放大,避免小字号文本被撑大导致布局溢出 */
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+}
+
+.app {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  background:
+    radial-gradient(1200px 500px at 80% -10%, #dbeafe 0%, transparent 55%),
+    radial-gradient(900px 420px at -10% 30%, #e0f2f1 0%, transparent 50%),
+    linear-gradient(180deg, #f6f9fd 0%, #eef2f7 100%);
+}
+
+.screen {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  /*padding: 36px 16px 56px;*/
+  padding: 25px 16px;
+}
+
+.card {
+  background: rgba(255, 255, 255, 0.92);
+  backdrop-filter: blur(8px);
+  border: 1px solid rgba(255, 255, 255, 0.7);
+  border-radius: 22px;
+  box-shadow: 0 18px 50px rgba(43, 76, 126, 0.12);
+  padding: 30px 25px;
+  width: 100%;
+  text-align: center;
+}
+
+/* ---------- 开始页 ---------- */
+.brand {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 14px;
+}
+
+/* 品牌 logo:项目自带图标(黑色圆角方块) */
+.brand-logo {
+  width: 64px;
+  height: 64px;
+  display: block;
+  border-radius: 16px;
+  box-shadow: 0 8px 20px rgba(15, 23, 42, 0.28);
+  user-select: none;
+}
+
+.title {
+  font-size: 34px;
+  letter-spacing: 4px;
+  font-weight: 800;
+  background: linear-gradient(90deg, #1d4ed8, #0d9488);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.subtitle {
+  color: #7a8a99;
+  font-size: 14px;
+  margin: 8px 0 26px;
+  letter-spacing: 1px;
+}
+
+.btn {
+  border: none;
+  border-radius: 12px;
+  font-size: 16px;
+  font-weight: 600;
+  padding: 13px 40px;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  transition:
+    transform 0.15s ease,
+    box-shadow 0.15s ease;
+}
+
+.btn:active {
+  transform: scale(0.97);
+}
+
+.btn-lg {
+  font-size: 17px;
+  padding: 14px 52px;
+}
+
+.btn-primary {
+  background: linear-gradient(135deg, #2f6fed 0%, #4f8cf7 100%);
+  color: #fff;
+  box-shadow: 0 8px 20px rgba(47, 111, 237, 0.35);
+}
+
+.btn-primary:hover {
+  box-shadow: 0 10px 26px rgba(47, 111, 237, 0.45);
+  transform: translateY(-1px);
+}
+
+.btn-ghost {
+  background: #eef2f7;
+  color: #45556b;
+}
+
+.disclaimer {
+  margin-top: 20px;
+  font-size: 12px;
+  color: #9aa8b8;
+}
+
+/* 呼吸光晕 + 旋转环 */
+.quiz-boot {
+  position: relative;
+  width: 46px;
+  height: 46px;
+}
+
+.quiz-boot-glow {
+  position: absolute;
+  inset: -16px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(94, 150, 255, 0.28) 0%, transparent 70%);
+  animation: quiz-breath 1.6s ease-in-out infinite;
+}
+
+.quiz-boot-ring {
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  border: 3px solid rgba(47, 111, 237, 0.16);
+  border-top-color: #2f6fed;
+  animation: quiz-spin 1s linear infinite;
+}
+
+@keyframes quiz-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes quiz-breath {
+  0%,
+  100% {
+    opacity: 0.4;
+    transform: scale(0.92);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.08);
+  }
+}
+
+.plate-wrap {
+  position: relative;
+  display: inline-block;
+  max-width: 500px;
+  width: 100%;
+  min-height: 200px;
+  border-radius: 5px;
+  /* 图片加载中显示流光占位,加载完成后被图片覆盖 */
+  background: linear-gradient(100deg, #edf1f6 40%, #f8fafc 50%, #edf1f6 60%);
+  background-size: 200% 100%;
+  animation: plate-shimmer 1.2s linear infinite;
+  overflow: hidden;
+}
+
+@keyframes plate-shimmer {
+  to {
+    background-position: -200% 0;
+  }
+}
+
+.plate-img {
+  width: 100%;
+  /*border-radius: 14px;*/
+  border: 1px solid #e6ebf1;
+  box-shadow: 0 8px 24px rgba(43, 76, 126, 0.12);
+  user-select: none;
+  display: block;
+}
+
+.plate-img.zoomable {
+  cursor: zoom-in;
+}
+
+.fade-enter-active {
+  transition:
+    opacity 0.2s ease,
+    transform 0.2s ease;
+}
+.fade-enter-from {
+  opacity: 0;
+  transform: translateY(-6px);
+}
+
+/* ---------- 结果页(共享部分:错题列表/评语,recordDetail 复用) ---------- */
+.all-right {
+  color: #177a46;
+  font-weight: 700;
+  margin: 10px 0 26px;
+}
+
+.wrong-section {
+  text-align: left;
+  margin-bottom: 28px;
+}
+
+.wrong-section h3 {
+  font-size: 16px;
+  margin-bottom: 12px;
+  color: #34455a;
+}
+
+.wrong-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  max-height: 380px;
+  overflow-y: auto;
+  padding-right: 4px;
+}
+
+.wrong-item {
+  display: flex;
+  gap: 14px;
+  align-items: center;
+  background: #f7f9fc;
+  border: 1px solid #e8edf4;
+  border-radius: 12px;
+  padding: 10px 14px;
+}
+
+.wrong-item img {
+  width: 96px;
+  height: auto;
+  border-radius: 8px;
+  flex-shrink: 0;
+}
+
+.wrong-info {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  font-size: 14px;
+  color: #45556b;
+}
+
+.wrong-no {
+  font-weight: 700;
+  color: #2b3a4d;
+}
+
+.wrong-info em {
+  font-style: normal;
+  font-weight: 700;
+}
+
+em.bad {
+  color: #c23b27;
+}
+em.good {
+  color: #177a46;
+}
+
+/* 返回按钮容器:与内容区同宽居中,胶囊靠左 */
+.back-bar {
+  width: 100%;
+  max-width: 660px;
+  margin: 0 auto 25px;
+  display: flex;
+}
+
+.back-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  margin-top: 0px; /* web 顶部 0px，安卓 App 内 15px（见下方覆盖） */
+  border: 1px solid rgba(255, 255, 255, 0.8);
+  background: rgba(255, 255, 255, 0.85);
+  color: #45556b;
+  font-size: 14px;
+  font-weight: 700;
+  padding: 8px 18px 8px 13px;
+  border-radius: 999px;
+  box-shadow: 0 4px 14px rgba(43, 76, 126, 0.08);
+  cursor: pointer;
+  transition: all 0.18s ease;
+}
+
+.back-link:hover {
+  color: #2f6fed;
+  border-color: #b6ccf5;
+  transform: translateX(-3px);
+  box-shadow: 0 8px 20px rgba(43, 76, 126, 0.14);
+}
+
+.back-link svg {
+  flex-shrink: 0;
+}
+
+html.android-app .back-link {
+  margin-top: 30px;
+}
