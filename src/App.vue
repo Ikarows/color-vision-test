@@ -681,7 +681,22 @@
     </div>
 
     <!-- ===================== 答题界面（仿真体检机·左右全屏） ===================== -->
-    <div v-else-if="stage === 'quiz'" class="screen quiz-screen">
+    <div
+      v-else-if="stage === 'quiz'"
+      class="screen quiz-screen"
+      ref="quizScreenEl"
+      :style="{ '--quiz-s': quizScale }"
+    >
+      <!-- 素材加载遮罩:体检机背景图/检查图就绪前覆盖,避免看到图片逐步加载 -->
+      <transition name="fade">
+        <div v-if="quizLoading" class="quiz-loading" aria-hidden="true">
+          <div class="quiz-boot">
+            <div class="quiz-boot-glow"></div>
+            <div class="quiz-boot-ring"></div>
+          </div>
+          <p class="quiz-loading-text">设备自检中…</p>
+        </div>
+      </transition>
       <!-- 返回按钮:吸顶悬浮在体检机上方,滚动时始终可见 -->
       <!-- <div class="quiz-top">
         <button class="back-link" @click="stage = drillMode ? 'wrongBook' : 'start'">
@@ -689,9 +704,9 @@
           返回
         </button>
       </div> -->
-      <div class="tjj">
+      <div class="tjj" ref="tjjEl">
         <!-- 体检机头部：左右机翼 + 中间机身底色蓝框屏幕(题目文字+检查图) + 底部摄像头区,样式参照真机照片 -->
-        <div class="tjj-head">
+        <div class="tjj-head" :style="quizScaleStyle">
           <div class="tjj-head-machine">
             <img
               class="tjj-head-wing wing-left"
@@ -725,6 +740,8 @@
                           :alt="'色盲检查图 第' + (currentIndex + 1) + '题'"
                           class="plate-img"
                           draggable="false"
+                          @load="plateReady = true"
+                          @error="plateReady = true"
                         />
                         <div class="answer-mask" aria-hidden="true">
                           <img :src="plateSrc" alt="" draggable="false" />
@@ -764,7 +781,7 @@
         </div>
 
         <!-- 体检机机身：屏幕照片，蓝条秒表图标后为倒计时，六个蓝色选项为答案（仅文字,卡片由 CSS 呈现） -->
-        <div class="tjj-body">
+        <div class="tjj-body" :style="quizScaleStyle">
           <img class="tjj-img" :src="tjjBodyImg" alt="" draggable="false" />
           <div
             v-if="timerEnabled"
@@ -884,8 +901,16 @@
         @pointercancel="onZoomPointerUp"
         @wheel.prevent="onZoomWheel"
       >
-        <!-- 学习关联切换:错题图放大时可切原图/技巧图/解析图 -->
-        <div v-if="zoomStudyItem" class="zoom-tabs" @click.stop>
+        <!-- 学习关联切换:错题图放大时可切原图/技巧图/解析图
+             pointer 事件全部截断,tab 点击不进入底层缩放手势/关闭逻辑 -->
+        <div
+          v-if="zoomStudyItem"
+          class="zoom-tabs"
+          @click.stop
+          @pointerdown.stop
+          @pointerup.stop
+          @pointercancel.stop
+        >
           <button
             v-for="t in zoomTabs"
             :key="t.key"
@@ -900,12 +925,24 @@
           ref="zoomImgEl"
           :src="studyZoomSrc"
           class="zoom-img"
+          :class="{ 'is-loading': zoomImgLoading }"
           :style="{
             transform: `translate(${zoomTx}px, ${zoomTy}px) scale(${zoomScale})`,
           }"
           alt="放大查看"
           draggable="false"
+          @load="onZoomImgDone"
+          @error="onZoomImgDone"
         />
+        <!-- 图片加载中:居中转圈(慢网络下切图时旧图淡出,避免看起来没反应) -->
+        <transition name="fade">
+          <div v-if="zoomImgLoading" class="zoom-loading" aria-hidden="true">
+            <div class="quiz-boot">
+              <div class="quiz-boot-glow"></div>
+              <div class="quiz-boot-ring"></div>
+            </div>
+          </div>
+        </transition>
         <!-- 关联学习条目的答案与记忆技巧 -->
         <div v-if="zoomStudyItem" class="zoom-tip">
           <span class="zoom-tip-answer">答案:{{ zoomStudyItem.answer }}</span>
@@ -924,7 +961,14 @@
 </template>
 
 <script setup>
-import { ref, computed, watch, nextTick } from "vue";
+import {
+  ref,
+  computed,
+  watch,
+  nextTick,
+  onMounted,
+  onUnmounted,
+} from "vue";
 import { QUESTIONS, buildOptions, shuffle } from "./data/questions.js";
 import { STUDY_CATEGORIES, STUDY_ITEMS } from "./data/study.js";
 import { loadStats, addRecord, resetStats } from "./data/stats.js";
@@ -1003,6 +1047,92 @@ function quitQuiz() {
   stage.value = "start";
 }
 
+// ---------- 答题页素材预加载（体检机背景图 + 检查图） ----------
+// 进入应用即后台静默预载体检机图片;未就绪时答题页显示 loading 遮罩兜底
+const machineReady = ref(false);
+const plateReady = ref(false);
+const quizLoading = computed(() => !machineReady.value || !plateReady.value);
+
+function preloadImage(src) {
+  return new Promise((resolve) => {
+    const img = new Image();
+    img.onload = img.onerror = () => resolve();
+    img.src = src;
+  });
+}
+
+onMounted(async () => {
+  await Promise.all([
+    preloadImage(tjjHeadLeftImg),
+    preloadImage(tjjHeadRightImg),
+    preloadImage(tjjHeadBottomImg),
+    preloadImage(tjjBodyImg),
+  ]);
+  machineReady.value = true;
+});
+
+// ---------- 答题页等比缩放:小屏/矮屏时整体缩小,保证一屏完整显示 ----------
+const quizScreenEl = ref(null);
+const tjjEl = ref(null);
+const quizScale = ref(1);
+
+function fitQuizScale() {
+  const screenEl = quizScreenEl.value;
+  const tjj = tjjEl.value;
+  if (!screenEl || !tjj) return;
+  const head = tjj.querySelector(".tjj-head");
+  const body = tjj.querySelector(".tjj-body");
+  if (!head || !body) return;
+  const GAP = 10; // 头屏与机身之间的最小间隙
+  const needH = head.offsetHeight + body.offsetHeight + GAP;
+  if (needH <= 0) return;
+  // 取容器与真实视口的较小值,避免容器被内容撑高时比例恒为 1
+  const availH = Math.min(screenEl.clientHeight, window.innerHeight);
+  quizScale.value = Math.min(1, availH / needH);
+}
+
+// 头屏贴顶向顶边收缩,机身贴底向底边收缩,整体同一比例
+const quizScaleStyle = computed(() => ({
+  transform: `scale(${quizScale.value})`,
+}));
+
+// 进页、体检机图/检查图就绪、窗口尺寸变化时重新计算
+watch([stage, machineReady, plateReady], () => {
+  if (stage.value !== "quiz") return;
+  nextTick(() => {
+    requestAnimationFrame(() => {
+      fitQuizScale();
+      observeQuizParts(); // 图片解码完成会改变头/身布局高度,由观察器兜底重算
+    });
+  });
+});
+
+// 观察头/身布局尺寸变化(大图加载完成、内容变化),自动重新适配
+let quizRO = null;
+function observeQuizParts() {
+  const tjj = tjjEl.value;
+  if (!tjj || !("ResizeObserver" in window)) return;
+  if (!quizRO) {
+    quizRO = new ResizeObserver(() => {
+      if (stage.value === "quiz") fitQuizScale();
+    });
+  }
+  quizRO.disconnect();
+  const head = tjj.querySelector(".tjj-head");
+  const body = tjj.querySelector(".tjj-body");
+  if (head) quizRO.observe(head);
+  if (body) quizRO.observe(body);
+}
+
+onMounted(() => {
+  window.addEventListener("resize", fitQuizScale);
+});
+
+onUnmounted(() => {
+  window.removeEventListener("resize", fitQuizScale);
+  if (quizRO) quizRO.disconnect();
+});
+
 function toggleTimer() {
   timerEnabled.value = !timerEnabled.value;
   localStorage.setItem("cv_timer", timerEnabled.value ? "1" : "0");
@@ -1033,6 +1163,23 @@ const zoomScale = ref(1);
 const zoomTx = ref(0);
 const zoomTy = ref(0);
 const zoomImgEl = ref(null);
+const zoomImgLoading = ref(false); // zoom 层图片加载中(慢网络下切图给转圈反馈)
+
+let zoomLoadingTimer = null;
+watch(studyZoomSrc, () => {
+  // 每次换图都视为"可能要加载":延迟 200ms 才显示转圈,
+  // 本机/缓存秒开时零闪烁(PC 上切 tab 不再看到遮罩闪一下就关)
+  clearTimeout(zoomLoadingTimer);
+  zoomLoadingTimer = setTimeout(() => {
+    zoomImgLoading.value = true;
+  }, 200);
+});
+
+// 图片加载完成/失败:撤销未触发的延迟计时并关闭转圈
+function onZoomImgDone() {
+  clearTimeout(zoomLoadingTimer);
+  zoomImgLoading.value = false;
+}
 const zoomPointers = new Map(); // pointerId -> {x,y}
 let zoomDragBase = null; // 单指拖动基准 {px,py,tx,ty}
 let zoomPinchBase = null; // 双指捏合基准 {dist,mx,my,s,tx,ty}
@@ -1058,6 +1205,8 @@ function openZoom(src) {
 }
 
 function closeZoom() {
+  clearTimeout(zoomLoadingTimer);
+  zoomImgLoading.value = false;
   studyZoomSrc.value = "";
   zoomReset();
   zoomStudyItem.value = null;
@@ -1253,7 +1402,8 @@ const zoomTabs = computed(() => {
 // 切换 zoom 层视图并重置缩放状态
 function zoomShowView(key) {
   const item = zoomStudyItem.value;
-  if (!item) return;
+  // 同一视图重复点击直接忽略,避免重设 src 触发无意义的加载态
+  if (!item || key === zoomView.value) return;
   zoomView.value = key;
   zoomReset();
   if (key === "original") {
@@ -1279,6 +1429,11 @@ function openQuizZoom(image) {
   if (item) {
     zoomStudyItem.value = item;
     zoomView.value = "original";
+    // 后台预载技巧图/解析图,慢网络下切 tab 不空窗
+    new Image().src = studyPath(item.image);
+    item.details?.forEach((d) => {
+      new Image().src = studyPath(d);
+    });
   }
 }
 
@@ -1400,6 +1555,7 @@ function startTest() {
   correctCount.value = 0;
   records.value = [];
   drillMode.value = false;
+  plateReady.value = false;
   loadQuestion();
   stage.value = "quiz";
 }
@@ -1419,6 +1575,7 @@ function startWrongDrill() {
   correctCount.value = 0;
   records.value = [];
   drillMode.value = true;
+  plateReady.value = false;
   loadQuestion();
   stage.value = "quiz";
 }
@@ -1440,6 +1597,9 @@ function choose(opt) {
   lastCorrect.value = correct;
   if (correct) correctCount.value++;
   records.value.push({ index: currentIndex.value, chosen: opt, correct });
+  // 答题间隙预载下一题检查图,切题时避免图片闪加载
+  const nextQ = questions.value[currentIndex.value + 1];
+  if (nextQ) preloadImage(platePath(nextQ.image));
   if (!correct) {
     shaking.value = true;
     setTimeout(() => (shaking.value = false), 400);
@@ -1977,6 +2137,7 @@ body {
 
 /* ---------- 答题页 ---------- */
 .quiz-screen {
+  position: relative; /* 素材加载遮罩的定位基准 */
   align-self: stretch;
   width: 100%;
   max-width: 740px; /* 与学习模式一致的最大宽度 */
@@ -1984,6 +2145,86 @@ body {
   padding: 0; /* 机身图左右上下全部贴边 */
   display: flex;
   flex-direction: column;
+  flex: none; /* 不随内容撑开,固定一屏高 */
+  height: 100vh; /* 旧浏览器回退 */
+  height: 100dvh; /* 动态视口高,移动端地址栏收展也精确 */
+  min-height: 0;
+  overflow: hidden; /* 缩放前的布局溢出不撑开页面 */
+}
+
+/* 素材加载遮罩:浅色半透明毛玻璃,与全局浅色主题融合,模糊盖住图片加载过程 */
+.quiz-loading {
+  position: absolute;
+  inset: 0;
+  z-index: 30;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 18px;
+  background: rgba(246, 249, 253, 0.62);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+}
+
+/* 呼吸光晕 + 旋转环 */
+.quiz-boot {
+  position: relative;
+  width: 46px;
+  height: 46px;
+}
+
+.quiz-boot-glow {
+  position: absolute;
+  inset: -16px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(94, 150, 255, 0.28) 0%, transparent 70%);
+  animation: quiz-breath 1.6s ease-in-out infinite;
+}
+
+.quiz-boot-ring {
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  border: 3px solid rgba(47, 111, 237, 0.16);
+  border-top-color: #2f6fed;
+  animation: quiz-spin 1s linear infinite;
+}
+
+@keyframes quiz-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes quiz-breath {
+  0%,
+  100% {
+    opacity: 0.4;
+    transform: scale(0.92);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.08);
+  }
+}
+
+.quiz-loading-text {
+  margin: 0;
+  font-size: 14px;
+  letter-spacing: 2px;
+  color: #55708f;
+  animation: quiz-text-breath 1.6s ease-in-out infinite;
+}
+
+@keyframes quiz-text-breath {
+  0%,
+  100% {
+    opacity: 0.55;
+  }
+  50% {
+    opacity: 1;
+  }
 }
 
 /* 返回按钮:吸顶悬浮,页面滚动时始终可见 */
@@ -2005,30 +2246,58 @@ html.android-app .quiz-top .back-link {
 
 /* ---------- 仿真体检机答题界面（头屏 + 机身双图,浮层按各图百分比定位） ---------- */
 .tjj {
+  position: relative; /* 头/身绝对定位的参照 */
   width: 100%;
   margin: 0;
-  flex: 1; /* 占满返回栏以下的剩余高度 */
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between; /* 头部贴顶,机身贴底,富余空间留在中间 */
+  flex: 1; /* 占满剩余高度 */
+  min-height: 0; /* 不让内容撑高自身,保证以视口边缘为基准 */
   background: #cad6d4;
 }
 
-.tjj-head,
-.tjj-body {
-  position: relative;
+/* 头屏钉死贴顶、机身钉死贴底(绝对定位,内容溢出时也不失去贴边),
+   等比缩放时头屏向顶边收缩、机身向底边收缩,中间留白自然扩大 */
+.tjj-head {
+  position: absolute;
+  top: 0;
+  left: 2%;
+  right: 2%;
+  transform-origin: top center;
 }
 
-.tjj-head {
-  margin: 0 2%; /* 头屏贴顶(临时试验) */
+.tjj-body {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  transform-origin: bottom center;
 }
-/* 机身是末尾元素,自然贴住 tjj 底边=屏幕最底部 */
 
 .tjj-img {
   display: block;
   width: 100%;
   user-select: none;
   -webkit-user-drag: none;
+}
+
+/* 电脑(≥772px):机身照片横向拉伸铺满 .tjj 盒子左右两边(以盒子宽为上限),机头保持不动。
+   原理:布局宽放大 1/s,经 scale(s) 缩放后视觉宽度恰好 = .tjj 盒子宽(100%);
+   高度锁定为 740 布局宽下的原始高度(2731x1922 素材 → 740*1922/2731),
+   缩放公式的 needH 不变 → 机头缩放比例与位置完全不受影响;
+   照片用 object-fit:fill 做横向拉伸,选项/倒计时/退出均为百分比定位自动跟随 */
+@media (min-width: 772px) {
+  .tjj-body {
+    left: 50%;
+    right: auto;
+    width: calc(100% / var(--quiz-s, 1));
+    margin-left: calc(-50% / var(--quiz-s, 1));
+    height: calc(740 * 1922 / 2731 * 1px);
+  }
+
+  .tjj-body .tjj-img {
+    width: 100%;
+    height: 100%;
+    object-fit: fill;
+  }
 }
 
 /* ---------- 头部拼接结构：左右机翼照片 + 中间机身底色蓝框屏幕 + 底部摄像头区 ---------- */
@@ -2051,11 +2320,11 @@ html.android-app .quiz-top .back-link {
 
 /* 机翼等宽,中间列居中(新素材左右翼尺寸接近,等宽最对称) */
 .wing-left {
-  width: 12%;
+  width: 13.4%;
 }
 
 .wing-right {
-  width: 12%;
+  width: 13.4%;
 }
 
 /* 中间机身底色区域(#32434d):上方蓝框屏幕面板,下方摄像头区,总高由内容撑开 */
@@ -2082,7 +2351,8 @@ html.android-app .quiz-top .back-link {
     linear-gradient(180deg, #32434d 0%, #3d515e 15%, #32434d 48%, #2b3a44 100%);
   border-bottom-left-radius: 5%;
   border-bottom-right-radius: 5%;
-  margin: auto -1px;
+  margin: 0 -1px;
+  margin-bottom: 10px;
 }
 
 /* 屏幕面板最外层:仅左侧和上侧 2px 黑色边框 */
@@ -2166,10 +2436,19 @@ html.android-app .quiz-top .back-link {
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 11px;
+  /* 与退出按钮同一套反比补偿,两者视觉尺度在缩放下保持同步 */
+  font-size: calc(11px / max(var(--quiz-s, 1), 0.8));
   font-weight: 800;
   color: rgba(255, 255, 255, 0.8);
   font-variant-numeric: tabular-nums;
+}
+
+/* 宽屏(电脑):字号加大一档并右移,使数字在闹钟图标与退出按钮之间居中 */
+@media (min-width: 520px) {
+  .tjj-body-count {
+    left: 63.5%;
+    font-size: calc(13px / max(var(--quiz-s, 1), 0.72));
+  }
 }
 
 /* 倒计时右侧的退出测试按钮(与倒计时文字同尺度的小胶囊,垂直对齐倒计时行;
@@ -2180,23 +2459,27 @@ html.android-app .quiz-top .back-link {
   right: 14.5%;
   top: 22.2%;
   transform: translateY(-50%);
-  padding: 2px 8px;
-  font-size: 11px;
+  /* 窄屏(手机):与倒计时数字同尺度;反比下限 0.8 防止向左生长盖住倒计时数字 */
+  padding: calc(2px / max(var(--quiz-s, 1), 0.8))
+    calc(6px / max(var(--quiz-s, 1), 0.8));
+  font-size: calc(10px / max(var(--quiz-s, 1), 0.8));
+  border: 1px solid rgba(255, 255, 255, 0.55);
   font-weight: 700;
   line-height: 1;
   color: rgba(255, 255, 255, 0.85);
   background: rgba(255, 255, 255, 0.12);
-  border: 1px solid rgba(255, 255, 255, 0.55);
   border-radius: 999px;
   cursor: pointer;
   white-space: nowrap;
 }
 
-/* 窄屏:蓝条可用宽度变窄,压缩按钮字号与内边距,避免向左生长时碰到倒计时数字 */
-@media (max-width: 420px) {
+/* 宽屏(电脑):机身整体缩小后按钮反比放大补偿,视觉尺寸对齐桌面可读标准;
+   下限 0.72 在"按钮够大"与"不挤倒计时数字"之间取平衡 */
+@media (min-width: 520px) {
   .tjj-exit {
-    padding: 2px 6px;
-    font-size: 10px;
+    padding: calc(2.5px / max(var(--quiz-s, 1), 0.72))
+      calc(6px / max(var(--quiz-s, 1), 0.72));
+    font-size: calc(13px / max(var(--quiz-s, 1), 0.72));
   }
 }
 
@@ -2423,6 +2706,32 @@ html.android-app .quiz-top .back-link {
   transform-origin: center center;
   will-change: transform;
   box-shadow: 0 12px 48px rgba(0, 0, 0, 0.5);
+  transition: opacity 0.25s ease;
+}
+
+/* 换图加载中:旧图淡出,配合中央转圈给明确反馈 */
+.zoom-img.is-loading {
+  opacity: 0.15;
+}
+
+.zoom-loading {
+  position: absolute;
+  inset: 0;
+  z-index: 3;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  pointer-events: none; /* 不挡手势 */
+}
+
+/* 深色遮罩上用亮一点的蓝 */
+.zoom-loading .quiz-boot-glow {
+  background: radial-gradient(circle, rgba(94, 150, 255, 0.4) 0%, transparent 70%);
+}
+
+.zoom-loading .quiz-boot-ring {
+  border-color: rgba(120, 170, 255, 0.25);
+  border-top-color: #7db0ff;
 }
 
 .zoom-close {
