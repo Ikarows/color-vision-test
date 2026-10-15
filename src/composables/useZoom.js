@@ -3,7 +3,7 @@ import { useStudy } from "./useStudy.js";
 import { platePath, studyPath, studyOriginalPath } from "../utils/assets.js";
 
 // 图片放大层域(全局单例):双指/滚轮缩放、拖动平移、双击放大、学习条目视图切换
-const { studyItemByImage } = useStudy();
+const { studyItemByImage, hasTipImg } = useStudy();
 
 const studyZoomSrc = ref(""); // 点击放大的图片地址,空 = 关闭
 
@@ -208,9 +208,9 @@ const zoomTabs = computed(() => {
   const orig = studyOriginalPath(item, ed);
   const tabs = [];
   if (orig) tabs.push({ key: "original", label: "原图" });
-  // 简单一眼出的技巧图就是原图,不重复提供
-  const qsrc = item.category === "easy" && orig ? orig : studyPath(item.image, ed);
-  if (qsrc !== orig) tabs.push({ key: "question", label: "技巧图" });
+  // 没有真技巧图的条目(noTipImg)不提供技巧图栏,默认落原图
+  if (hasTipImg(item) && studyPath(item.image, ed) !== orig)
+    tabs.push({ key: "question", label: "技巧图" });
   const details = item.details || [];
   details.forEach((d, i) => {
     tabs.push({
@@ -231,11 +231,8 @@ function zoomShowView(key) {
   const ed = item.editionId;
   if (key === "original") {
     studyZoomSrc.value = studyOriginalPath(item, ed) || studyPath(item.image, ed);
-  } else if (key === "question") {
-    studyZoomSrc.value =
-      item.category === "easy" && studyOriginalPath(item, ed)
-        ? studyOriginalPath(item, ed)
-        : studyPath(item.image, ed);
+  } else if (key === "question" && hasTipImg(item)) {
+    studyZoomSrc.value = studyPath(item.image, ed);
   } else if (key.startsWith("detail:")) {
     const d = (item.details || [])[Number(key.slice(7))];
     if (d) studyZoomSrc.value = studyPath(d, ed);
@@ -255,7 +252,7 @@ function openQuizZoom(image, editionId) {
     zoomStudyItem.value = { ...item, editionId: editionId || item.editionId };
     zoomView.value = "original";
     // 后台预载技巧图/解析图,慢网络下切 tab 不空窗
-    new Image().src = studyPath(item.image, editionId);
+    if (hasTipImg(item)) new Image().src = studyPath(item.image, editionId);
     item.details?.forEach((d) => {
       new Image().src = studyPath(d, editionId);
     });

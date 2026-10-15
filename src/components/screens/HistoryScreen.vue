@@ -146,17 +146,39 @@
       <button
         v-if="statsSummary.count"
         class="btn btn-danger"
-        :class="{ armed: resetArmed }"
-        @click="confirmReset"
+        @click="confirmOpen = true"
       >
-        {{ resetArmed ? "再点一次确认清空" : "清空统计数据" }}
+        清空本版数据
       </button>
     </div>
+
+    <!-- 清空确认弹层:Teleport 到 body,.card 的 backdrop-filter 会劫持 fixed 定位 -->
+    <Teleport to="body">
+      <transition name="rc-fade">
+        <div v-if="confirmOpen" class="rc-mask" @click.self="confirmOpen = false">
+          <div class="rc-card">
+            <h3 class="rc-title">清空本版数据</h3>
+            <p class="rc-text">
+              将删除 <b>{{ editionLabel }}</b> 的全部测试记录与常错图统计，
+              其他版本的数据不受影响。此操作无法撤销。
+            </p>
+            <div class="rc-actions">
+              <button class="rc-btn rc-cancel" @click="confirmOpen = false">
+                取消
+              </button>
+              <button class="rc-btn rc-ok" @click="doReset">确认清空</button>
+            </div>
+          </div>
+        </div>
+      </transition>
+    </Teleport>
   </div>
 </template>
 
 <script setup>
+import { ref } from "vue";
 import { useRecords } from "../../composables/useRecords.js";
+import { useEdition } from "../../composables/useEdition.js";
 
 defineEmits(["back"]);
 
@@ -169,7 +191,6 @@ const {
   setPage,
   openWrongBook,
   confirmReset,
-  resetArmed,
   modeName,
   formatTime,
   recordScore,
@@ -178,6 +199,14 @@ const {
   openRecord,
   wrongPlateStats,
 } = useRecords();
+const { editionLabel } = useEdition();
+
+// 清空确认弹层(局部状态,不进全局)
+const confirmOpen = ref(false);
+function doReset() {
+  confirmReset();
+  confirmOpen.value = false;
+}
 </script>
 
 <style>
@@ -441,8 +470,101 @@ const {
   background: #fbdad6;
 }
 
-.btn-danger.armed {
+/* ---------- 清空确认弹层 ---------- */
+.rc-mask {
+  position: fixed;
+  inset: 0;
+  z-index: 90;
+  background: rgba(15, 23, 42, 0.55);
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  overflow-y: auto;
+  padding: 24px 16px;
+}
+
+/* margin:auto 在 flex 中实现水平+垂直居中,内容超高时贴边可滚不裁顶 */
+.rc-card {
+  width: 100%;
+  max-width: 340px;
+  margin: auto;
+  background: #fff;
+  border-radius: 18px;
+  padding: 22px 20px 18px;
+  box-shadow: 0 24px 60px rgba(15, 23, 42, 0.3);
+}
+
+.rc-title {
+  font-size: 17px;
+  font-weight: 800;
+  color: #22314a;
+  letter-spacing: 1px;
+}
+
+.rc-text {
+  margin-top: 10px;
+  font-size: 13.5px;
+  color: #5c6f84;
+  line-height: 1.7;
+}
+
+.rc-text b {
+  color: #c23b27;
+}
+
+.rc-actions {
+  display: flex;
+  gap: 10px;
+  margin-top: 18px;
+}
+
+.rc-btn {
+  flex: 1;
+  padding: 10px 0;
+  border: none;
+  border-radius: 11px;
+  font-size: 14px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.rc-cancel {
+  background: #f1f5f9;
+  color: #45556b;
+}
+
+.rc-cancel:hover {
+  background: #e2e8f0;
+}
+
+.rc-ok {
   background: #e0533d;
   color: #fff;
+}
+
+.rc-ok:hover {
+  background: #c94732;
+}
+
+/* 弹层过渡 */
+.rc-fade-enter-active,
+.rc-fade-leave-active {
+  transition: opacity 0.2s ease;
+}
+
+.rc-fade-enter-active .rc-card,
+.rc-fade-leave-active .rc-card {
+  transition: transform 0.2s ease;
+}
+
+.rc-fade-enter-from,
+.rc-fade-leave-to {
+  opacity: 0;
+}
+
+.rc-fade-enter-from .rc-card,
+.rc-fade-leave-to .rc-card {
+  transform: scale(0.94) translateY(8px);
 }
 </style>

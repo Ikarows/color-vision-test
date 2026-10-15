@@ -28,7 +28,7 @@
             :class="{ active: edition.id === e.id }"
             @click="pickEdition(e.id)"
           >
-            <span>{{ e.source }}{{ e.edition }}</span>
+            <span> {{ e.name }} {{ e.source }}{{ e.edition }}</span>
             <svg
               v-if="edition.id === e.id"
               viewBox="0 0 20 20"
@@ -48,6 +48,8 @@
         </div>
       </div>
     </div>
+    <!-- 版本切换动画:内容包一层带 key 的容器,切换时整组重建重放入场动画;display:contents 不影响原 flex 布局 -->
+    <div :key="edition.id" class="menu-body">
     <div class="brand">
       <img
         class="brand-logo"
@@ -143,9 +145,16 @@
         />
       </svg>
     </button>
+    </div>
+
+    <!-- 版本切换胶囊:居中弹出,背后带局部柔光垫,避免与内容硬碰 -->
+    <div v-if="switching" :key="'sweep-' + edition.id" class="edition-sweep" aria-hidden="true">
+      <div class="es-pad"></div>
+      <div class="es-label">已切换 · {{ edition.edition }}</div>
+    </div>
 
     <p class="disclaimer">本软件仅供自测学习使用，不能替代专业医学诊断</p>
-    <p class="copyright">@Copyright 来杯橙汁/Ikarows 2026 v1.4.0</p>
+    <p class="copyright">@Copyright 来杯橙汁/Ikarows 2026 v2.0.0</p>
   </div>
 </template>
 
@@ -166,9 +175,17 @@ const { categoryCount } = useStudy();
 // 左上角版本徽章的弹出状态
 const badgeOpen = ref(false);
 
+// 版本切换胶囊动画开关(动画结束自动复位)
+const switching = ref(false);
+let switchTimer = null;
+
 function pickEdition(id) {
-  setEdition(id);
   badgeOpen.value = false;
+  if (id === edition.value.id) return;
+  setEdition(id);
+  switching.value = true;
+  clearTimeout(switchTimer);
+  switchTimer = setTimeout(() => (switching.value = false), 950);
 }
 
 // 点击徽章外部时关闭弹出列表
@@ -176,7 +193,10 @@ function onDocClick(e) {
   if (!e.target.closest(".edition-badge-wrap")) badgeOpen.value = false;
 }
 onMounted(() => document.addEventListener("click", onDocClick));
-onBeforeUnmount(() => document.removeEventListener("click", onDocClick));
+onBeforeUnmount(() => {
+  document.removeEventListener("click", onDocClick);
+  clearTimeout(switchTimer);
+});
 </script>
 
 <style>
@@ -438,5 +458,140 @@ html.android-app .menu-top {
   color: #2f6fed;
   font-weight: 800;
   background: #eef4ff;
+}
+
+/* ---------- 版本切换动画 ---------- */
+/* 内容容器:不参与布局,仅作为 key 重建的载体 */
+.menu-body {
+  display: contents;
+}
+
+/* 切换后逐项错落入场(brand/标题/副标题/卡片区/查询入口 共 5 项) */
+.menu-body > * {
+  animation: edIn 0.5s cubic-bezier(0.22, 1, 0.36, 1) backwards;
+}
+
+.menu-body > *:nth-child(1) {
+  animation-delay: 0.08s;
+}
+
+.menu-body > *:nth-child(2) {
+  animation-delay: 0.15s;
+}
+
+.menu-body > *:nth-child(3) {
+  animation-delay: 0.22s;
+}
+
+.menu-body > *:nth-child(4) {
+  animation-delay: 0.29s;
+}
+
+.menu-body > *:nth-child(5) {
+  animation-delay: 0.36s;
+}
+
+@keyframes edIn {
+  from {
+    opacity: 0;
+    transform: translateY(12px) scale(0.98);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+/* ---------- 版本切换胶囊过渡层 ---------- */
+.edition-sweep {
+  position: fixed;
+  inset: 0;
+  z-index: 90;
+  pointer-events: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* 柔光垫:只垫在胶囊背后一小圈,轻微压虚底下内容,胶囊悬浮有依托 */
+.es-pad {
+  position: absolute;
+  width: 46vmin;
+  height: 46vmin;
+  border-radius: 50%;
+  background: radial-gradient(
+    circle,
+    rgba(255, 255, 255, 0.72),
+    rgba(255, 255, 255, 0.35) 55%,
+    transparent 72%
+  );
+  animation: esPad 0.85s ease forwards;
+}
+
+@keyframes esPad {
+  0% {
+    opacity: 0;
+    transform: scale(0.7);
+  }
+  20% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  80% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+    transform: scale(1.08);
+  }
+}
+
+.es-label {
+  position: relative;
+  padding: 12px 28px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.95);
+  border: 1px solid rgba(255, 255, 255, 0.85);
+  box-shadow: 0 10px 30px rgba(43, 76, 126, 0.16);
+  backdrop-filter: blur(6px);
+  font-size: 17px;
+  font-weight: 800;
+  color: #2f6fed;
+  letter-spacing: 2px;
+  white-space: nowrap;
+  animation: esLabel 0.85s ease forwards;
+}
+
+@keyframes esLabel {
+  0% {
+    opacity: 0;
+    transform: scale(0.94);
+    filter: blur(2px);
+  }
+  12% {
+    opacity: 1;
+    transform: scale(1.02);
+    filter: blur(0);
+  }
+  78% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  100% {
+    opacity: 0;
+    transform: scale(1.04);
+    filter: blur(0);
+  }
+}
+
+/* 弱动效偏好:关闭切换动画 */
+@media (prefers-reduced-motion: reduce) {
+  .menu-body > * {
+    animation: none;
+  }
+
+  .edition-sweep {
+    display: none;
+  }
 }
 </style>

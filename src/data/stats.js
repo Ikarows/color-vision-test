@@ -46,10 +46,18 @@ export function addRecord(mode, total, correct, score, wrong = [], correctPlates
   return stats
 }
 
-// 清空全部统计数据
-export function resetStats() {
+// 清空统计数据:传版本 id 只删该版本的记录,不传则清空全部
+export function resetStats(editionId) {
   try {
-    localStorage.removeItem(KEY)
+    if (!editionId) {
+      localStorage.removeItem(KEY)
+      return
+    }
+    const stats = loadStats()
+    stats.records = stats.records.filter(
+      (r) => (r.editionId || DEFAULT_EDITION_ID) !== editionId
+    )
+    saveStats(stats)
   } catch (e) {
     // 忽略
   }

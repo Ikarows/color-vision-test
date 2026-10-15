@@ -3,13 +3,23 @@ import { getEdition, DEFAULT_EDITION_ID } from "../data/editions/index.js";
 import { loadStats, resetStats } from "../data/stats.js";
 import { MODES } from "./useQuizConfig.js";
 import { useStage } from "./useStage.js";
+import { useEdition } from "./useEdition.js";
 
 // 测试记录域(全局单例):历史成绩 / 统计速览 / 常错图聚合 / 记录详情
 const statsData = ref(loadStats());
-const resetArmed = ref(false);
+const { edition } = useEdition();
+
+// 体检模拟数据跟随版本:统计/历史只统计当前版本的测试记录
+// (旧记录无 editionId 已在 loadStats 归一为默认版本,这里兜底再防一次)
+const editionRecords = computed(() => {
+  const cur = edition.value.id;
+  return statsData.value.records.filter(
+    (r) => (r.editionId || DEFAULT_EDITION_ID) === cur,
+  );
+});
 
 const statsSummary = computed(() => {
-  const rs = statsData.value.records;
+  const rs = editionRecords.value;
   const totalQ = rs.reduce((s, r) => s + r.total, 0);
   const correctQ = rs.reduce((s, r) => s + r.correct, 0);
   return {
@@ -23,7 +33,7 @@ const statsSummary = computed(() => {
 });
 
 const statsRecords = computed(() =>
-  [...statsData.value.records].reverse().slice(0, 30),
+  [...editionRecords.value].reverse().slice(0, 30),
 );
 
 // 最近记录分页:每页 10 条
@@ -49,7 +59,6 @@ function refreshStats() {
 }
 
 function openStats() {
-  resetArmed.value = false;
   refreshStats();
   historyPage.value = 1;
   stageGo("stats");
@@ -58,21 +67,15 @@ function openStats() {
 const wrongBookBack = ref("stats");
 // from: 常错图入口来源页(返回时回到该页),统计页入口传 "stats",首页/设置页传 "start"
 function openWrongBook(from = "start") {
-  resetArmed.value = false;
   refreshStats();
   wrongBookBack.value = from;
   stageGo("wrongBook");
 }
 
 function confirmReset() {
-  if (!resetArmed.value) {
-    resetArmed.value = true;
-    setTimeout(() => (resetArmed.value = false), 3000);
-    return;
-  }
-  resetStats();
-  statsData.value = { records: [] };
-  resetArmed.value = false;
+  // 只清当前版本的记录,其他版本数据保留(确认弹层在 HistoryScreen 内)
+  resetStats(edition.value.id);
+  statsData.value = loadStats();
 }
 
 function modeName(key) {
@@ -120,17 +123,19 @@ function openRecord(r) {
   stageGo("recordDetail");
 }
 
-// 跨全部历史记录聚合每张图的答错次数,按次数降序
-// 聚合 key 为 "版本id:图名",不同版本同名图互不干扰;条目携带 editionId 供图片路径/答案/针对测试解析
+// 跨历史记录聚合当前版本每张图的答错次数,按次数降序
+// 聚合 key 为 "版本id:图名",只统计当前版本的错图/答对图(drill 混版本记录中其他版本的图跳过)
 // 同一张图累计连对 2 次(期间没再答错)即移出常错图;之后再答错则重新计算
 const WRONG_CLEAR_STREAK = 2;
 const wrongPlateStats = computed(() => {
+  const curEd = edition.value.id; // 常错图只聚合当前版本的图
   const map = new Map(); // "ed:image" -> { image, editionId, count, lastTs, streak }
   // records 按时间正序回放,保证"连对"判断正确
   statsData.value.records.forEach((r) => {
     const recEd = r.editionId || DEFAULT_EDITION_ID;
     (r.wrong ?? []).forEach((w) => {
       const ed = w.editionId || recEd;
+      if (ed !== curEd) return;
       const key = ed + ":" + w.image;
       const cur = map.get(key) ?? {
         image: w.image,
@@ -147,6 +152,7 @@ const wrongPlateStats = computed(() => {
     (r.correctPlates ?? []).forEach((c) => {
       // 旧记录 correctPlates 为纯图名字符串,按记录版本归一
       const ed = (typeof c === "string" ? recEd : c.editionId) || DEFAULT_EDITION_ID;
+      if (ed !== curEd) return;
       const img = typeof c === "string" ? c : c.image;
       const cur = map.get(ed + ":" + img);
       if (cur) cur.streak++;
@@ -170,7 +176,6 @@ const { go: stageGo } = useStage();
 export function useRecords() {
   return {
     statsData,
-    resetArmed,
     statsSummary,
     statsRecords,
     historyPage,

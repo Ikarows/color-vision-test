@@ -58,6 +58,15 @@ const currentOptions = ref([]);
 const records = ref([]); // { index, chosen, correct }
 // 驾照自助机模拟判定结果: 'pass' 通过 | 'fail' 未通过 | null 非该模式
 const drivingResult = ref(null);
+// 驾照自助机复测:首轮失败(错 >2)触发,再抽 4 张新图重考一轮,复测仍未通过直接结束
+const drivingRetest = ref(false); // 是否处于复测轮
+const retestOffer = ref(false); // 首轮失败后的复测确认层
+const drivingRoundStart = ref(0); // 当前轮(首轮/复测)在 records 中的起始下标
+const drivingRoundWrong = computed(() =>
+  records.value
+    .slice(drivingRoundStart.value)
+    .filter((r) => !r.correct).length,
+);
 
 // ---------- 倒计时 ----------
 const QUIZ_TIME = 14; // 每题限时(秒)
@@ -138,6 +147,9 @@ function startTest() {
   correctCount.value = 0;
   records.value = [];
   drivingResult.value = null;
+  drivingRetest.value = false;
+  retestOffer.value = false;
+  drivingRoundStart.value = 0;
   drillMode.value = false;
   plateReady.value = false;
   loadQuestion();
@@ -163,6 +175,9 @@ function startWrongDrill() {
   currentIndex.value = 0;
   correctCount.value = 0;
   records.value = [];
+  drivingRetest.value = false;
+  retestOffer.value = false;
+  drivingRoundStart.value = 0;
   drillMode.value = true;
   plateReady.value = false;
   loadQuestion();
@@ -175,6 +190,66 @@ function loadQuestion() {
   chosenOption.value = null;
   currentOptions.value = buildOptions(currentQuestion.value);
   startTimer();
+}
+
+// 结算:写入本地统计(含评分、错图与答对图明细,逐条带版本 id)并进入结果页
+function finishQuiz() {
+  const answeredCount = records.value.length;
+  const score = Math.round((correctCount.value / answeredCount) * 100);
+  const wrongPlates = wrongList.value.map((w) => ({
+    image: w.q.image,
+    chosen: w.chosen,
+    answer: w.q.answer,
+    no: w.index + 1,
+    editionId: w.q.editionId,
+  }));
+  const correctPlates = records.value
+    .filter((r) => r.correct)
+    .map((r) => ({
+      image: questions.value[r.index].image,
+      editionId: questions.value[r.index].editionId,
+    }));
+  addRecord(
+    drivingMode.value && !drillMode.value
+      ? "driving"
+      : drillMode.value
+        ? "wrongDrill"
+        : mode.value,
+    answeredCount,
+    correctCount.value,
+    score,
+    wrongPlates,
+    correctPlates,
+    edition.value.id,
+  );
+  refreshStats();
+  stage.value = "result";
+}
+
+// 复测:追加 4 张新图(排除本轮已出的图)继续作答;
+// 题目数组续接而非重置,保证已有记录的题目下标不失效
+function startDrivingRetest() {
+  retestOffer.value = false;
+  drivingRetest.value = true;
+  drivingRoundStart.value = records.value.length;
+  const used = new Set(questions.value.map((q) => q.image));
+  let pool = edition.value.questions.filter((q) => !used.has(q.image));
+  if (pool.length < DRIVING_TOTAL) pool = edition.value.questions;
+  questions.value = questions.value.concat(
+    shuffle(pool)
+      .slice(0, DRIVING_TOTAL)
+      .map((q) => withEdition(q, edition.value.id)),
+  );
+  currentIndex.value = drivingRoundStart.value;
+  plateReady.value = false;
+  loadQuestion();
+}
+
+// 放弃复测:按首轮失败判定,直接结束本轮测试
+function endDrivingFail() {
+  retestOffer.value = false;
+  drivingResult.value = "fail";
+  finishQuiz();
 }
 
 function choose(opt) {
@@ -200,41 +275,21 @@ function choose(opt) {
         loadQuestion();
       } else {
         // 测试完成,写入本地统计(含评分、错图与答对图明细,逐条带版本 id)
-        if (drivingMode.value) {
-          // 驾照自助机模拟:必须跑完全部题目后统一判定,答对至少 2 题(错 ≤2)即通过
-          const wrongSoFar = records.value.filter((r) => !r.correct).length;
-          drivingResult.value = wrongSoFar <= DRIVING_MAX_WRONG ? "pass" : "fail";
+        if (drivingMode.value && !drillMode.value) {
+          // 驾照自助机模拟:按当前轮(首轮/复测)判定,答对至少 2 题(错 ≤2)本轮通过
+          const roundWrong = records.value
+            .slice(drivingRoundStart.value)
+            .filter((r) => !r.correct).length;
+          if (roundWrong <= DRIVING_MAX_WRONG) {
+            drivingResult.value = "pass"; // 首轮直接通过,或复测通过
+          } else if (!drivingRetest.value) {
+            retestOffer.value = true; // 首轮失败:触发复测,弹出确认层
+            return;
+          } else {
+            drivingResult.value = "fail"; // 复测仍未通过,直接结束本轮测试
+          }
         }
-        const answeredCount = records.value.length;
-        const score = Math.round((correctCount.value / answeredCount) * 100);
-        const wrongPlates = wrongList.value.map((w) => ({
-          image: w.q.image,
-          chosen: w.chosen,
-          answer: w.q.answer,
-          no: w.index + 1,
-          editionId: w.q.editionId,
-        }));
-        const correctPlates = records.value
-          .filter((r) => r.correct)
-          .map((r) => ({
-            image: questions.value[r.index].image,
-            editionId: questions.value[r.index].editionId,
-          }));
-        addRecord(
-          drivingMode.value
-            ? "driving"
-            : drillMode.value
-              ? "wrongDrill"
-              : mode.value,
-          answeredCount,
-          correctCount.value,
-          score,
-          wrongPlates,
-          correctPlates,
-          edition.value.id,
-        );
-        refreshStats();
-        stage.value = "result";
+        finishQuiz();
       }
     },
     correct ? 550 : 1400,
@@ -270,9 +325,14 @@ export function useQuiz() {
     wrongList,
     drillMode,
     drivingResult,
+    drivingRetest,
+    retestOffer,
+    drivingRoundWrong,
     // 方法
     startTest,
     startWrongDrill,
+    startDrivingRetest,
+    endDrivingFail,
     choose,
     optionClass,
     quitQuiz,

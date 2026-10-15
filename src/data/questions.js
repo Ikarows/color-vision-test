@@ -1,31 +1,9 @@
-// 出题引擎(版本无关):干扰项池 + 选项生成 + 洗牌
-// 各版本题库在 data/editions/ 下作为数据包挂载,本文件只保留共用逻辑
+// 出题引擎(版本无关):干扰项派生 + 选项生成 + 洗牌
+// 干扰项不再手工维护固定池,按版本从题库答案自动派生:
+// 同类干扰优先取当前版本的同类答案,不足时并入其它注册版本的同类答案
+// (如 v6 仅一道茶壶题,茶壶的同类干扰自动取自 v5 的水杯/雨伞)
 
-// 各类型干扰项池
-const POOLS = {
-  number: [
-    '26', '28', '66', '68', '98', '89', '59', '50', '90', '80',
-    '126', '152', '169', '196', '816', '918', '926', '956', '58', '65',
-    '288', '683', '829', '689', '682', '609', '905', '960', '662', '928',
-    '265', '286', '869', '958', '995', '986', '6859', '6239', '6989', '6089',
-    '2610', '8608', '8509', '8606', '523', '525', '855', '823', '865', '87',
-    '85', '25', '55', '22', '11', '12', '24', '27', '51', '57',
-    '2 和 8', '5 和 9', '6 和 8', '0 和 6', '8 和 9', '3 和 8',
-  ],
-  animal: ['熊猫', '牛', '蜻蜓', '鹅', '金鱼', '燕子', '羊', '兔子', '蝴蝶', '狗', '猫', '马', '鸟', '鱼', '猴子'],
-  shape: [
-    '三角形、圆形', '大圆', '圆形、剪刀', '2个五角星', '三角形、正方形',
-    '2个圆', '正方形、三角形', '五角星', '圆形', '正方形', '三角形',
-    '2个三角形', '圆、正方形', '菱形、圆形', '1个五角星',
-  ],
-  color: ['红色', '黄色', '蓝色', '绿色', '紫色', '橙色', '粉色', '黑色', '棕色', '灰色'],
-  rows: [
-    '899、022', '621、989', '699、028',
-    '826、988', '689、022', '621、968',
-    '896、020', '627、986',
-  ],
-  object: ['茶壶', '水杯', '花瓶', '闹钟', '剪刀', '眼镜', '雨伞'],
-}
+import { getEdition, EDITIONS, DEFAULT_EDITION_ID } from "./editions/index.js"
 
 // 随机打乱数组（返回新数组）
 export function shuffle(arr) {
@@ -37,15 +15,63 @@ export function shuffle(arr) {
   return a
 }
 
-// 为每道题生成 6 个选项（1 个正确答案 + 2 个同类干扰 + 3 个跨类型干扰），顺序随机
+// 按版本派生干扰项池:类型 → 去重答案数组(版本数据为静态模块,按 id 缓存)
+const poolCache = new Map()
+function poolsOf(editionId) {
+  const id = editionId || DEFAULT_EDITION_ID
+  if (!poolCache.has(id)) {
+    const sets = {}
+    for (const q of getEdition(id)?.questions ?? []) {
+      ;(sets[q.type] ??= new Set()).add(q.answer)
+    }
+    const pools = {}
+    for (const t of Object.keys(sets)) pools[t] = [...sets[t]]
+    poolCache.set(id, pools)
+  }
+  return poolCache.get(id)
+}
+
+// 全部注册版本的合并池(当前版本同类答案不足时的补充来源)
+let unionPools = null
+function poolsOfAll() {
+  if (!unionPools) {
+    const sets = {}
+    for (const e of EDITIONS) {
+      for (const q of e.questions ?? []) {
+        ;(sets[q.type] ??= new Set()).add(q.answer)
+      }
+    }
+    unionPools = {}
+    for (const t of Object.keys(sets)) unionPools[t] = [...sets[t]]
+  }
+  return unionPools
+}
+
+// 为每道题生成 6 个选项(1 个正确答案 + 5 个干扰,顺序随机):
+// 同类干扰最多 2 个(当前版本同类答案优先,不足由其它版本同类答案补),
+// 其余从跨类型答案池补足;数字类选项自然混入上下排/并列双图等题型的选项中
 export function buildOptions(question) {
-  // 同类型干扰 2 个 + 跨类型干扰 3 个,避免 6 个选项全是同一类型
-  const samePool = POOLS[question.type].filter((item) => item !== question.answer)
-  const distractors = shuffle(samePool).slice(0, 2)
-  let crossPool = Object.keys(POOLS)
+  const own = poolsOf(question.editionId)
+  const all = poolsOfAll()
+  let same = shuffle(
+    (own[question.type] ?? []).filter((a) => a !== question.answer),
+  ).slice(0, 2)
+  if (same.length < 2) {
+    same = same.concat(
+      shuffle(
+        [...new Set(all[question.type] ?? [])].filter(
+          (a) => a !== question.answer && !same.includes(a),
+        ),
+      ).slice(0, 2 - same.length),
+    )
+  }
+  const crossPool = Object.keys(all)
     .filter((t) => t !== question.type)
-    .flatMap((t) => POOLS[t])
-  if (question.type === 'rows') crossPool = [...POOLS.number, ...crossPool] // 上下排题优先混入纯数字干扰
-  const cross = shuffle(crossPool).slice(0, 3)
-  return shuffle([question.answer, ...distractors, ...cross])
+    .flatMap((t) => all[t] ?? [])
+  const cross = shuffle(
+    [...new Set(crossPool)].filter(
+      (a) => a !== question.answer && !same.includes(a),
+    ),
+  ).slice(0, 5 - same.length)
+  return shuffle([question.answer, ...same, ...cross])
 }

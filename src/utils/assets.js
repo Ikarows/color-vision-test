@@ -1,9 +1,13 @@
 // 静态资源路径与图片加载工具(纯函数,多处页面复用)
 // 路径按版本解析:各版本数据包的 dirs 决定图片目录(如 v6 → plates/v6/、study/v6/)
-import { getEdition, DEFAULT_EDITION_ID } from "../data/editions/index.js";
+// 不传 editionId 的调用点跟随"当前版本"而非固定默认版本,否则切版本后图片不跟随切换
+import { getEdition } from "../data/editions/index.js";
+import { useEdition } from "../composables/useEdition.js";
+
+const { edition } = useEdition();
 
 function dirsOf(editionId) {
-  const ed = getEdition(editionId || DEFAULT_EDITION_ID);
+  const ed = getEdition(editionId || edition.value.id);
   return ed?.dirs ?? { plates: "plates/v6", study: "study/v6" };
 }
 

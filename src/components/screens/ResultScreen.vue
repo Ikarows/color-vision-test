@@ -100,6 +100,8 @@ const props = defineProps({
   wrongList: { type: Array, required: true },
   // 驾照自助机模拟判定: 'pass' | 'fail' | ''(普通测试)
   drivingResult: { type: String, default: "" },
+  // 是否经过复测(true = 首轮失败后复测)
+  drivingRetest: { type: Boolean, default: false },
 });
 
 defineEmits(["restart", "back"]);
@@ -129,9 +131,13 @@ const verdictText = computed(() => {
 
 const finalVerdict = computed(() => {
   if (props.drivingResult === "pass")
-    return "答对题数达到通过标准,本轮模拟通过。";
+    return props.drivingRetest
+      ? "首轮未通过,复测达标,整体判定通过。"
+      : "答对题数达到通过标准,本轮模拟通过。";
   if (props.drivingResult === "fail")
-    return `累计答错 ${props.wrongList.length} 题,超出容错上限,未达驾照自助机通过标准,建议针对性练习后再模拟。`;
+    return props.drivingRetest
+      ? `两轮均未达标,累计答错 ${props.wrongList.length} 题,未通过驾照自助机模拟,建议针对性练习后再模拟。`
+      : `累计答错 ${props.wrongList.length} 题,超出容错上限,未达驾照自助机通过标准,建议针对性练习后再模拟。`;
   return verdictText.value;
 });
 </script>

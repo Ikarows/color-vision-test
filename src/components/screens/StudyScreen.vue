@@ -16,7 +16,7 @@
       </button>
       <div class="study-tabs">
         <button
-          v-for="c in STUDY_CATEGORIES"
+          v-for="c in visibleCategories"
           :key="c.key"
           class="study-tab"
           :class="{ active: studyCat === c.key }"
@@ -28,7 +28,7 @@
       </div>
       <div class="study-subtabs" v-if="studyCat === 'feature'">
         <button
-          v-for="s in FEATURE_SUBS"
+          v-for="s in visibleSubs"
           :key="s.key"
           class="sub-tab"
           :class="{ active: studySubCat === s.key }"
@@ -40,10 +40,7 @@
     </header>
 
     <main class="quiz-main study-main" :key="studyCat + '-' + studyIndex">
-      <div
-        v-if="hasStudyOriginal || studyItem.details?.length"
-        class="view-switch"
-      >
+      <div v-if="showViewSwitch" class="view-switch">
         <button
           v-if="hasStudyOriginal"
           class="vs-btn"
@@ -53,6 +50,7 @@
           原图
         </button>
         <button
+          v-if="hasStudyTip"
           class="vs-btn"
           :class="{ active: studyView === 'question' }"
           @click="studyView = 'question'"
@@ -69,7 +67,10 @@
         </button>
       </div>
 
-      <div class="plate-wrap" v-if="studyView === 'question'">
+      <div
+        class="plate-wrap"
+        v-if="studyView === 'question' && hasStudyTip"
+      >
         <img
           :src="studyQuestionSrc"
           :alt="'学习图 ' + (studyIndex + 1)"
@@ -143,7 +144,7 @@
 </template>
 
 <script setup>
-import { STUDY_CATEGORIES } from "../../data/study.js";
+import { computed } from "vue";
 import { useStudy } from "../../composables/useStudy.js";
 import { studyPath, studyOriginalPath, retryImg } from "../../utils/assets.js";
 
@@ -155,17 +156,28 @@ const {
   studyView,
   studyList,
   studySubCat,
-  FEATURE_SUBS,
   studyItem,
   hasStudyOriginal,
+  hasStudyTip,
   studyQuestionSrc,
   subCount,
   setSubCat,
   categoryCount,
+  visibleCategories,
+  visibleSubs,
   switchCategory,
   prevStudy,
   nextStudy,
 } = useStudy();
+
+// 视图栏仅在两个及以上视图时显示,只有一个视图无需切换
+const showViewSwitch = computed(
+  () =>
+    (hasStudyTip.value ? 1 : 0) +
+      (hasStudyOriginal.value ? 1 : 0) +
+      (studyItem.value?.details?.length ? 1 : 0) >=
+    2,
+);
 </script>
 
 <style>
@@ -364,10 +376,10 @@ const {
 
 /* ---------- 手机端学习模式适配 ---------- */
 @media (max-width: 480px) {
-  /* 分类 tab 四个并排一行,小字号收紧 */
+  /* 分类 tab 并排一行,数量随版本不同,自适应列数 */
   .study-tabs {
     display: grid;
-    grid-template-columns: repeat(4, 1fr);
+    grid-template-columns: repeat(auto-fit, minmax(0, 1fr));
     gap: 6px;
   }
 
