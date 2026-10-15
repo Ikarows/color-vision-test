@@ -40,7 +40,7 @@ android {
     // 统一 APK 命名:应用名称 + 版本号(与 Windows 安装包格式对齐)
     applicationVariants.all { variant ->
         variant.outputs.all {
-            outputFileName = "色盲色弱助手 ${variant.versionName}.apk"
+            outputFileName = "色盲色弱助手 v${variant.versionName}.apk"
         }
     }
 }

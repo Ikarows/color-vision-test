@@ -16,7 +16,7 @@
       </button>
     </header>
 
-    <!-- 筛选工具条 -->
+    <!-- 筛选工具条:独立第二吸顶层,跟在返回条正下方一起悬浮 -->
     <div class="hs-toolbar">
       <div class="hs-selects">
         <select
@@ -276,22 +276,42 @@ onMounted(() => {
 });
 </script>
 
-<style>
+<style lang="scss" scoped>
 .hs-screen {
   max-width: 740px;
+  margin: 0 auto; /* .app 纵向 flex 下 max-width 会卡左,自动外边距水平居中 */
 }
 
 .hs-back {
-  margin-bottom: 16px;
+  //margin-bottom: 16px;
+}
+
+/* 筛选工具条:独立第二吸顶层,吸附在返回条正下方(top=返回条实测高度,由 App.vue 写入 --backbar-h) */
+.hs-toolbar {
+  position: sticky;
+  top: var(--backbar-h, 65px);
+  z-index: 19; /* 低于返回条,边缘重叠时返回条在上 */
+  width: calc(100% + 2rem); /* 负 margin 全宽,与返回条吸顶层对齐 */
+  max-width: none;
+  margin: 0 -1rem 6px;
+  box-sizing: border-box;
+  padding-left: max(1rem, calc(50% - 20.625rem));
+  padding-right: max(1rem, calc(50% - 20.625rem));
+  padding-bottom: 12px; /* 原 18px 间距 = 12px padding + 6px margin,悬浮背景含 padding 区不留缝 */
+  background: transparent;
+  transition: background 0.1s ease;
+}
+
+.hs-toolbar.scrolled {
+  background: #f6f9fd;
+  transition: background 0.25s ease;
 }
 
 /* ---------- 筛选工具条 ---------- */
 .hs-toolbar {
-  width: 100%;
   display: flex;
   flex-direction: column;
   gap: 12px;
-  margin-bottom: 18px;
 }
 
 .hs-selects {

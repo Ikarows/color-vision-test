@@ -8,6 +8,9 @@
   box-sizing: border-box;
 }
 
+/* 安卓 App 内由原生 JS 桥注入真实状态栏高度(css px)到 documentElement 内联样式;
+   不设样式表默认值:pxtorem 会把 0px 剥成裸 0,在 calc() 内属非法长度,
+   web 端由各处 var(--sbh, 0px) 的 0px 回退兜底 */
 html,
 body {
   font-family: "PingFang SC", "Microsoft YaHei", "Helvetica Neue", sans-serif;
@@ -34,7 +37,7 @@ body {
   flex-direction: column;
   align-items: center;
   /*padding: 36px 16px 56px;*/
-  padding: 25px 16px;
+  padding: 15px 16px 25px 16px;
 }
 
 .card {
@@ -286,24 +289,41 @@ em.good {
   color: #177a46;
 }
 
-/* 返回按钮容器:与内容区同宽居中,胶囊靠左 */
+/* ---------- 顶部吸顶工具栏(所有带返回的页面统一,全端生效) ---------- */
+/* 默认透明衔接页面一体;滚动吸顶后由 App.vue 加 .scrolled 显形为实色工具栏 */
 .back-bar {
-  width: 100%;
-  max-width: 660px;
-  margin: 0 auto 25px;
+  position: sticky;
+  top: 0;
+  z-index: 20;
   display: flex;
+  width: calc(100% + 2rem); /* 抵消 .screen 左右 padding,拉满全宽 */
+  max-width: none;
+  margin: 0 -1rem 0;
+  box-sizing: border-box;
+  padding: 12px max(1rem, calc(50% - 20.625rem)) 16px;
+  background: transparent;
+  /* 恢复不吸附时快速淡出(0.1s),避免半透明背景跟着按钮滑动显得不自然 */
+  transition: background 0.1s ease;
 }
 
+/* 滚动吸顶后:实色工具栏滑入,内容从其下方滚过被盖住(无底边框) */
+.back-bar.scrolled {
+  background: #f6f9fd;
+  /* 吸附显形走较自然的淡入 */
+  transition: background 0.25s ease;
+}
+
+/* 返回按钮:胶囊样式 */
 .back-link {
   display: inline-flex;
   align-items: center;
   gap: 5px;
-  margin-top: 0px; /* web 顶部 0px，安卓 App 内 15px（见下方覆盖） */
   border: 1px solid rgba(255, 255, 255, 0.8);
-  background: rgba(255, 255, 255, 0.85);
+  background: #fff;
   color: #45556b;
   font-size: 14px;
   font-weight: 700;
+  font-family: inherit;
   padding: 8px 18px 8px 13px;
   border-radius: 999px;
   box-shadow: 0 4px 14px rgba(43, 76, 126, 0.08);
@@ -322,6 +342,21 @@ em.good {
   flex-shrink: 0;
 }
 
-html.android-app .back-link {
-  margin-top: 30px;
+/* ---------- 安卓沉浸式:状态栏高度由原生注入为 --sbh,顶部元素自动避让 ---------- */
+/* 返回条垫在状态栏底下:顶部 padding 额外让出状态栏高度 */
+html.android-app .back-bar {
+  padding-top: calc(var(--sbh, 0px) + 12px);
+}
+
+/* 状态栏区域实色垫:首页等无工具栏页面,滚动内容经过状态栏底下时被盖住 */
+html.android-app .app::before {
+  content: "";
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: var(--sbh, 0px);
+  background: #f6f9fd;
+  pointer-events: none;
+  z-index: 80;
 }

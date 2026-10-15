@@ -20,6 +20,7 @@
     "directories": {
       "output": "release"
     },
+    "artifactName": "${productName} v${version}.${ext}",
     "afterPack": "scripts/afterPack.cjs",
     "files": [
       "dist/**/*",
@@ -42,6 +43,7 @@
   },
   "dependencies": {
     "@capacitor/android": "^5.7.8",
+    "@capacitor/app": "^5.0.8",
     "@capacitor/cli": "^5.7.8",
     "@capacitor/core": "^5.7.8",
     "vue": "^3.5.13"
@@ -49,12 +51,10 @@
   "devDependencies": {
     "@vitejs/plugin-vue": "^5.2.1",
     "postcss-pxtorem": "^6.1.0",
+    "sass-embedded": "^1.105.1",
     "vite": "^6.0.7"
   },
   "description": "<div align=\"center\">\r <p><img width=\"150\" src=\"./public/logo.png\"></p>",
-  "directories": {
-    "doc": "docs"
-  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/Ikarows/color-vision-test.git"

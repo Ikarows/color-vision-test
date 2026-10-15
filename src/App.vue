@@ -68,12 +68,13 @@
 </template>
 
 <script setup>
-import { onMounted } from "vue";
+import { onMounted, onUnmounted, nextTick, watch } from "vue";
 import { useStage } from "./composables/useStage.js";
 import { useRecords } from "./composables/useRecords.js";
 import { useStudy } from "./composables/useStudy.js";
 import { useQuiz, initQuizPreload } from "./composables/useQuiz.js";
 import { useZoom } from "./composables/useZoom.js";
+import { initBackKey } from "./composables/useBackKey.js";
 import MenuScreen from "./components/screens/MenuScreen.vue";
 import StartScreen from "./components/screens/StartScreen.vue";
 import ResultScreen from "./components/screens/ResultScreen.vue";
@@ -100,8 +101,50 @@ const {
 } = useQuiz();
 const { openZoom, openQuizZoom } = useZoom();
 
+// 吸顶工具栏:默认透明衔接页面一体,吸顶后加 .scrolled 显形为实色背景
+let barTicking = false;
+function updateBackBars() {
+  barTicking = false;
+  const bars = document.querySelectorAll(".back-bar");
+  let scrolled = false;
+  bars.forEach((bar, i) => {
+    if (i === 0) {
+      // 返回条吸顶层实测高度写入 CSS 变量,供体检点筛选条跟随吸附
+      document.documentElement.style.setProperty(
+        "--backbar-h",
+        bar.offsetHeight + "px"
+      );
+    }
+    scrolled = bar.getBoundingClientRect().top <= 1;
+    bar.classList.toggle("scrolled", scrolled);
+  });
+  // 体检点筛选条作为第二吸顶层,显色状态与返回条同步
+  document.querySelectorAll(".hs-toolbar").forEach((el) => {
+    el.classList.toggle("scrolled", scrolled);
+  });
+}
+function onWinScroll() {
+  if (!barTicking) {
+    barTicking = true;
+    requestAnimationFrame(updateBackBars);
+  }
+}
+
+// 页面切换时重置窗口滚动位置:SPA 切页后滚动残留会把新页面顶部内容顶出屏幕
+watch(stage, () => {
+  window.scrollTo(0, 0);
+  nextTick(updateBackBars);
+});
+
 // 答题页体检机素材:进入应用即后台预载(未就绪时答题页显示 loading 遮罩兜底)
 onMounted(() => {
   initQuizPreload();
+  initBackKey();
+  window.addEventListener("scroll", onWinScroll, { passive: true });
+  updateBackBars();
+});
+
+onUnmounted(() => {
+  window.removeEventListener("scroll", onWinScroll);
 });
 </script>

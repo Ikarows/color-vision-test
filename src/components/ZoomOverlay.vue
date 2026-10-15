@@ -12,38 +12,41 @@
       @wheel.prevent="onZoomWheel"
     >
       <!-- 学习关联切换:错题图放大时可切原图/技巧图/解析图
+           图片+切换按钮组成一组,按钮始终紧贴图片正下方;
            pointer 事件全部截断,tab 点击不进入底层缩放手势/关闭逻辑 -->
-      <div
-        v-if="zoomStudyItem"
-        class="zoom-tabs"
-        @click.stop
-        @pointerdown.stop
-        @pointerup.stop
-        @pointercancel.stop
-      >
-        <button
-          v-for="t in zoomTabs"
-          :key="t.key"
-          class="zoom-tab"
-          :class="{ active: zoomView === t.key }"
-          @click="zoomShowView(t.key)"
+      <div class="zoom-stage">
+        <img
+          ref="zoomImgEl"
+          :src="studyZoomSrc"
+          class="zoom-img"
+          :class="{ 'is-loading': zoomImgLoading }"
+          :style="{
+            transform: `translate(${zoomTx}px, ${zoomTy}px) scale(${zoomScale})`,
+          }"
+          alt="放大查看"
+          draggable="false"
+          @load="onZoomImgDone"
+          @error="onZoomImgDone"
+        />
+        <div
+          v-if="zoomStudyItem"
+          class="zoom-tabs"
+          @click.stop
+          @pointerdown.stop
+          @pointerup.stop
+          @pointercancel.stop
         >
-          {{ t.label }}
-        </button>
+          <button
+            v-for="t in zoomTabs"
+            :key="t.key"
+            class="zoom-tab"
+            :class="{ active: zoomView === t.key }"
+            @click="zoomShowView(t.key)"
+          >
+            {{ t.label }}
+          </button>
+        </div>
       </div>
-      <img
-        ref="zoomImgEl"
-        :src="studyZoomSrc"
-        class="zoom-img"
-        :class="{ 'is-loading': zoomImgLoading }"
-        :style="{
-          transform: `translate(${zoomTx}px, ${zoomTy}px) scale(${zoomScale})`,
-        }"
-        alt="放大查看"
-        draggable="false"
-        @load="onZoomImgDone"
-        @error="onZoomImgDone"
-      />
       <!-- 图片加载中:居中转圈(慢网络下切图时旧图淡出,避免看起来没反应) -->
       <transition name="fade">
         <div v-if="zoomImgLoading" class="zoom-loading" aria-hidden="true">
@@ -109,9 +112,20 @@ const {
   overscroll-behavior: contain;
 }
 
+/* 图片+切换按钮组:占满遮罩内区,按钮永远紧贴图片正下方一点点 */
+.zoom-stage {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 10px; /* 图片与按钮的间距("下面一点点") */
+}
+
 .zoom-img {
   max-width: 100%;
-  max-height: 100%;
+  max-height: calc(100% - 56px); /* 给正下方按钮留空间(按钮高+间距) */
   object-fit: contain;
   border-radius: 8px;
   user-select: none;
@@ -150,7 +164,7 @@ const {
 
 .zoom-close {
   position: absolute;
-  top: max(14px, env(safe-area-inset-top));
+  top: max(14px, var(--sbh, 0px), env(safe-area-inset-top));
   right: max(14px, env(safe-area-inset-right));
   width: 42px;
   height: 42px;
@@ -171,13 +185,8 @@ const {
   background: rgba(255, 255, 255, 0.28);
 }
 
-/* zoom 层顶部学习切换 tab:原图/技巧图/解析图 */
+/* zoom 层学习切换 tab:原图/技巧图/解析图(流式跟在图片正下方,不再绝对定位) */
 .zoom-tabs {
-  position: absolute;
-  top: 14px;
-  left: 50%;
-  transform: translateX(-50%);
-  z-index: 2;
   display: flex;
   gap: 4px;
   padding: 4px;
@@ -185,6 +194,8 @@ const {
   border-radius: 999px;
   backdrop-filter: blur(6px);
   max-width: 92%;
+  flex-shrink: 0;
+  margin-top: 15px;
 }
 
 .zoom-tab {
@@ -204,11 +215,11 @@ const {
   background: #2f6fed;
 }
 
-/* zoom 层底部答案/记忆技巧提示(不可交互,点击穿透到遮罩关闭) */
+/* zoom 层答案/记忆技巧提示:在切换 tab 上方(不可交互,点击穿透到遮罩关闭) */
 .zoom-tip {
   position: absolute;
   left: 50%;
-  bottom: 18px;
+  bottom: 20px;
   transform: translateX(-50%);
   z-index: 2;
   max-width: min(86%, 560px);

@@ -209,8 +209,11 @@ function fitQuizScale() {
   const GAP = 10; // 头屏与机身之间的最小间隙
   const needH = head.offsetHeight + body.offsetHeight + GAP;
   if (needH <= 0) return;
-  // 取容器与真实视口的较小值,避免容器被内容撑高时比例恒为 1
-  const availH = Math.min(screenEl.clientHeight, window.innerHeight);
+  // 取容器与真实视口的较小值,避免容器被内容撑高时比例恒为 1;
+  // 安卓沉浸式下顶部让出状态栏高度(--sbh 由原生注入,web 端为 0)
+  const sbh =
+    parseFloat(getComputedStyle(document.documentElement).getPropertyValue("--sbh")) || 0;
+  const availH = Math.min(screenEl.clientHeight, window.innerHeight) - sbh;
   quizScale.value = Math.min(1, availH / needH);
 }
 
@@ -274,6 +277,7 @@ onUnmounted(() => {
   max-width: 740px; /* 与学习模式一致的最大宽度 */
   margin: 0 auto;
   padding: 0; /* 机身图左右上下全部贴边 */
+  padding-top: var(--sbh, 0px); /* 安卓沉浸式:顶部让出状态栏(高度由原生注入) */
   display: flex;
   flex-direction: column;
   flex: none; /* 不随内容撑开,固定一屏高 */
@@ -394,11 +398,6 @@ onUnmounted(() => {
 }
 
 .quiz-top .back-link {
-  margin-top: 0;
-}
-
-/* 安卓 App 内的全局返回胶囊 15px 顶距在此不适用(吸顶已避开状态栏) */
-html.android-app .quiz-top .back-link {
   margin-top: 0;
 }
 

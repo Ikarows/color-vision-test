@@ -1,6 +1,7 @@
 <template>
   <div class="screen study-screen">
-    <header class="study-header">
+    <!-- 返回条直接挂在 .screen 下:sticky 只能在父容器内吸附,包在矮的 study-header 里会失效 -->
+    <div class="back-bar">
       <button class="back-link" @click="$emit('back')">
         <svg viewBox="0 0 20 20" width="15" height="15">
           <path
@@ -14,6 +15,8 @@
         </svg>
         返回菜单
       </button>
+    </div>
+    <header class="study-header">
       <div class="study-tabs">
         <button
           v-for="c in visibleCategories"
@@ -212,10 +215,6 @@ const showViewSwitch = computed(
 .study-header {
   width: 100%;
   margin-bottom: 18px;
-}
-
-.study-header .back-link {
-  margin-bottom: 20px;
 }
 
 .study-tabs {

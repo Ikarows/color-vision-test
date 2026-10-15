@@ -89,7 +89,7 @@ function onImgError(e) {
   align-items: flex-start;
   justify-content: center;
   overflow-y: auto;
-  padding: 24px 16px;
+  padding: calc(24px + var(--sbh, 0px)) 16px 24px; /* 顶部让出状态栏(安卓沉浸式) */
 }
 
 /* margin:auto 在 flex 中实现水平+垂直居中,内容超高时贴边可滚不裁顶 */

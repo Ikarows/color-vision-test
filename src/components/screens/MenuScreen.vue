@@ -361,7 +361,9 @@ onBeforeUnmount(() => {
 }
 
 html.android-app .menu-top {
-  top: 55px; /* 安卓状态栏避让,与 back-link 的 30px margin 基线一致(25+30) */
+  /* 安卓沉浸式:徽章常驻左上角(参考支付宝顶部操作条),25px 基线 + 状态栏高度 */
+  position: fixed;
+  top: calc(25px + var(--sbh, 0px));
 }
 
 .edition-badge-wrap {
@@ -373,7 +375,7 @@ html.android-app .menu-top {
   align-items: center;
   gap: 6px;
   border: 1px solid rgba(255, 255, 255, 0.8);
-  background: rgba(255, 255, 255, 0.85);
+  background: #fff;
   color: #45556b;
   font-size: 14px;
   font-weight: 700;
@@ -405,8 +407,7 @@ html.android-app .menu-top {
   top: calc(100% + 8px);
   left: 0;
   min-width: 196px;
-  background: rgba(255, 255, 255, 0.97);
-  backdrop-filter: blur(8px);
+  background: #fff;
   border: 1px solid rgba(255, 255, 255, 0.8);
   border-radius: 14px;
   box-shadow: 0 14px 36px rgba(43, 76, 126, 0.18);

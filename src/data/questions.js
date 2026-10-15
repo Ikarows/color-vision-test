@@ -1,9 +1,8 @@
 // 出题引擎(版本无关):干扰项派生 + 选项生成 + 洗牌
 // 干扰项不再手工维护固定池,按版本从题库答案自动派生:
-// 同类干扰优先取当前版本的同类答案,不足时并入其它注册版本的同类答案
-// (如 v6 仅一道茶壶题,茶壶的同类干扰自动取自 v5 的水杯/雨伞)
+// 各版本干扰词严格封闭在本版本题库内,不借用其它版本任何数据
 
-import { getEdition, EDITIONS, DEFAULT_EDITION_ID } from "./editions/index.js"
+import { getEdition, DEFAULT_EDITION_ID } from "./editions/index.js"
 
 // 随机打乱数组（返回新数组）
 export function shuffle(arr) {
@@ -31,43 +30,17 @@ function poolsOf(editionId) {
   return poolCache.get(id)
 }
 
-// 全部注册版本的合并池(当前版本同类答案不足时的补充来源)
-let unionPools = null
-function poolsOfAll() {
-  if (!unionPools) {
-    const sets = {}
-    for (const e of EDITIONS) {
-      for (const q of e.questions ?? []) {
-        ;(sets[q.type] ??= new Set()).add(q.answer)
-      }
-    }
-    unionPools = {}
-    for (const t of Object.keys(sets)) unionPools[t] = [...sets[t]]
-  }
-  return unionPools
-}
-
 // 为每道题生成 6 个选项(1 个正确答案 + 5 个干扰,顺序随机):
-// 同类干扰最多 2 个(当前版本同类答案优先,不足由其它版本同类答案补),
-// 其余从跨类型答案池补足;数字类选项自然混入上下排/并列双图等题型的选项中
+// 同类干扰最多 2 个,其余从本版本跨类型答案池补足;
+// 数字类选项自然混入上下排/并列双图等题型的选项中
 export function buildOptions(question) {
   const own = poolsOf(question.editionId)
-  const all = poolsOfAll()
-  let same = shuffle(
+  const same = shuffle(
     (own[question.type] ?? []).filter((a) => a !== question.answer),
   ).slice(0, 2)
-  if (same.length < 2) {
-    same = same.concat(
-      shuffle(
-        [...new Set(all[question.type] ?? [])].filter(
-          (a) => a !== question.answer && !same.includes(a),
-        ),
-      ).slice(0, 2 - same.length),
-    )
-  }
-  const crossPool = Object.keys(all)
+  const crossPool = Object.keys(own)
     .filter((t) => t !== question.type)
-    .flatMap((t) => all[t] ?? [])
+    .flatMap((t) => own[t] ?? [])
   const cross = shuffle(
     [...new Set(crossPool)].filter(
       (a) => a !== question.answer && !same.includes(a),
