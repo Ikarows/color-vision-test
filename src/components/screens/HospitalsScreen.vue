@@ -221,7 +221,7 @@ let observer = null;
 
 const shownList = computed(() => filtered.value.slice(0, shownCount.value));
 const remainingCount = computed(
-  () => filtered.value.length - shownList.value.length
+  () => filtered.value.length - shownList.value.length,
 );
 
 function loadMore() {
@@ -251,7 +251,7 @@ onMounted(() => {
       if (entries.some((en) => en.isIntersecting) && remainingCount.value > 0)
         loadMore();
     },
-    { rootMargin: "200px" }
+    { rootMargin: "200px" },
   );
   if (sentinelRef.value && remainingCount.value > 0)
     observer.observe(sentinelRef.value);
@@ -293,18 +293,20 @@ onMounted(() => {
   z-index: 19; /* 低于返回条,边缘重叠时返回条在上 */
   width: calc(100% + 2rem); /* 负 margin 全宽,与返回条吸顶层对齐 */
   max-width: none;
-  margin: 0 -1rem 6px;
+  margin: 0 -1rem; /* 底部间距并入 padding:margin 在背景外会留透明缝,内容从缝里穿出 */
   box-sizing: border-box;
   padding-left: max(1rem, calc(50% - 20.625rem));
   padding-right: max(1rem, calc(50% - 20.625rem));
-  padding-bottom: 12px; /* 原 18px 间距 = 12px padding + 6px margin,悬浮背景含 padding 区不留缝 */
+  /* 18px 间距全部放进 padding:margin 在背景外会留一条透明缝,滚动时列表内容从缝里穿出来 */
+  padding-bottom: 18px;
   background: transparent;
   transition: background 0.1s ease;
 }
 
 .hs-toolbar.scrolled {
   background: #f6f9fd;
-  transition: background 0.25s ease;
+  /* 淡入要快:0.25s 的渐显会让卡片从半透明背景里透出来,看起来像内容穿过 */
+  transition: background 0.1s ease;
 }
 
 /* ---------- 筛选工具条 ---------- */
@@ -316,13 +318,16 @@ onMounted(() => {
 
 .hs-selects {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  /* minmax(0,1fr):允许列宽压到内容以下,省市 option 文字过长时不再把整页撑出横向溢出 */
+  grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 8px;
 }
 
 .hs-select {
   appearance: none;
   -webkit-appearance: none;
+  min-width: 0; /* 配合 minmax(0,1fr),长 option 文字在窄屏下裁剪而非撑破布局 */
+  text-overflow: ellipsis;
   border: 1px solid rgba(255, 255, 255, 0.8);
   background: rgba(255, 255, 255, 0.92);
   color: #33445c;
@@ -466,7 +471,11 @@ onMounted(() => {
   position: absolute;
   inset: -14px;
   border-radius: 50%;
-  background: radial-gradient(circle, rgba(94, 150, 255, 0.28) 0%, transparent 70%);
+  background: radial-gradient(
+    circle,
+    rgba(94, 150, 255, 0.28) 0%,
+    transparent 70%
+  );
   animation: quiz-breath 1.6s ease-in-out infinite;
 }
 

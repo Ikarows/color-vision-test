@@ -21,6 +21,12 @@ body {
   text-size-adjust: 100%;
 }
 
+/* 预留滚动条槽位:列表高度增减(筛选/无限加载)导致滚动条出现/消失时,
+   页面不再被占走的约 17px 宽度挤得左右晃动;安卓等覆盖式滚动条无此问题,该规则对它们无副作用 */
+html {
+  scrollbar-gutter: stable;
+}
+
 .app {
   min-height: 100vh;
   display: flex;
@@ -126,7 +132,7 @@ body {
 }
 
 .disclaimer {
-  margin-top: 10px;
+  margin-top: 18px;
   font-size: 12px;
   color: #9aa8b8;
 }
@@ -309,8 +315,8 @@ em.good {
 /* 滚动吸顶后:实色工具栏滑入,内容从其下方滚过被盖住(无底边框) */
 .back-bar.scrolled {
   background: #f6f9fd;
-  /* 吸附显形走较自然的淡入 */
-  transition: background 0.25s ease;
+  /* 淡入要快:慢渐显会让内容从半透明状态栏区域里透出来 */
+  transition: background 0.1s ease;
 }
 
 /* 返回按钮:胶囊样式 */
@@ -344,19 +350,7 @@ em.good {
 
 /* ---------- 安卓沉浸式:状态栏高度由原生注入为 --sbh,顶部元素自动避让 ---------- */
 /* 返回条垫在状态栏底下:顶部 padding 额外让出状态栏高度 */
+/* 注意:不要再给状态栏区域加实色垫,否则页面背景透不上来,沉浸式会看起来"没生效" */
 html.android-app .back-bar {
   padding-top: calc(var(--sbh, 0px) + 12px);
-}
-
-/* 状态栏区域实色垫:首页等无工具栏页面,滚动内容经过状态栏底下时被盖住 */
-html.android-app .app::before {
-  content: "";
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  height: var(--sbh, 0px);
-  background: #f6f9fd;
-  pointer-events: none;
-  z-index: 80;
 }

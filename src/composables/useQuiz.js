@@ -261,9 +261,11 @@ function choose(opt) {
   lastCorrect.value = correct;
   if (correct) correctCount.value++;
   records.value.push({ index: currentIndex.value, chosen: opt, correct });
-  // 答题间隙预载下一题检查图,切题时避免图片闪加载
-  const nextQ = questions.value[currentIndex.value + 1];
-  if (nextQ) preloadImage(platePath(nextQ.image, nextQ.editionId));
+  // 答题间隙预载下两题检查图,慢网络下切题时图片已就绪,避免空白等待
+  for (const offset of [1, 2]) {
+    const nextQ = questions.value[currentIndex.value + offset];
+    if (nextQ) preloadImage(platePath(nextQ.image, nextQ.editionId));
+  }
   if (!correct) {
     shaking.value = true;
     setTimeout(() => (shaking.value = false), 400);

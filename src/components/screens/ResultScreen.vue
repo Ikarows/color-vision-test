@@ -1,12 +1,10 @@
 <template>
   <div class="screen result-screen">
+    <!-- 吸顶状态栏垫:无返回按钮,滚动时不让内容穿过状态栏区域 -->
+    <StatusBarPad />
     <div class="card result-card">
       <h2>{{ drivingResult ? "模拟判定完成" : "测试完成" }}</h2>
-      <div
-        v-if="drivingResult"
-        class="driving-verdict"
-        :class="drivingResult"
-      >
+      <div v-if="drivingResult" class="driving-verdict" :class="drivingResult">
         {{
           drivingResult === "pass"
             ? "驾照自助机模拟 · 通过"
@@ -67,8 +65,9 @@
             <div class="wrong-info">
               <span class="wrong-no">第 {{ item.index + 1 }} 题</span>
               <span
-                >你的选择:<em class="bad">{{ item.chosen ?? "超时未答" }}</em
-              ></span
+                >你的选择:<em class="bad">{{
+                  item.chosen ?? "超时未答"
+                }}</em></span
               >
               <span
                 >正确答案:<em class="good">{{ item.q.answer }}</em></span
@@ -93,6 +92,7 @@
 <script setup>
 import { computed } from "vue";
 import { platePath } from "../../utils/assets.js";
+import StatusBarPad from "../StatusBarPad.vue";
 
 const props = defineProps({
   correctCount: { type: Number, required: true },

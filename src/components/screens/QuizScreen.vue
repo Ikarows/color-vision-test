@@ -210,10 +210,12 @@ function fitQuizScale() {
   const needH = head.offsetHeight + body.offsetHeight + GAP;
   if (needH <= 0) return;
   // 取容器与真实视口的较小值,避免容器被内容撑高时比例恒为 1;
-  // 安卓沉浸式下顶部让出状态栏高度(--sbh 由原生注入,web 端为 0)
+  // 可用高度取机器容器实际高度(flex 已自动扣除顶部留白,兼容安卓状态栏额外避让)
   const sbh =
-    parseFloat(getComputedStyle(document.documentElement).getPropertyValue("--sbh")) || 0;
-  const availH = Math.min(screenEl.clientHeight, window.innerHeight) - sbh;
+    parseFloat(
+      getComputedStyle(document.documentElement).getPropertyValue("--sbh"),
+    ) || 0;
+  const availH = Math.min(tjj.clientHeight, window.innerHeight - sbh);
   quizScale.value = Math.min(1, availH / needH);
 }
 
@@ -285,6 +287,11 @@ onUnmounted(() => {
   height: 100dvh; /* 动态视口高,移动端地址栏收展也精确 */
   min-height: 0;
   overflow: hidden; /* 缩放前的布局溢出不撑开页面 */
+}
+
+/* 安卓沉浸式:状态栏高度外再留一段距离,机头不贴着状态栏下沿(web 端无此规则,机器保持贴边) */
+html.android-app .screen.quiz-screen {
+  padding-top: calc(var(--sbh, 0px) + 12px);
 }
 
 /* 素材加载遮罩:浅色半透明毛玻璃,与全局浅色主题融合,模糊盖住图片加载过程 */
@@ -684,12 +691,12 @@ onUnmounted(() => {
   left: 22%;
   top: 47.9%;
   width: 56%;
-  height: 47.5%;
+  height: 44%; /* 底边上提(原 47.5%),给机身底部留出空间 */
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   grid-template-rows: repeat(2, 1fr);
   column-gap: 6.1%;
-  row-gap: 17.9%;
+  row-gap: 12%; /* 第二排上移贴近第一排(原 17.9%),与高度同步收紧后卡片高度不变 */
 }
 
 .tjj-option {

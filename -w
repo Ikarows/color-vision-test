@@ -1,0 +1,9 @@
+HTTP/1.1 200 OK
+Server: nginx/1.22.1
+Date: Thu, 15 Oct 2026 12:16:49 GMT
+Content-Type: text/html
+Connection: keep-alive
+Vary: Accept-Encoding
+Strict-Transport-Security: max-age=31536000
+X-TUNA-MIRROR-ID: neomirrors
+

@@ -1,154 +1,167 @@
 <template>
   <div class="screen menu-screen">
-    <div class="menu-top">
-      <div class="edition-badge-wrap">
-        <button
-          class="edition-badge"
-          :class="{ open: badgeOpen }"
-          aria-label="切换题库版本"
-          @click="badgeOpen = !badgeOpen"
-        >
-          {{ edition.edition }}
-          <svg viewBox="0 0 20 20" width="11" height="11">
-            <path
-              d="M5.5 8l4.5 4.5L14.5 8"
-              fill="none"
-              stroke="currentColor"
-              stroke-width="2.4"
-              stroke-linecap="round"
-              stroke-linejoin="round"
-            />
-          </svg>
-        </button>
-        <div v-if="badgeOpen" class="edition-menu">
+    <!-- 顶部吸顶条:只放版本徽章,复用 .back-bar 机制(默认透明,吸顶后由 App.vue 加 .scrolled 变实色) -->
+    <header class="menu-top-bar back-bar">
+      <div class="menu-top">
+        <div class="edition-badge-wrap">
           <button
-            v-for="e in editions"
-            :key="e.id"
-            class="edition-option"
-            :class="{ active: edition.id === e.id }"
-            @click="pickEdition(e.id)"
+            class="edition-badge"
+            :class="{ open: badgeOpen }"
+            aria-label="切换题库版本"
+            @click="badgeOpen = !badgeOpen"
           >
-            <span> {{ e.name }} {{ e.source }}{{ e.edition }}</span>
-            <svg
-              v-if="edition.id === e.id"
-              viewBox="0 0 20 20"
-              width="14"
-              height="14"
-            >
+            {{ edition.edition }}
+            <svg viewBox="0 0 20 20" width="11" height="11">
               <path
-                d="M3 10.5l4.5 4.5L17 5.5"
+                d="M5.5 8l4.5 4.5L14.5 8"
                 fill="none"
                 stroke="currentColor"
-                stroke-width="3"
+                stroke-width="2.4"
                 stroke-linecap="round"
                 stroke-linejoin="round"
               />
             </svg>
           </button>
+          <div v-if="badgeOpen" class="edition-menu">
+            <button
+              v-for="e in editions"
+              :key="e.id"
+              class="edition-option"
+              :class="{ active: edition.id === e.id }"
+              @click="pickEdition(e.id)"
+            >
+              <span> {{ e.name }} {{ e.source }}{{ e.edition }}</span>
+              <svg
+                v-if="edition.id === e.id"
+                viewBox="0 0 20 20"
+                width="14"
+                height="14"
+              >
+                <path
+                  d="M3 10.5l4.5 4.5L17 5.5"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="3"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                />
+              </svg>
+            </button>
+          </div>
         </div>
       </div>
-    </div>
+      <div class="brand">
+        <img
+          class="brand-logo"
+          :src="BRAND_LOGO_SRC"
+          alt="色盲色弱助手 logo"
+          draggable="false"
+        />
+      </div>
+      <h1 class="title">色盲色弱助手</h1>
+    </header>
     <!-- 版本切换动画:内容包一层带 key 的容器,切换时整组重建重放入场动画;display:contents 不影响原 flex 布局 -->
     <div :key="edition.id" class="menu-body">
-    <div class="brand">
-      <img
-        class="brand-logo"
-        :src="BRAND_LOGO_SRC"
-        alt="色盲色弱助手 logo"
-        draggable="false"
-      />
-    </div>
-    <h1 class="title">色盲色弱助手</h1>
-    <p class="subtitle">基于{{ editionLabel }} · 共 {{ totalCount }} 题</p>
+      <p class="subtitle">基于{{ editionLabel }} · 共 {{ totalCount }} 题</p>
 
-    <div class="menu-cards">
-      <button class="menu-card study" @click="$emit('study')">
-        <span class="menu-icon">
+      <div class="menu-cards">
+        <button class="menu-card study" @click="$emit('study')">
+          <span class="menu-icon">
+            <svg
+              viewBox="0 0 24 24"
+              width="30"
+              height="30"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="1.8"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            >
+              <path
+                d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20V4H6.5A2.5 2.5 0 0 0 4 6.5v13z"
+              />
+              <path d="M4 19.5A2.5 2.5 0 0 0 6.5 22H20v-5" />
+              <path d="M9 8h7M9 12h5" />
+            </svg>
+          </span>
+          <span class="menu-name">技巧记图</span>
+          <span class="menu-desc"
+            >逐图记忆技巧讲解<br />简单 {{ categoryCount("easy") }} · 特征
+            {{ categoryCount("feature") }} · 数字
+            {{ categoryCount("number") }}</span
+          >
+        </button>
+        <button class="menu-card quiz" @click="$emit('start')">
+          <span class="menu-icon">
+            <svg
+              viewBox="0 0 24 24"
+              width="30"
+              height="30"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="1.8"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            >
+              <path d="M9 11l3 3L22 4" />
+              <path
+                d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"
+              />
+            </svg>
+          </span>
+          <span class="menu-name">体检模拟</span>
+          <span class="menu-desc"
+            >模拟体检自测<br />固定顺序 · 随机 10 / 20 / 全部</span
+          >
+        </button>
+      </div>
+
+      <!-- 体检点查询入口:全宽横条卡 -->
+      <button class="menu-entry" @click="$emit('hospitals')">
+        <span class="menu-entry-icon">
           <svg
             viewBox="0 0 24 24"
-            width="30"
-            height="30"
+            width="24"
+            height="24"
             fill="none"
             stroke="currentColor"
             stroke-width="1.8"
             stroke-linecap="round"
             stroke-linejoin="round"
           >
-            <path
-              d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20V4H6.5A2.5 2.5 0 0 0 4 6.5v13z"
-            />
-            <path d="M4 19.5A2.5 2.5 0 0 0 6.5 22H20v-5" />
-            <path d="M9 8h7M9 12h5" />
+            <path d="M20 10c0 6-8 12-8 12S4 16 4 10a8 8 0 1 1 16 0z" />
+            <circle cx="12" cy="10" r="3" />
           </svg>
         </span>
-        <span class="menu-name">技巧记图</span>
-        <span class="menu-desc"
-          >逐图记忆技巧讲解<br />简单 {{ categoryCount("easy") }} · 特征
-          {{ categoryCount("feature") }} · 数字
-          {{ categoryCount("number") }}</span
-        >
-      </button>
-      <button class="menu-card quiz" @click="$emit('start')">
-        <span class="menu-icon">
-          <svg
-            viewBox="0 0 24 24"
-            width="30"
-            height="30"
-            fill="none"
-            stroke="currentColor"
-            stroke-width="1.8"
-            stroke-linecap="round"
-            stroke-linejoin="round"
-          >
-            <path d="M9 11l3 3L22 4" />
-            <path
-              d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"
-            />
-          </svg>
+        <span class="menu-entry-text">
+          <span class="menu-entry-name">体检点查询</span>
+          <span class="menu-entry-desc">按省市查找提供色觉检查的体检机构</span>
         </span>
-        <span class="menu-name">体检模拟</span>
-        <span class="menu-desc"
-          >模拟体检自测<br />固定顺序 · 随机 10 / 20 / 全部</span
-        >
-      </button>
-    </div>
-
-    <!-- 体检点查询入口:全宽横条卡 -->
-    <button class="menu-entry" @click="$emit('hospitals')">
-      <span class="menu-entry-icon">
         <svg
-          viewBox="0 0 24 24"
-          width="24"
-          height="24"
-          fill="none"
-          stroke="currentColor"
-          stroke-width="1.8"
-          stroke-linecap="round"
-          stroke-linejoin="round"
+          class="menu-entry-arrow"
+          viewBox="0 0 20 20"
+          width="14"
+          height="14"
         >
-          <path d="M20 10c0 6-8 12-8 12S4 16 4 10a8 8 0 1 1 16 0z" />
-          <circle cx="12" cy="10" r="3" />
+          <path
+            d="M7.5 4.5L13 10l-5.5 5.5"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2.2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          />
         </svg>
-      </span>
-      <span class="menu-entry-text">
-        <span class="menu-entry-name">体检点查询</span>
-        <span class="menu-entry-desc">按省市查找提供色觉检查的体检机构</span>
-      </span>
-      <svg class="menu-entry-arrow" viewBox="0 0 20 20" width="14" height="14">
-        <path
-          d="M7.5 4.5L13 10l-5.5 5.5"
-          fill="none"
-          stroke="currentColor"
-          stroke-width="2.2"
-          stroke-linecap="round"
-          stroke-linejoin="round"
-        />
-      </svg>
-    </button>
+      </button>
     </div>
 
     <!-- 版本切换胶囊:居中弹出,背后带局部柔光垫,避免与内容硬碰 -->
-    <div v-if="switching" :key="'sweep-' + edition.id" class="edition-sweep" aria-hidden="true">
+    <div
+      v-if="switching"
+      :key="'sweep-' + edition.id"
+      class="edition-sweep"
+      aria-hidden="true"
+    >
       <div class="es-pad"></div>
       <div class="es-label">已切换 · {{ edition.edition }}</div>
     </div>
@@ -202,8 +215,9 @@ onBeforeUnmount(() => {
 <style>
 /* ---------- 首页菜单 ---------- */
 .menu-screen {
-  justify-content: center;
   position: relative;
+  /* 原justify-content:center在内容超高时顶端滚不到底,头部吸顶永远无法触发;
+     改为首尾 auto 外边距实现溢出安全居中(空间够时居中,超高时贴顶可滚动) */
 }
 
 .menu-cards {
@@ -346,24 +360,37 @@ onBeforeUnmount(() => {
 
 /* 版权行:仅首页菜单使用 */
 .copyright {
-  margin-top: 10px;
+  margin-top: 8px;
+  margin-bottom: auto; /* 尾部 auto 外边距:与头部块顶部 auto 配对,实现溢出安全居中 */
   font-size: 12px;
   color: #9aa8b8;
   text-align: center;
 }
 
-/* 左上角版本切换:固定贴角,与子页面返回栏同一水平基线;宽屏时左缘不超过内容区 */
-.menu-top {
-  position: absolute;
-  top: 25px;
-  left: max(16px, calc(50% - 330px));
-  z-index: 5;
+/* 吸顶条:徽章行+logo+标题纵向排列,外观与原头部一致,滚动时整组吸顶
+   (沿用 .back-bar 机制:透明→吸顶实色盖住滚过的内容,安卓 padding-top 让出状态栏) */
+.menu-top-bar.back-bar {
+  flex-direction: column;
+  align-items: center;
 }
 
-html.android-app .menu-top {
-  /* 安卓沉浸式:徽章常驻左上角(参考支付宝顶部操作条),25px 基线 + 状态栏高度 */
-  position: fixed;
-  top: calc(25px + var(--sbh, 0px));
+/* 徽章行在头部块内左对齐(横向 padding 已按内容区对齐),与 logo 保持原间距 */
+.menu-top {
+  align-self: flex-start;
+  margin-bottom: 12px;
+}
+
+/* 吸顶后用页面同款渐变(.app 背景的顶部一段)代替纯色,与页面背景无缝衔接 */
+.menu-top-bar.back-bar.scrolled {
+  background:
+    radial-gradient(1200px 500px at 80% -10%, #dbeafe 0%, transparent 55%),
+    radial-gradient(900px 420px at -10% 30%, #e0f2f1 0%, transparent 50%),
+    linear-gradient(180deg, #f6f9fd 0%, #eef2f7 100%);
+}
+
+/* 溢出安全居中:吸顶条下方的内容组首尾 auto 外边距(空间够时居中,超高时贴顶可滚动,吸顶才可触发) */
+.menu-body > .subtitle {
+  margin-top: auto;
 }
 
 .edition-badge-wrap {
@@ -467,7 +494,7 @@ html.android-app .menu-top {
   display: contents;
 }
 
-/* 切换后逐项错落入场(brand/标题/副标题/卡片区/查询入口 共 5 项) */
+/* 切换后逐项错落入场(副标题/卡片区/查询入口 共 3 项;logo/标题已上移吸顶条,不参与重播) */
 .menu-body > * {
   animation: edIn 0.5s cubic-bezier(0.22, 1, 0.36, 1) backwards;
 }
