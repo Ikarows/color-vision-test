@@ -1,6 +1,7 @@
 <template>
   <div class="screen menu-screen">
-    <!-- 顶部吸顶条:只放版本徽章,复用 .back-bar 机制(默认透明,吸顶后由 App.vue 加 .scrolled 变实色) -->
+    <!-- 顶部吸顶条:只放版本徽章胶囊,复用 .back-bar 机制(默认透明,吸顶后由 App.vue 加 .scrolled 变实色);
+         logo 与标题已挪出吸顶条,随页面内容一起滚动 -->
     <header class="menu-top-bar back-bar">
       <div class="menu-top">
         <div class="edition-badge-wrap">
@@ -50,6 +51,9 @@
           </div>
         </div>
       </div>
+    </header>
+    <!-- 版本切换动画:内容包一层带 key 的容器,切换时整组重建重放入场动画;display:contents 不影响原 flex 布局 -->
+    <div :key="edition.id" class="menu-body">
       <div class="brand">
         <img
           class="brand-logo"
@@ -59,9 +63,6 @@
         />
       </div>
       <h1 class="title">色盲色弱助手</h1>
-    </header>
-    <!-- 版本切换动画:内容包一层带 key 的容器,切换时整组重建重放入场动画;display:contents 不影响原 flex 布局 -->
-    <div :key="edition.id" class="menu-body">
       <p class="subtitle">基于{{ editionLabel }} · 共 {{ totalCount }} 题</p>
 
       <div class="menu-cards">
@@ -367,17 +368,12 @@ onBeforeUnmount(() => {
   text-align: center;
 }
 
-/* 吸顶条:徽章行+logo+标题纵向排列,外观与原头部一致,滚动时整组吸顶
+/* 吸顶条:只保留版本徽章胶囊一行(logo/标题已挪出,随内容滚动)
    (沿用 .back-bar 机制:透明→吸顶实色盖住滚过的内容,安卓 padding-top 让出状态栏) */
-.menu-top-bar.back-bar {
-  flex-direction: column;
-  align-items: center;
-}
 
-/* 徽章行在头部块内左对齐(横向 padding 已按内容区对齐),与 logo 保持原间距 */
+/* 徽章行在吸顶条内左对齐(横向 padding 已按内容区对齐) */
 .menu-top {
   align-self: flex-start;
-  margin-bottom: 12px;
 }
 
 /* 吸顶后用页面同款渐变(.app 背景的顶部一段)代替纯色,与页面背景无缝衔接 */
@@ -388,8 +384,9 @@ onBeforeUnmount(() => {
     linear-gradient(180deg, #f6f9fd 0%, #eef2f7 100%);
 }
 
-/* 溢出安全居中:吸顶条下方的内容组首尾 auto 外边距(空间够时居中,超高时贴顶可滚动,吸顶才可触发) */
-.menu-body > .subtitle {
+/* 溢出安全居中:auto 外边距打在内容组首项(logo)上,logo/标题随内容一起居中
+   (空间够时整组居中,超高时贴顶可滚动,吸顶才可触发) */
+.menu-body > .brand {
   margin-top: auto;
 }
 
@@ -494,7 +491,7 @@ onBeforeUnmount(() => {
   display: contents;
 }
 
-/* 切换后逐项错落入场(副标题/卡片区/查询入口 共 3 项;logo/标题已上移吸顶条,不参与重播) */
+/* 切换后逐项错落入场(logo/标题/副标题/卡片区/查询入口 共 5 项,随内容滚动一并重播) */
 .menu-body > * {
   animation: edIn 0.5s cubic-bezier(0.22, 1, 0.36, 1) backwards;
 }

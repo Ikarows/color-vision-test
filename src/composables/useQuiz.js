@@ -23,7 +23,18 @@ const { refreshStats, wrongPlateStats } = useRecords();
 // 进入应用即后台静默预载体检机图片;未就绪时答题页显示 loading 遮罩兜底
 const machineReady = ref(false);
 const plateReady = ref(false);
-const quizLoading = computed(() => !machineReady.value || !plateReady.value);
+// 加载遮罩最短显示 0.5s:素材秒开时避免"设备启动中"一闪而过,保证启动动效可感知
+const QUIZ_BOOT_MIN = 500;
+const bootMinDone = ref(false);
+let bootMinTimer = null;
+function beginBootMin() {
+  bootMinDone.value = false;
+  clearTimeout(bootMinTimer);
+  bootMinTimer = setTimeout(() => (bootMinDone.value = true), QUIZ_BOOT_MIN);
+}
+const quizLoading = computed(
+  () => !machineReady.value || !plateReady.value || !bootMinDone.value,
+);
 
 let preloadStarted = false;
 // 由 App.vue onMounted 调用一次(模块级保证幂等)
@@ -152,6 +163,7 @@ function startTest() {
   drivingRoundStart.value = 0;
   drillMode.value = false;
   plateReady.value = false;
+  beginBootMin();
   loadQuestion();
   stage.value = "quiz";
 }
@@ -180,6 +192,7 @@ function startWrongDrill() {
   drivingRoundStart.value = 0;
   drillMode.value = true;
   plateReady.value = false;
+  beginBootMin();
   loadQuestion();
   stage.value = "quiz";
 }
@@ -241,7 +254,7 @@ function startDrivingRetest() {
       .map((q) => withEdition(q, edition.value.id)),
   );
   currentIndex.value = drivingRoundStart.value;
-  plateReady.value = false;
+  // 复测是答题中途换题:不重置 plateReady、不弹加载遮罩,新题图在固定比例图框内直接换入
   loadQuestion();
 }
 
