@@ -6,8 +6,9 @@
 // 图片素材:检查图在 public/plates/v5/、学习图在 public/study/v5/
 //   (q_*.png 为红框标注技巧图,仅 24 张有;*_d1.png 为黑底解析图,65 张全有)
 
-// ---------- 测试题(65 道) ----------
+// ---------- 测试题(65 道;按题型分组:数字 / 动物 / 形状 / 整行数字 / 物品) ----------
 const QUESTIONS = [
+  // ---------- 数字(32) ----------
   { image: 'image1.jpeg',  answer: '98',  type: 'number' },
   { image: 'image2.jpeg',  answer: '291', type: 'number' },
   { image: 'image3.jpeg',  answer: '628', type: 'number' },
@@ -21,32 +22,6 @@ const QUESTIONS = [
   { image: 'image11.jpeg', answer: '62',  type: 'number' },
   { image: 'image12.jpeg', answer: '2/9', type: 'number' },
   { image: 'image13.jpeg', answer: '6/0', type: 'number' },
-  { image: 'image14.jpeg', answer: '☆', type: 'shape' },
-  { image: 'image15.jpeg', answer: '△/○', type: 'shape' },
-  { image: 'image16.jpeg', answer: '☆', type: 'shape' },
-  { image: 'image17.jpeg', answer: '○/○', type: 'shape' },
-  { image: 'image18.jpeg', answer: '○', type: 'shape' },
-  { image: 'image19.jpeg', answer: '○/△', type: 'shape' },
-  { image: 'image20.jpeg', answer: '△/○/△', type: 'shape' },
-  { image: 'image21.jpeg', answer: '□/△', type: 'shape' },
-  { image: 'image22.jpeg', answer: '○/☆', type: 'shape' },
-  { image: 'image23.jpeg', answer: '茶壶', type: 'object' },
-  { image: 'image24.jpeg', answer: '眼镜', type: 'object' },
-  { image: 'image25.jpeg', answer: '○/✂', type: 'shape' },
-  { image: 'image26.jpeg', answer: '水杯', type: 'object' },
-  { image: 'image27.jpeg', answer: '鱼',   type: 'animal' },
-  { image: 'image28.jpeg', answer: '鹅',   type: 'animal' },
-  { image: 'image29.jpeg', answer: '燕子', type: 'animal' },
-  { image: 'image30.jpeg', answer: '蝴蝶', type: 'animal' },
-  { image: 'image31.jpeg', answer: '蜻蜓', type: 'animal' },
-  { image: 'image32.jpeg', answer: '鸽子', type: 'animal' },
-  { image: 'image33.jpeg', answer: '牛',   type: 'animal' },
-  { image: 'image34.jpeg', answer: '狗',   type: 'animal' },
-  { image: 'image35.jpeg', answer: '羊',   type: 'animal' },
-  { image: 'image36.jpeg', answer: '☂', type: 'object' },
-  { image: 'image37.jpeg', answer: '熊猫', type: 'animal' },
-  { image: 'image38.jpeg', answer: '899/022', type: 'rows' },
-  { image: 'image39.jpeg', answer: '621/989', type: 'rows' },
   { image: 'image40.jpeg', answer: '812',  type: 'number' },
   { image: 'image41.jpeg', answer: '908',  type: 'number' },
   { image: 'image42.jpeg', answer: '6098', type: 'number' },
@@ -66,6 +41,30 @@ const QUESTIONS = [
   { image: 'image56.jpeg', answer: '68',   type: 'number' },
   { image: 'image57.jpeg', answer: '26',   type: 'number' },
   { image: 'image58.jpeg', answer: '16',   type: 'number' },
+
+  // ---------- 动物(10) ----------
+  { image: 'image27.jpeg', answer: '鱼',   type: 'animal' },
+  { image: 'image28.jpeg', answer: '鹅',   type: 'animal' },
+  { image: 'image29.jpeg', answer: '燕子', type: 'animal' },
+  { image: 'image30.jpeg', answer: '蝴蝶', type: 'animal' },
+  { image: 'image31.jpeg', answer: '蜻蜓', type: 'animal' },
+  { image: 'image32.jpeg', answer: '鸽子', type: 'animal' },
+  { image: 'image33.jpeg', answer: '牛',   type: 'animal' },
+  { image: 'image34.jpeg', answer: '狗',   type: 'animal' },
+  { image: 'image35.jpeg', answer: '羊',   type: 'animal' },
+  { image: 'image37.jpeg', answer: '熊猫', type: 'animal' },
+
+  // ---------- 形状(17) ----------
+  { image: 'image14.jpeg', answer: '☆', type: 'shape' },
+  { image: 'image15.jpeg', answer: '△/○', type: 'shape' },
+  { image: 'image16.jpeg', answer: '☆', type: 'shape' },
+  { image: 'image17.jpeg', answer: '○/○', type: 'shape' },
+  { image: 'image18.jpeg', answer: '○', type: 'shape' },
+  { image: 'image19.jpeg', answer: '○/△', type: 'shape' },
+  { image: 'image20.jpeg', answer: '△/○/△', type: 'shape' },
+  { image: 'image21.jpeg', answer: '□/△', type: 'shape' },
+  { image: 'image22.jpeg', answer: '○/☆', type: 'shape' },
+  { image: 'image25.jpeg', answer: '○/✂', type: 'shape' },
   { image: 'image59.jpeg', answer: '○', type: 'shape' },
   { image: 'image60.jpeg', answer: '○/□', type: 'shape' },
   { image: 'image61.jpeg', answer: '○/△', type: 'shape' },
@@ -73,12 +72,22 @@ const QUESTIONS = [
   { image: 'image63.jpeg', answer: '△/○', type: 'shape' },
   { image: 'image64.jpeg', answer: '△/□', type: 'shape' },
   { image: 'image65.jpeg', answer: '○/○', type: 'shape' },
+
+  // ---------- 整行数字(2) ----------
+  { image: 'image38.jpeg', answer: '899/022', type: 'rows' },
+  { image: 'image39.jpeg', answer: '621/989', type: 'rows' },
+
+  // ---------- 物品(4) ----------
+  { image: 'image23.jpeg', answer: '茶壶', type: 'object' },
+  { image: 'image24.jpeg', answer: '眼镜', type: 'object' },
+  { image: 'image26.jpeg', answer: '水杯', type: 'object' },
+  { image: 'image36.jpeg', answer: '☂', type: 'object' },
 ]
 
 // ---------- 学习内容 ----------
 // 与测试题按图号一一对应(65 条),答案同步自 QUESTIONS
 // 有红框技巧图(q_*.png)的 24 条归入 feature/number,其余 41 条归入 easy(noTipImg: true,隐藏技巧图栏)
-// tip 录自第五版原始源图左下角的技巧说明(逐字转录、多行合并,数字对/上下排写法与答案统一)
+// crop 特写图(q_imageN_c1.jpg):红框标注区域的特写放大图,学习卡特写视图与总结复习画廊共用
 // 图14/51/55/57/59/61/63 为组合双拼的顶图,源图无技巧条,tip 留空;解析图 imageN_d1.png 全量配齐
 const STUDY_ITEMS = [
   // ---------- 简单一眼出(41 张,无技巧图) ----------
@@ -87,21 +96,6 @@ const STUDY_ITEMS = [
   { image: 'q_image3.png',  answer: '628', category: 'easy', tip: '简单一眼出，无需背', noTipImg: true, details: ['image3_d1.png'] },
   { image: 'q_image4.png',  answer: '88',  category: 'easy', tip: '看到 66，直接记成 88', noTipImg: true, details: ['image4_d1.png'] },
   { image: 'q_image10.png', answer: '286', category: 'easy', tip: '能看出来 286 就不用记，只看到个 8 的，直接记 286', noTipImg: true, details: ['image10_d1.png'] },
-  { image: 'q_image14.png', answer: '☆', category: 'easy', tip: '', noTipImg: true, details: ['image14_d1.png'] },
-  { image: 'q_image15.png', answer: '△/○', category: 'easy', tip: '简单一眼出，无需背', noTipImg: true, details: ['image15_d1.png'] },
-  { image: 'q_image16.png', answer: '☆', category: 'easy', tip: '色弱只看到类似三角形，直接记成五角星即可（表示啥也看不见）', noTipImg: true, details: ['image16_d1.png'] },
-  { image: 'q_image17.png', answer: '○/○', category: 'easy', tip: '简单一眼出，无需背', noTipImg: true, details: ['image17_d1.png'] },
-  { image: 'q_image20.png', answer: '△/○/△', category: 'easy', tip: '能看出来不用记，只看到中间圆圈的，斜着看圆圈两边还有两个三角形', noTipImg: true, details: ['image20_d1.png'] },
-  { image: 'q_image21.png', answer: '□/△', category: 'easy', tip: '首先一分为二看得出来，三角形比较容易看出来，看到三角形记住对应还有个正方形', noTipImg: true, details: ['image21_d1.png'] },
-  { image: 'q_image22.png', answer: '○/☆', category: 'easy', tip: '首先斜线一分为二看得出来，五角星比较容易看出来，看到五角星记住对应还有个圆', noTipImg: true, details: ['image22_d1.png'] },
-  { image: 'q_image23.png', answer: '茶壶', category: 'easy', tip: '简单一眼出，无需背', noTipImg: true, details: ['image23_d1.png'] },
-  { image: 'q_image24.png', answer: '眼镜', category: 'easy', tip: '简单一眼出，无需背', noTipImg: true, details: ['image24_d1.png'] },
-  { image: 'q_image25.png', answer: '○/✂', category: 'easy', tip: '看到圆圈，别忘了还有剪刀', noTipImg: true, details: ['image25_d1.png'] },
-  { image: 'q_image27.png', answer: '鱼',   category: 'easy', tip: '看到这种花花的，要么是鱼，要么是鹅，可以记颜色，也可以记图，图形细碎，小的记鱼，图形大块的记鹅（小鱼，大鹅）', noTipImg: true, details: ['image27_d1.png'] },
-  { image: 'q_image28.png', answer: '鹅',   category: 'easy', tip: '看到这种花花的，要么是鱼，要么是鹅，可以记颜色，也可以记图，图形细碎，小的记鱼，图形大块的记鹅（小鱼，大鹅）', noTipImg: true, details: ['image28_d1.png'] },
-  { image: 'q_image34.png', answer: '狗',   category: 'easy', tip: '简单一眼出，无需背', noTipImg: true, details: ['image34_d1.png'] },
-  { image: 'q_image36.png', answer: '☂', category: 'easy', tip: '简单一眼出，无需背', noTipImg: true, details: ['image36_d1.png'] },
-  { image: 'q_image37.png', answer: '熊猫', category: 'easy', tip: '简单一眼出，无需背', noTipImg: true, details: ['image37_d1.png'] },
   { image: 'q_image41.png', answer: '908',  category: 'easy', tip: '看得出来 908 不用记，只看到个 0 的，直接记 908 即可', noTipImg: true, details: ['image41_d1.png'] },
   { image: 'q_image44.png', answer: '698',  category: 'easy', tip: '看得出来 698 不用记，只看到个蓝色 9 的，9 上面图形多的直接记 698 即可', noTipImg: true, details: ['image44_d1.png'] },
   { image: 'q_image46.png', answer: '2901', category: 'easy', tip: '蓝色底图，斜着看能隐约看到数字 29 的，直接记 2901', noTipImg: true, details: ['image46_d1.png'] },
@@ -116,6 +110,18 @@ const STUDY_ITEMS = [
   { image: 'q_image56.png', answer: '68',   category: 'easy', tip: '简单一眼出，无需背', noTipImg: true, details: ['image56_d1.png'] },
   { image: 'q_image57.png', answer: '26',   category: 'easy', tip: '', noTipImg: true, details: ['image57_d1.png'] },
   { image: 'q_image58.png', answer: '16',   category: 'easy', tip: '简单一眼出，无需背', noTipImg: true, details: ['image58_d1.png'] },
+  { image: 'q_image27.png', answer: '鱼',   category: 'easy', tip: '看到这种花花的，要么是鱼，要么是鹅，可以记颜色，也可以记图，图形细碎，小的记鱼，图形大块的记鹅（小鱼，大鹅）', noTipImg: true, details: ['image27_d1.png'] },
+  { image: 'q_image28.png', answer: '鹅',   category: 'easy', tip: '看到这种花花的，要么是鱼，要么是鹅，可以记颜色，也可以记图，图形细碎，小的记鱼，图形大块的记鹅（小鱼，大鹅）', noTipImg: true, details: ['image28_d1.png'] },
+  { image: 'q_image34.png', answer: '狗',   category: 'easy', tip: '简单一眼出，无需背', noTipImg: true, details: ['image34_d1.png'] },
+  { image: 'q_image37.png', answer: '熊猫', category: 'easy', tip: '简单一眼出，无需背', noTipImg: true, details: ['image37_d1.png'] },
+  { image: 'q_image14.png', answer: '☆', category: 'easy', tip: '', noTipImg: true, details: ['image14_d1.png'] },
+  { image: 'q_image15.png', answer: '△/○', category: 'easy', tip: '简单一眼出，无需背', noTipImg: true, details: ['image15_d1.png'] },
+  { image: 'q_image16.png', answer: '☆', category: 'easy', tip: '色弱只看到类似三角形，直接记成五角星即可（表示啥也看不见）', noTipImg: true, details: ['image16_d1.png'] },
+  { image: 'q_image17.png', answer: '○/○', category: 'easy', tip: '简单一眼出，无需背', noTipImg: true, details: ['image17_d1.png'] },
+  { image: 'q_image20.png', answer: '△/○/△', category: 'easy', tip: '能看出来不用记，只看到中间圆圈的，斜着看圆圈两边还有两个三角形', noTipImg: true, details: ['image20_d1.png'] },
+  { image: 'q_image21.png', answer: '□/△', category: 'easy', tip: '首先一分为二看得出来，三角形比较容易看出来，看到三角形记住对应还有个正方形', noTipImg: true, details: ['image21_d1.png'] },
+  { image: 'q_image22.png', answer: '○/☆', category: 'easy', tip: '首先斜线一分为二看得出来，五角星比较容易看出来，看到五角星记住对应还有个圆', noTipImg: true, details: ['image22_d1.png'] },
+  { image: 'q_image25.png', answer: '○/✂', category: 'easy', tip: '看到圆圈，别忘了还有剪刀', noTipImg: true, details: ['image25_d1.png'] },
   { image: 'q_image59.png', answer: '○', category: 'easy', tip: '', noTipImg: true, details: ['image59_d1.png'] },
   { image: 'q_image60.png', answer: '○/□', category: 'easy', tip: '简单一眼出，无需背', noTipImg: true, details: ['image60_d1.png'] },
   { image: 'q_image61.png', answer: '○/△', category: 'easy', tip: '', noTipImg: true, details: ['image61_d1.png'] },
@@ -123,34 +129,37 @@ const STUDY_ITEMS = [
   { image: 'q_image63.png', answer: '△/○', category: 'easy', tip: '', noTipImg: true, details: ['image63_d1.png'] },
   { image: 'q_image64.png', answer: '△/□', category: 'easy', tip: '简单一眼出，无需背', noTipImg: true, details: ['image64_d1.png'] },
   { image: 'q_image65.png', answer: '○/○', category: 'easy', tip: '简单一眼出，无需背', noTipImg: true, details: ['image65_d1.png'] },
+  { image: 'q_image23.png', answer: '茶壶', category: 'easy', tip: '简单一眼出，无需背', noTipImg: true, details: ['image23_d1.png'] },
+  { image: 'q_image24.png', answer: '眼镜', category: 'easy', tip: '简单一眼出，无需背', noTipImg: true, details: ['image24_d1.png'] },
+  { image: 'q_image36.png', answer: '☂', category: 'easy', tip: '简单一眼出，无需背', noTipImg: true, details: ['image36_d1.png'] },
 
-  // ---------- 特征对应(13 张;sub: num=数字 / animal=动物 / other=形状及其他) ----------
-  { image: 'q_image12.png', answer: '2/9', category: 'feature', sub: 'num', tip: '一分为二都能看出来，能看到个 9 的，记 2 和 9，看不到 9 的，记左上角四边形五边形=2 和 9', details: ['image12_d1.png'] },
-  { image: 'q_image13.png', answer: '6/0', category: 'feature', sub: 'num', tip: '首先一分为二都能看出来，能看到个 0 的，记 6 和 0，看不到 0 的，记左上角小点点和四边形的=6 和 0', details: ['image13_d1.png'] },
-  { image: 'q_image38.png', answer: '899/022', category: 'feature', sub: 'num', tip: '一分为 6 块，左上角长四边形的记 899、022，正梯形记 621、989', details: ['image38_d1.png'] },
-  { image: 'q_image39.png', answer: '621/989', category: 'feature', sub: 'num', tip: '一分为 6 块，左上角长四边形的记 899、022，正梯形记 621、989', details: ['image39_d1.png'] },
-  { image: 'q_image29.png', answer: '燕子', category: 'feature', sub: 'animal', tip: '看得出来就不用记，或记左上正方形和四边形，也可以记它在鹅的下一页，鹅燕不分家', details: ['image29_d1.png'] },
-  { image: 'q_image30.png', answer: '蝴蝶', category: 'feature', sub: 'animal', tip: '左上两三角形像翅膀，比翼双飞是蝴蝶', details: ['image30_d1.png'] },
-  { image: 'q_image31.png', answer: '蜻蜓', category: 'feature', sub: 'animal', tip: '左上缺角的正方形，或中间两个正方形相连，正义使者蜻蜓队长', details: ['image31_d1.png'] },
-  { image: 'q_image32.png', answer: '鸽子', category: 'feature', sub: 'animal', tip: '看得出来就不用记，看不出来看肚子图案显亮、显白，记亮白肚子是鸽子', details: ['image32_d1.png'] },
-  { image: 'q_image33.png', answer: '牛',   category: 'feature', sub: 'animal', tip: '色弱看到个鸡，可记左上角，正梯形是牛，左上角没图案的是羊，或鸡小的是牛，鸡大的是羊', details: ['image33_d1.png'] },
-  { image: 'q_image35.png', answer: '羊',   category: 'feature', sub: 'animal', tip: '色弱看到个鸡，可记左上角，正梯形是牛，左上角没图案的是羊，或鸡小的是牛，鸡大的是羊', details: ['image35_d1.png'] },
-  { image: 'q_image18.png', answer: '○', category: 'feature', sub: 'other', tip: '左上角三角形紧跟四边形=大圆圈', details: ['image18_d1.png'] },
-  { image: 'q_image19.png', answer: '○/△', category: 'feature', sub: 'other', tip: '大块多边形，圆圈和三角形', details: ['image19_d1.png'] },
-  { image: 'q_image26.png', answer: '水杯', category: 'feature', sub: 'other', tip: '上方，三角形扣着菱形，就像倒咖啡，记杯子', details: ['image26_d1.png'] },
+  // ---------- 特征认图(13 张;sub: num=数字 / animal=动物 / other=形状及其他) ----------
+  { image: 'q_image12.png', answer: '2/9', category: 'feature', sub: 'num', tip: '一分为二都能看出来，能看到个 9 的，记 2 和 9，看不到 9 的，记左上角四边形五边形=2 和 9', details: ['image12_d1.png'], crop: 'q_image12_c1.jpg' },
+  { image: 'q_image13.png', answer: '6/0', category: 'feature', sub: 'num', tip: '首先一分为二都能看出来，能看到个 0 的，记 6 和 0，看不到 0 的，记左上角小点点和四边形的=6 和 0', details: ['image13_d1.png'], crop: 'q_image13_c1.jpg' },
+  { image: 'q_image38.png', answer: '899/022', category: 'feature', sub: 'num', tip: '一分为 6 块，左上角长四边形的记 899、022，正梯形记 621、989', details: ['image38_d1.png'], crop: 'q_image38_c1.jpg' },
+  { image: 'q_image39.png', answer: '621/989', category: 'feature', sub: 'num', tip: '一分为 6 块，左上角长四边形的记 899、022，正梯形记 621、989', details: ['image39_d1.png'], crop: 'q_image39_c1.jpg' },
+  { image: 'q_image29.png', answer: '燕子', category: 'feature', sub: 'animal', tip: '看得出来就不用记，或记左上正方形和四边形，也可以记它在鹅的下一页，鹅燕不分家', details: ['image29_d1.png'], crop: 'q_image29_c1.jpg' },
+  { image: 'q_image30.png', answer: '蝴蝶', category: 'feature', sub: 'animal', tip: '左上两三角形像翅膀，比翼双飞是蝴蝶', details: ['image30_d1.png'], crop: 'q_image30_c1.jpg' },
+  { image: 'q_image31.png', answer: '蜻蜓', category: 'feature', sub: 'animal', tip: '左上缺角的正方形，或中间两个正方形相连，正义使者蜻蜓队长', details: ['image31_d1.png'], crop: 'q_image31_c1.jpg' },
+  { image: 'q_image32.png', answer: '鸽子', category: 'feature', sub: 'animal', tip: '看得出来就不用记，看不出来看肚子图案显亮、显白，记亮白肚子是鸽子', details: ['image32_d1.png'], crop: 'q_image32_c1.jpg' },
+  { image: 'q_image33.png', answer: '牛',   category: 'feature', sub: 'animal', tip: '色弱看到个鸡，可记左上角，正梯形是牛，左上角没图案的是羊，或鸡小的是牛，鸡大的是羊', details: ['image33_d1.png'], crop: 'q_image33_c1.jpg' },
+  { image: 'q_image35.png', answer: '羊',   category: 'feature', sub: 'animal', tip: '色弱看到个鸡，可记左上角，正梯形是牛，左上角没图案的是羊，或鸡小的是牛，鸡大的是羊', details: ['image35_d1.png'], crop: 'q_image35_c1.jpg' },
+  { image: 'q_image18.png', answer: '○', category: 'feature', sub: 'other', tip: '左上角三角形紧跟四边形=大圆圈', details: ['image18_d1.png'], crop: 'q_image18_c1.jpg' },
+  { image: 'q_image19.png', answer: '○/△', category: 'feature', sub: 'other', tip: '大块多边形，圆圈和三角形', details: ['image19_d1.png'], crop: 'q_image19_c1.jpg' },
+  { image: 'q_image26.png', answer: '水杯', category: 'feature', sub: 'other', tip: '上方，三角形扣着菱形，就像倒咖啡，记杯子', details: ['image26_d1.png'], crop: 'q_image26_c1.jpg' },
 
-  // ---------- 数字对应(11 张) ----------
-  { image: 'q_image5.png',  answer: '69',  category: 'number', tip: '看得出来 69 就不用记，看中间很多三角形四边形围绕，记 69', details: ['image5_d1.png'] },
-  { image: 'q_image6.png',  answer: '60',  category: 'number', tip: '看得出来 60 就不用记，看不出来看中间一横线断开，记 60', details: ['image6_d1.png'] },
-  { image: 'q_image7.png',  answer: '98',  category: 'number', tip: '看到 6 且下面记得多边形，直接记 98 即可，麻溜麻溜跑去酒吧（98）', details: ['image7_d1.png'] },
-  { image: 'q_image8.png',  answer: '816', category: 'number', tip: '正中间，两个大黑色菱形，记 816', details: ['image8_d1.png'] },
-  { image: 'q_image9.png',  answer: '9',   category: 'number', tip: '直接看出来 9 就不用记，看不出来记左上角黑色菱形记成 9 即可', details: ['image9_d1.png'] },
-  { image: 'q_image11.png', answer: '62',  category: 'number', tip: '记左上角，大个三角形四边形记 62', details: ['image11_d1.png'] },
-  { image: 'q_image40.png', answer: '812', category: 'number', tip: '左上两大黑色四边形，记 812', details: ['image40_d1.png'] },
-  { image: 'q_image42.png', answer: '6098', category: 'number', tip: '左上单单一个直角三角形，记 6098', details: ['image42_d1.png'] },
-  { image: 'q_image43.png', answer: '8609', category: 'number', tip: '很多大块头三角形四边形的记 8609', details: ['image43_d1.png'] },
-  { image: 'q_image45.png', answer: '6289', category: 'number', tip: '记左上黑色方块，或在 698 下一页', details: ['image45_d1.png'] },
-  { image: 'q_image49.png', answer: '820', category: 'number', tip: '左上黑色方块像开花，记 820', details: ['image49_d1.png'] },
+  // ---------- 数字口诀(11 张) ----------
+  { image: 'q_image5.png',  answer: '69',  category: 'number', tip: '看得出来 69 就不用记，看中间很多三角形四边形围绕，记 69', details: ['image5_d1.png'], crop: 'q_image5_c1.jpg' },
+  { image: 'q_image6.png',  answer: '60',  category: 'number', tip: '看得出来 60 就不用记，看不出来看中间一横线断开，记 60', details: ['image6_d1.png'], crop: 'q_image6_c1.jpg' },
+  { image: 'q_image7.png',  answer: '98',  category: 'number', tip: '看到 6 且下面记得多边形，直接记 98 即可，麻溜麻溜跑去酒吧（98）', details: ['image7_d1.png'], crop: 'q_image7_c1.jpg' },
+  { image: 'q_image8.png',  answer: '816', category: 'number', tip: '正中间，两个大黑色菱形，记 816', details: ['image8_d1.png'], crop: 'q_image8_c1.jpg' },
+  { image: 'q_image9.png',  answer: '9',   category: 'number', tip: '直接看出来 9 就不用记，看不出来记左上角黑色菱形记成 9 即可', details: ['image9_d1.png'], crop: 'q_image9_c1.jpg' },
+  { image: 'q_image11.png', answer: '62',  category: 'number', tip: '记左上角，大个三角形四边形记 62', details: ['image11_d1.png'], crop: 'q_image11_c1.jpg' },
+  { image: 'q_image40.png', answer: '812', category: 'number', tip: '左上两大黑色四边形，记 812', details: ['image40_d1.png'], crop: 'q_image40_c1.jpg' },
+  { image: 'q_image42.png', answer: '6098', category: 'number', tip: '左上单单一个直角三角形，记 6098', details: ['image42_d1.png'], crop: 'q_image42_c1.jpg' },
+  { image: 'q_image43.png', answer: '8609', category: 'number', tip: '很多大块头三角形四边形的记 8609', details: ['image43_d1.png'], crop: 'q_image43_c1.jpg' },
+  { image: 'q_image45.png', answer: '6289', category: 'number', tip: '记左上黑色方块，或在 698 下一页', details: ['image45_d1.png'], crop: 'q_image45_c1.jpg' },
+  { image: 'q_image49.png', answer: '820', category: 'number', tip: '左上黑色方块像开花，记 820', details: ['image49_d1.png'], crop: 'q_image49_c1.jpg' },
 ]
 
 // 版本数据包:图片在 plates/v5/、study/v5/

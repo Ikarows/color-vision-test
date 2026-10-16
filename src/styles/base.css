@@ -35,6 +35,8 @@ html {
     radial-gradient(1200px 500px at 80% -10%, #dbeafe 0%, transparent 55%),
     radial-gradient(900px 420px at -10% 30%, #e0f2f1 0%, transparent 50%),
     linear-gradient(180deg, #f6f9fd 0%, #eef2f7 100%);
+  /* 固定于视口:光晕位置不随页高/滚动变化,长页面(总结复习画廊)顶部不再褪成近白 */
+  background-attachment: fixed, fixed, fixed;
 }
 
 .screen {
@@ -312,9 +314,15 @@ em.good {
   transition: background 0.1s ease;
 }
 
-/* 滚动吸顶后:实色工具栏滑入,内容从其下方滚过被盖住(无底边框) */
+/* 滚动吸顶后:蓝色渐变工具栏滑入,内容从其下方滚过被盖住(无底边框)。
+   attachment fixed:渐变按视口渲染,与 .app 页面背景逐像素同源,
+   返回条变成页面背景的"窗口",高度矮也不会压出一条发蓝的贴纸感 */
 .back-bar.scrolled {
-  background: #f6f9fd;
+  background:
+    radial-gradient(1200px 500px at 80% -10%, #dbeafe 0%, transparent 55%),
+    radial-gradient(900px 420px at -10% 30%, #e0f2f1 0%, transparent 50%),
+    linear-gradient(180deg, #f6f9fd 0%, #eef2f7 100%);
+  background-attachment: fixed, fixed, fixed;
   /* 淡入要快:慢渐显会让内容从半透明状态栏区域里透出来 */
   transition: background 0.1s ease;
 }

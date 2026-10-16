@@ -304,7 +304,12 @@ onMounted(() => {
 }
 
 .hs-toolbar.scrolled {
-  background: #f6f9fd;
+  /* 与 .back-bar.scrolled 同款;attachment fixed 让渐变按视口渲染、与页面背景逐像素同源 */
+  background:
+    radial-gradient(1200px 500px at 80% -10%, #dbeafe 0%, transparent 55%),
+    radial-gradient(900px 420px at -10% 30%, #e0f2f1 0%, transparent 50%),
+    linear-gradient(180deg, #f6f9fd 0%, #eef2f7 100%);
+  background-attachment: fixed, fixed, fixed;
   /* 淡入要快:0.25s 的渐显会让卡片从半透明背景里透出来,看起来像内容穿过 */
   transition: background 0.1s ease;
 }

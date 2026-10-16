@@ -1,5 +1,4 @@
 import { ref, computed, watch, nextTick } from "vue";
-import { shuffle } from "../data/questions.js";
 import { getEdition, DEFAULT_EDITION_ID } from "../data/editions/index.js";
 import { STUDY_CATEGORIES } from "../data/study.js";
 import { useStage } from "./useStage.js";
@@ -22,6 +21,14 @@ const FEATURE_SUBS = [
   { key: "other", name: "其它" },
 ];
 
+// 总结复习画廊分组:按特征子分类 / 数字口诀归类,只收挂 crop 的条目
+const REVIEW_GROUPS = [
+  { key: "num", name: "数字特征" },
+  { key: "animal", name: "动物特征" },
+  { key: "other", name: "形状及其他" },
+  { key: "number", name: "数字口诀" },
+];
+
 // 当前版本的学习条目(切换版本即整体切换)
 const studyItems = computed(() => edition.value.studyItems);
 
@@ -30,7 +37,7 @@ function shuffleStudy() {
   if (studyCat.value === "feature" && studySubCat.value !== "all") {
     list = list.filter((i) => i.sub === studySubCat.value);
   }
-  studyList.value = shuffle(list);
+  studyList.value = list;
 }
 const studyItem = computed(() => studyList.value[studyIndex.value]);
 
@@ -91,6 +98,7 @@ watch(studyItem, (item) => {
   if (!item) return;
   studyView.value = defaultViewFor(item);
   if (hasTipImg(item)) new Image().src = studyPath(item.image, edition.value.id);
+  if (item.crop) new Image().src = studyPath(item.crop, edition.value.id);
   const orig = studyOriginalPath(item, edition.value.id);
   if (orig) new Image().src = orig;
   item.details?.forEach((d) => {
@@ -105,12 +113,19 @@ watch(studyCat, (cat) => {
     studyItems.value.filter((i) => i.category === cat).forEach((item) => {
       if (hasTipImg(item))
         new Image().src = studyPath(item.image, edition.value.id);
+      if (item.crop) new Image().src = studyPath(item.crop, edition.value.id);
       const orig = studyOriginalPath(item, edition.value.id);
       if (orig) new Image().src = orig;
       item.details?.forEach((d) => {
         new Image().src = studyPath(d, edition.value.id);
       });
     });
+    // 总结复习画廊跨分类取图(挂 crop 的条目),单独补预载
+    if (cat === "review") {
+      studyItems.value.filter((i) => i.crop).forEach((item) => {
+        new Image().src = studyPath(item.crop, edition.value.id);
+      });
+    }
   }, 400);
 });
 
@@ -132,8 +147,26 @@ function setSubCat(sub) {
 }
 
 function categoryCount(key) {
+  // 总结复习是特写合集画廊:计数 = 挂 crop 的条目数(无 crop 数据的版本回退按 category 统计)
+  if (key === "review") {
+    const n = studyItems.value.filter((i) => i.crop).length;
+    if (n) return n;
+  }
   return studyItems.value.filter((i) => i.category === key).length;
 }
+
+// 总结复习画廊:挂 crop 的条目按 REVIEW_GROUPS 归类,组内保持数据顺序,空组不显示
+const reviewGroups = computed(() => {
+  const items = studyItems.value.filter((i) => i.crop);
+  return REVIEW_GROUPS.map((g) => ({
+    ...g,
+    items: items.filter(
+      (i) =>
+        (g.key === "number" && i.category === "number") ||
+        (g.key !== "number" && i.category === "feature" && i.sub === g.key),
+    ),
+  })).filter((g) => g.items.length > 0);
+});
 
 // 分类/子分类按当前版本数据显隐:没有条目的分类不显示
 const visibleCategories = computed(() =>
@@ -190,6 +223,7 @@ export function useStudy() {
     subCount,
     setSubCat,
     categoryCount,
+    reviewGroups,
     visibleCategories,
     visibleSubs,
     switchCategory,

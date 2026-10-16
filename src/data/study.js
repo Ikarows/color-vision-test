@@ -3,7 +3,7 @@
 
 export const STUDY_CATEGORIES = [
   { key: 'easy',    name: '简单易看', desc: '无需背诵,看不出来的说明色觉异常' },
-  { key: 'feature', name: '特征对应',   desc: '记图中的特征形状,对号入座' },
-  { key: 'number',  name: '数字对应',   desc: '把看到的数字对应成正确答案' },
-  { key: 'review',  name: '总结复习',   desc: 'PDF《三、总结复习》:速查图与备考建议' },
+  { key: 'feature', name: '特征认图',   desc: '记图中的特征形状,对号入座' },
+  { key: 'number',  name: '数字口诀',   desc: '把看到的数字对应成正确答案' },
+  { key: 'review',  name: '总结复习',   desc: '特征特写速查合集,点图放大对号入座' },
 ]

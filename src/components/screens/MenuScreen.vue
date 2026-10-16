@@ -168,7 +168,7 @@
     </div>
 
     <p class="disclaimer">本软件仅供自测学习使用，不能替代专业医学诊断</p>
-    <p class="copyright">@Copyright 来杯橙汁/Ikarows 2026 v2.0.0</p>
+    <p class="copyright">@Copyright 来杯橙汁/Ikarows 2026 v2.1.0</p>
   </div>
 </template>
 
