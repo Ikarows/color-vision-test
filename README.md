@@ -30,17 +30,17 @@
 ## 应用预览
 
 <div align="center">
-  <img src="docs/preview/1.jpg" width="30%" alt="应用预览 1">&nbsp;
-  <img src="docs/preview/2.jpg" width="30%" alt="应用预览 2">&nbsp;
-  <img src="docs/preview/3.jpg" width="30%" alt="应用预览 3">
+  <img src="docs/preview/1_v2.0.jpg" width="30%" alt="应用预览 1">&nbsp;
+  <img src="docs/preview/2_v2.0.jpg" width="30%" alt="应用预览 2">&nbsp;
+  <img src="docs/preview/3_v2.0.jpg" width="30%" alt="应用预览 3">  
   <br><br>
-  <img src="docs/preview/4.jpg" width="30%" alt="应用预览 4">&nbsp;
-  <img src="docs/preview/5.jpg" width="30%" alt="应用预览 5">&nbsp;
-  <img src="docs/preview/6.jpg" width="30%" alt="应用预览 6">
+  <img src="docs/preview/4_v2.0.jpg" width="30%" alt="应用预览 4">&nbsp;
+  <img src="docs/preview/5_v2.0.jpg" width="30%" alt="应用预览 5">&nbsp;
+  <img src="docs/preview/6_v2.0.jpg" width="30%" alt="应用预览 6">
   <br><br>
-  <img src="docs/preview/7.jpg" width="30%" alt="应用预览 7">&nbsp;
-  <img src="docs/preview/8.jpg" width="30%" alt="应用预览 8">&nbsp;
-  <img src="docs/preview/9.jpg" width="30%" alt="应用预览 9">
+  <img src="docs/preview/7_v2.0.jpg" width="30%" alt="应用预览 7">&nbsp;
+  <img src="docs/preview/8_v2.0.jpg" width="30%" alt="应用预览 8">&nbsp;
+  <img src="docs/preview/9_v2.0.jpg" width="30%" alt="应用预览 9">
 </div>
 
 ## 功能特性
