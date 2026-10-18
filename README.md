@@ -102,6 +102,8 @@ color-vision-test/
 ├── package.json               # 脚本与依赖（含 electron-builder 配置）
 ├── TTS-RULES.md               # 技巧语音（TTS）生成规则与批量自动化说明
 ├── tts-gen.mjs                # 技巧语音批量生成脚本（用法见 TTS-RULES.md）
+├── scripts/
+│   └── protect-assets.mjs     # 构建后处理：题图覆盖答案栏（盖住题号/答案） + mp3 改名 .aud（资源保护）
 │
 ├── src/
 │   ├── main.js                # Vue 应用入口（先加载全局样式再挂载）

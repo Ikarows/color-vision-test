@@ -91,7 +91,9 @@ function audioEl() {
 
 function tipAudioSrc(item) {
   if (!item?.tipAudio) return "";
-  return studyPath(item.tipAudio, edition.value.id);
+  // 生产构建时 mp3 已被构建脚本改名为 .aud（资源保护），开发环境仍用原名
+  const file = import.meta.env.PROD ? item.tipAudio.replace(/\.mp3$/, ".aud") : item.tipAudio;
+  return studyPath(file, edition.value.id);
 }
 
 // 播放指定条目的技巧语音;无语音条目在自动播放下直接跳下一张

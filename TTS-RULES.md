@@ -29,6 +29,13 @@
 - tip 为空的条目
 - tip 为「简单一眼出，无需背」的条目
 
+## 四·补、构建产物中的音频改名（资源保护）
+
+- `npm run build` 会在 vite build 后自动执行 `scripts/protect-assets.mjs`
+- dist 内所有 `.mp3` 被重命名为 `.aud`（内容不变，防浏览器/下载器直接识别保存）
+- 运行时 [useTipAudio.js](src/composables/useTipAudio.js) 的 `tipAudioSrc()` 在生产环境自动把 `.mp3` 映射为 `.aud`，开发环境（vite dev）仍用原名
+- `public/` 源文件始终保持 `.mp3`，不受影响
+
 ## 五、生成站点
 
 ### 1. 首选：https://edge.text-to-speech.cn

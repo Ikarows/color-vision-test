@@ -48,7 +48,7 @@ function studyIndexFor(editionId) {
   if (!studyIndexCache.has(id)) {
     const map = {};
     (getEdition(id)?.studyItems ?? []).forEach((it) => {
-      const m = it.image.match(/^q_(image\d+)\.png$/);
+      const m = it.image.match(/^q_(image\d+)\.(?:png|jpe?g)$/);
       if (m) map[m[1]] = it;
     });
     studyIndexCache.set(id, map);

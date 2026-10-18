@@ -58,11 +58,11 @@
         <img
           class="brand-logo"
           :src="BRAND_LOGO_SRC"
-          alt="色盲色弱助手 logo"
+          :alt="appTitle + ' logo'"
           draggable="false"
         />
       </div>
-      <h1 class="title">色盲色弱助手</h1>
+      <h1 class="title">{{ appTitle }}</h1>
       <p class="subtitle">基于{{ editionLabel }} · 共 {{ totalCount }} 题</p>
 
       <div class="menu-cards">
@@ -175,6 +175,8 @@
 <script setup>
 import { ref, onMounted, onBeforeUnmount } from "vue";
 import { useEdition } from "../../composables/useEdition.js";
+
+const appTitle = import.meta.env.VITE_APP_TITLE;
 import { useStudy } from "../../composables/useStudy.js";
 
 defineEmits(["study", "start", "hospitals"]);
