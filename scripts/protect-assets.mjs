@@ -115,16 +115,19 @@ function coverAnswerBar(canvas) {
   return false;
 }
 
-// 渐变印章字：首页标题同款渐变（#1d4ed8 → #0d9488）+ 白描边，贴底部中央
+// 渐变印章字：首页标题同款渐变（#1d4ed8 → #0d9488）+ 白描边，贴底部右下角
 function drawStamp(ctx, W, H) {
   const fontSize = Math.max(12, Math.round(W * 0.037));
-  const cx = Math.round(W / 2), cy = Math.round(H * 0.945);
+  const cy = Math.round(H * 0.945);
   ctx.save();
   ctx.font = `bold ${fontSize}px MSYH`;
   ctx.textBaseline = 'middle';
   ctx.textAlign = 'center';
   ctx.lineJoin = 'round';
   const tw = ctx.measureText(TEXT).width;
+  // 右下角：文字右缘距图右 2.5%W（让开照片白边框），避开学习图底部中央的红圈技巧标注
+  const cx = Math.round(W * 0.975 - tw / 2);
+  ctx.globalAlpha = 0.75; // 整体淡一些(描边+文字同步)
   const grad = ctx.createLinearGradient(cx - tw / 2, 0, cx + tw / 2, 0);
   grad.addColorStop(0, '#1d4ed8');
   grad.addColorStop(1, '#0d9488');
