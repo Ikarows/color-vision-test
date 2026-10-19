@@ -3,6 +3,7 @@ import { getEdition, DEFAULT_EDITION_ID } from "../data/editions/index.js";
 import { STUDY_CATEGORIES } from "../data/study.js";
 import { useStage } from "./useStage.js";
 import { useEdition } from "./useEdition.js";
+import { beginStudySession } from "./useStudyStats.js";
 import { studyPath, studyOriginalPath } from "../utils/assets.js";
 
 // 学习模式域(全局单例):分类切换 / 卡片列表 / 视图切换 / 图片预载
@@ -184,6 +185,7 @@ function switchCategory(key) {
 }
 
 function enterStudy() {
+  beginStudySession(); // 学习统计:次数+1、连续天数、开始计时
   // 默认进第一个有数据的分类(各版本分类数可能不同)
   studyCat.value = visibleCategories.value[0]?.key || "easy";
   studyIndex.value = 0;

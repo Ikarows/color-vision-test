@@ -8,7 +8,7 @@
 
 ## 二、语音文案拼接规则
 
-每条语音的文本 = `这张图答案是` + **answer 中文读法** + `。记忆技巧：` + **tip 原文**
+每条语音的文本 = `这张图答案是` + **answer 中文读法** + `。技巧：` + **tip 原文**
 
 - tip 原文不做任何转换，原样拼接（数字若已用空格逐位隔开如「6 0 2」，保留空格让 TTS 逐位读）
 - answer 字段必须转成中文读法，规则见下节
@@ -38,7 +38,7 @@
 
 ## 五、生成站点
 
-### 1. 首选：https://edge.text-to-speech.cn
+### 1. 首选：<https://edge.text-to-speech.cn>
 
 - 免费、无需登录，微软晓晓等 Azure 神经音色
 - 页面要素：输入框 `textarea#text`、生成按钮 `#generate-btn`
@@ -46,7 +46,7 @@
 - 生成后音频出现在 `<audio>` 元素，src 形如 `/download/xxx.mp3`
 - 抓取方式：页面上下文 `fetch` 音频 URL → 转 base64 → Node 存盘为 mp3
 
-### 2. 备选：https://fuym.cn
+### 2. 备选：<https://fuym.cn>
 
 - 同样免费 TTS
 - 需要用户 Cookie 登录后才有高音质选项
