@@ -54,7 +54,7 @@
       :total="total"
       :wrong-list="wrongList"
       :driving-result="drivingResult"
-      :driving-retest="drivingRetest"
+      :driving-chances="drivingChance"
       @restart="startTest"
       @back="stage = 'start'"
     />
@@ -95,7 +95,7 @@ const {
   total,
   wrongList,
   drivingResult,
-  drivingRetest,
+  drivingChance,
   startTest,
   startWrongDrill,
 } = useQuiz();

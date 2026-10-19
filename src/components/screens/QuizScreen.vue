@@ -132,30 +132,6 @@
         </div>
       </div>
     </div>
-
-    <!-- 复测确认层:首轮失败(错 >2)触发,确认后抽 4 张新图重考一轮 -->
-    <transition name="fade">
-      <div v-if="retestOffer" class="retest-mask">
-        <div class="retest-card">
-          <p class="retest-tag">首轮未通过</p>
-          <p class="retest-main">触发复测</p>
-          <p class="retest-desc">
-            本轮答错 <b>{{ drivingRoundWrong }}</b> 题,超出容错上限(最多错 2 题)
-          </p>
-          <p class="retest-note">
-            复测将抽取 4 张新图,同样最多错 2 题;复测仍未通过,本轮测试结束
-          </p>
-          <div class="retest-actions">
-            <button class="btn btn-primary" @click="startDrivingRetest">
-              开始复测
-            </button>
-            <button class="btn btn-ghost" @click="endDrivingFail">
-              结束测试
-            </button>
-          </div>
-        </div>
-      </div>
-    </transition>
   </div>
 </template>
 
@@ -188,13 +164,9 @@ const {
   plateSrc,
   currentQuestion,
   drillMode,
-  retestOffer,
-  drivingRoundWrong,
   choose,
   optionClass,
   quitQuiz,
-  startDrivingRetest,
-  endDrivingFail,
 } = useQuiz();
 
 // ---------- 答题页等比缩放:小屏/矮屏时整体缩小,保证一屏完整显示 ----------
@@ -328,75 +300,6 @@ html.android-app .screen.quiz-screen {
   50% {
     opacity: 1;
   }
-}
-
-/* ---------- 复测确认层:首轮失败触发,毛玻璃遮罩与加载层一致 ---------- */
-.retest-mask {
-  position: absolute;
-  inset: 0;
-  z-index: 40;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 24px;
-  background: rgba(246, 249, 253, 0.72);
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
-}
-
-.retest-card {
-  width: 100%;
-  max-width: 340px;
-  background: #fff;
-  border-radius: 18px;
-  padding: 26px 24px 22px;
-  text-align: center;
-  box-shadow: 0 24px 60px rgba(15, 23, 42, 0.25);
-}
-
-.retest-tag {
-  margin: 0;
-  font-size: 13px;
-  font-weight: 800;
-  letter-spacing: 2px;
-  color: #c23b27;
-}
-
-.retest-main {
-  margin: 6px 0 12px;
-  font-size: 24px;
-  font-weight: 800;
-  letter-spacing: 3px;
-  color: #22314a;
-}
-
-.retest-desc {
-  margin: 0 0 6px;
-  font-size: 14px;
-  color: #46586e;
-}
-
-.retest-desc b {
-  color: #c23b27;
-  font-weight: 800;
-}
-
-.retest-note {
-  margin: 0 0 18px;
-  font-size: 12.5px;
-  line-height: 1.7;
-  color: #8494a7;
-}
-
-.retest-actions {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-}
-
-.retest-actions .btn {
-  width: 100%;
-  justify-content: center;
 }
 
 /* 返回按钮:吸顶悬浮,页面滚动时始终可见 */
