@@ -1,0 +1,19 @@
+# 统一行尾策略：文本文件仓库内统一存 LF，检出也用 LF（消除 LF/CRLF 转换警告）
+* text=auto eol=lf
+
+# Windows 批处理必须用 CRLF，否则部分语法块可能解析异常
+*.bat text eol=crlf
+*.cmd text eol=crlf
+
+# 图片/音频等二进制文件不做任何行尾处理
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.gif binary
+*.ico binary
+*.webp binary
+*.mp3 binary
+*.wav binary
+*.zip binary
+*.apk binary
+*.keystore binary
