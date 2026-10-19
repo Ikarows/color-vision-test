@@ -14,7 +14,7 @@ import tjjHeadBottomImg from "../assets/img/tjj_head_bottom.png";
 import tjjBodyImg from "../assets/img/tjj_body.jpg";
 
 const { stage } = useStage();
-const { mode, timerEnabled, drivingMode, DRIVING_TOTAL, DRIVING_MAX_WRONG } =
+const { mode, timerEnabled, drivingMode, DRIVING_TOTAL, DRIVING_CHANCES } =
   useQuizConfig();
 const { edition } = useEdition();
 const { refreshStats, wrongPlateStats } = useRecords();
@@ -69,15 +69,11 @@ const currentOptions = ref([]);
 const records = ref([]); // { index, chosen, correct }
 // 驾照自助机模拟判定结果: 'pass' 通过 | 'fail' 未通过 | null 非该模式
 const drivingResult = ref(null);
-// 驾照自助机复测:首轮失败(错 >2)触发,再抽 4 张新图重考一轮,复测仍未通过直接结束
-const drivingRetest = ref(false); // 是否处于复测轮
-const retestOffer = ref(false); // 首轮失败后的复测确认层
-const drivingRoundStart = ref(0); // 当前轮(首轮/复测)在 records 中的起始下标
-const drivingRoundWrong = computed(() =>
-  records.value
-    .slice(drivingRoundStart.value)
-    .filter((r) => !r.correct).length,
-);
+// 机会制:共 DRIVING_CHANCES 次机会,每次机会换 4 张新图,必须从头连续答对
+// DRIVING_TOTAL 张才算通过;任意一张答错该次机会立即作废并自动进入下一次机会
+// (真实机无间歇提示),机会全部用完正式结束
+const drivingChance = ref(1); // 当前第几次机会(1 起)
+const drivingRoundStart = ref(0); // 当前机会在 records 中的起始下标
 
 // ---------- 倒计时 ----------
 const QUIZ_TIME = 14; // 每题限时(秒)
@@ -158,8 +154,7 @@ function startTest() {
   correctCount.value = 0;
   records.value = [];
   drivingResult.value = null;
-  drivingRetest.value = false;
-  retestOffer.value = false;
+  drivingChance.value = 1;
   drivingRoundStart.value = 0;
   drillMode.value = false;
   plateReady.value = false;
@@ -187,8 +182,6 @@ function startWrongDrill() {
   currentIndex.value = 0;
   correctCount.value = 0;
   records.value = [];
-  drivingRetest.value = false;
-  retestOffer.value = false;
   drivingRoundStart.value = 0;
   drillMode.value = true;
   plateReady.value = false;
@@ -239,11 +232,10 @@ function finishQuiz() {
   stage.value = "result";
 }
 
-// 复测:追加 4 张新图(排除本轮已出的图)继续作答;
+// 进入下一次机会:追加 4 张新图(排除已出过的图)从头作答,自动衔接无间歇弹层;
 // 题目数组续接而非重置,保证已有记录的题目下标不失效
-function startDrivingRetest() {
-  retestOffer.value = false;
-  drivingRetest.value = true;
+function nextChance() {
+  drivingChance.value++;
   drivingRoundStart.value = records.value.length;
   const used = new Set(questions.value.map((q) => q.image));
   let pool = edition.value.questions.filter((q) => !used.has(q.image));
@@ -254,15 +246,8 @@ function startDrivingRetest() {
       .map((q) => withEdition(q, edition.value.id)),
   );
   currentIndex.value = drivingRoundStart.value;
-  // 复测是答题中途换题:不重置 plateReady、不弹加载遮罩,新题图在固定比例图框内直接换入
+  // 中途换题:不重置 plateReady、不弹加载遮罩,新题图在固定比例图框内直接换入
   loadQuestion();
-}
-
-// 放弃复测:按首轮失败判定,直接结束本轮测试
-function endDrivingFail() {
-  retestOffer.value = false;
-  drivingResult.value = "fail";
-  finishQuiz();
 }
 
 function choose(opt) {
@@ -285,25 +270,38 @@ function choose(opt) {
   }
   setTimeout(
     () => {
+      if (drivingMode.value && !drillMode.value) {
+        // 驾照自助机模拟(机会制):判定只看本次机会内的连续作答
+        const round = records.value.slice(drivingRoundStart.value);
+        const roundCorrect = round.filter((r) => r.correct).length;
+        if (correct) {
+          if (roundCorrect >= DRIVING_TOTAL) {
+            // 本次机会 4 张全部连续答对 → 模拟通过
+            drivingResult.value = "pass";
+            finishQuiz();
+            return;
+          }
+          // 本次机会还有未答的图,继续下一张
+          currentIndex.value++;
+          loadQuestion();
+          return;
+        }
+        // 答错:本次机会立即作废,剩余图不再作答;
+        // 真实机无间歇提示,答错反馈展示后自动换 4 张新图进入下一次机会
+        if (drivingChance.value >= DRIVING_CHANCES) {
+          // 机会全部用完:正式结束,判定未通过
+          drivingResult.value = "fail";
+          finishQuiz();
+          return;
+        }
+        nextChance();
+        return;
+      }
       if (currentIndex.value < total.value - 1) {
         currentIndex.value++;
         loadQuestion();
       } else {
         // 测试完成,写入本地统计(含评分、错图与答对图明细,逐条带版本 id)
-        if (drivingMode.value && !drillMode.value) {
-          // 驾照自助机模拟:按当前轮(首轮/复测)判定,答对至少 2 题(错 ≤2)本轮通过
-          const roundWrong = records.value
-            .slice(drivingRoundStart.value)
-            .filter((r) => !r.correct).length;
-          if (roundWrong <= DRIVING_MAX_WRONG) {
-            drivingResult.value = "pass"; // 首轮直接通过,或复测通过
-          } else if (!drivingRetest.value) {
-            retestOffer.value = true; // 首轮失败:触发复测,弹出确认层
-            return;
-          } else {
-            drivingResult.value = "fail"; // 复测仍未通过,直接结束本轮测试
-          }
-        }
         finishQuiz();
       }
     },
@@ -340,14 +338,10 @@ export function useQuiz() {
     wrongList,
     drillMode,
     drivingResult,
-    drivingRetest,
-    retestOffer,
-    drivingRoundWrong,
+    drivingChance,
     // 方法
     startTest,
     startWrongDrill,
-    startDrivingRetest,
-    endDrivingFail,
     choose,
     optionClass,
     quitQuiz,

@@ -27,6 +27,20 @@ html {
   scrollbar-gutter: stable;
 }
 
+/* 内容保护:全局禁用文字选中与长按呼出菜单(输入框除外,保证搜索框等可正常编辑) */
+body {
+  -webkit-user-select: none;
+  user-select: none;
+  -webkit-touch-callout: none;
+}
+
+input,
+textarea,
+[contenteditable] {
+  -webkit-user-select: text;
+  user-select: text;
+}
+
 .app {
   min-height: 100vh;
   display: flex;

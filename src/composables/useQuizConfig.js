@@ -28,9 +28,10 @@ export const MODES = [
 const mode = ref("random10");
 const timerEnabled = ref(localStorage.getItem("cv_timer") === "1");
 
-// 驾照自助机模拟:一轮 4 题随机抽题,容错 2 次(答对至少 2 题通过),必须答完全部题目后统一判定
-export const DRIVING_TOTAL = 4;
-export const DRIVING_MAX_WRONG = 2;
+// 驾照自助机模拟:共 DRIVING_CHANCES 次机会,每次机会随机抽 DRIVING_TOTAL 张图,
+// 必须从头连续答对全部图才算通过;任意一张答错该次机会立即作废,机会全部用完正式结束
+export const DRIVING_TOTAL = 4; // 每次机会的图数
+export const DRIVING_CHANCES = 4; // 总机会次数
 const drivingMode = ref(localStorage.getItem("cv_driving") === "1");
 
 function toggleTimer() {
@@ -52,6 +53,6 @@ export function useQuizConfig() {
     drivingMode,
     toggleDriving,
     DRIVING_TOTAL,
-    DRIVING_MAX_WRONG,
+    DRIVING_CHANCES,
   };
 }

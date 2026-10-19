@@ -3,6 +3,21 @@ import { createApp } from 'vue'
 import './styles/base.css'
 import App from './App.vue'
 
+// 内容保护:禁用右键菜单与复制/剪切(输入框等可编辑元素除外,保证搜索框可正常编辑)
+const isEditable = (el) =>
+  el instanceof HTMLElement &&
+  (el.tagName === 'INPUT' || el.tagName === 'TEXTAREA' || el.isContentEditable)
+
+document.addEventListener('contextmenu', (e) => {
+  if (!isEditable(e.target)) e.preventDefault()
+})
+document.addEventListener('copy', (e) => {
+  if (!isEditable(e.target)) e.preventDefault()
+})
+document.addEventListener('cut', (e) => {
+  if (!isEditable(e.target)) e.preventDefault()
+})
+
 // 安卓 App 内（Capacitor 原生桥注入 window.Capacitor）给根元素打类，供 CSS 区分平台样式
 if (window.Capacitor?.isNativePlatform?.()) {
   document.documentElement.classList.add('android-app')

@@ -30,34 +30,32 @@
         </div>
 
         <div class="dh-section">
-          <p class="dh-core">4 道题 · 最多允许错 2 题 · 倒计时 14 秒</p>
+          <div class="dh-chips">
+            <div class="dh-chip"><b>4 次</b><span>机会总数</span></div>
+            <div class="dh-chip"><b>4 张</b><span>每次抽图</span></div>
+            <div class="dh-chip"><b>连对 4 张</b><span>才能通过</span></div>
+          </div>
           <ul class="dh-list">
-            <li class="ok">错 0 题 · 对 4 题 <b>✔ 通过</b></li>
-            <li class="ok">错 1 题 · 对 3 题 <b>✔ 通过</b></li>
-            <li class="ok">错 2 题 · 对 2 题 <b>✔ 通过</b></li>
-            <li class="bad">错 3 题 · 对 1 题 <b>❌ 本轮失败,触发复测</b></li>
-            <li>触发复测（再4张新图，同样最多错2题），如果复测也没通过就直接结束本轮测试。</li>
+            <li class="ok">本次机会连续答对 4 张 <b>✔ 通过</b></li>
+            <li class="bad">任意一张答错 <b>❌ 本次机会立即作废</b></li>
+            <li>作废后换 4 张新图,从头开始作答</li>
+            <li class="bad">4 次机会全部用完 <b>❌ 未通过,正式结束</b></li>
           </ul>
-          <p class="dh-core-line">
-            核心:4 题,容错 2 次,最低答对 2 题即可过关
-          </p>
         </div>
 
         <div class="dh-section dh-examples">
-          <p>
-            <b>例 1</b> 错 2 题、对 2 题 → 整套做完,判定通过,直接进入下一项体检,不会再追加题目。
-          </p>
-          <p>
-            <b>例 2</b> 错 3 题、对 1 题 → 本轮失败,触发复测(再 4 张新图);复测仍未通过,本轮测试结束。
-          </p>
-        </div>
-
-        <div class="dh-warn">
-          <p class="dh-warn-title">重要提醒</p>
-          <p>
-            是整套 4 题全部答完之后才统计,不是答对 2 题就立刻提前结束页面!哪怕前
-            2 题答对了,依然要继续做完剩下 2 道题,直到 4 题全部完成,再出结果。
-          </p>
+          <div class="dh-eg">
+            <span class="dh-eg-no">例 1</span>
+            <p>
+              第 1 次答对 3 张,第 4 张答错 → 本次机会作废,第 2 次换 4 张新图重新开始。
+            </p>
+          </div>
+          <div class="dh-eg">
+            <span class="dh-eg-no">例 2</span>
+            <p>
+              某次答到第 2 张就错 → 立即作废(剩余的图不用再答),直接进入下一次机会。
+            </p>
+          </div>
         </div>
         </div>
       </div>
@@ -163,11 +161,36 @@ function onImgError(e) {
   padding: 16px 18px;
 }
 
-.dh-core {
-  font-size: 15.5px;
+/* 规则数据胶囊:三个关键数字横排,避免长句换行 */
+.dh-chips {
+  display: flex;
+  gap: 10px;
+}
+
+.dh-chip {
+  flex: 1;
+  min-width: 0;
+  background: #fff;
+  border: 1px solid #e3ecf6;
+  border-radius: 12px;
+  padding: 12px 6px 10px;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.dh-chip b {
+  font-size: 16.5px;
   font-weight: 800;
-  color: #22314a;
-  letter-spacing: 0.5px;
+  color: #2f6fed;
+  white-space: nowrap;
+}
+
+.dh-chip span {
+  font-size: 11.5px;
+  color: #8494a7;
+  white-space: nowrap;
 }
 
 .dh-list {
@@ -199,47 +222,38 @@ function onImgError(e) {
   color: #c23b27;
 }
 
-.dh-core-line {
-  margin-top: 12px;
-  font-size: 13.5px;
-  font-weight: 700;
-  color: #2f6fed;
+/* 徽章式示例行:序号胶囊 + 说明文字 */
+.dh-eg {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  background: #fff;
+  border: 1px solid #edf2f7;
+  border-radius: 10px;
+  padding: 10px 12px;
 }
 
-.dh-examples p {
-  font-size: 13.5px;
-  color: #46586e;
-  line-height: 1.7;
-}
-
-.dh-examples p + p {
+.dh-eg + .dh-eg {
   margin-top: 8px;
 }
 
-.dh-examples b {
-  color: #22314a;
-  margin-right: 4px;
-}
-
-.dh-warn {
-  margin-top: 14px;
-  background: #fff7ed;
-  border: 1px solid #fed7aa;
-  border-radius: 14px;
-  padding: 14px 18px;
-}
-
-.dh-warn-title {
-  font-size: 14px;
+.dh-eg-no {
+  flex: none;
+  font-size: 11px;
   font-weight: 800;
-  color: #b45309;
+  letter-spacing: 1px;
+  color: #2f6fed;
+  background: #e9f1fe;
+  border-radius: 6px;
+  padding: 3px 7px;
+  margin-top: 2px;
 }
 
-.dh-warn p {
-  font-size: 13.5px;
-  color: #7c5a1e;
-  line-height: 1.7;
-  margin-top: 4px;
+.dh-eg p {
+  margin: 0;
+  font-size: 13px;
+  color: #46586e;
+  line-height: 1.65;
 }
 
 /* 弹层过渡 */
