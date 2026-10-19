@@ -40,7 +40,35 @@ function siteTitle() {
 }
 const TEXT = STAMP_TEXT || siteTitle();
 
-GlobalFonts.registerFromPath('C:/Windows/Fonts/msyh.ttc', 'MSYH');
+// 印章字体：优先用仓库内置的 Noto Sans SC Bold 子集（scripts/fonts/，SIL OFL 1.1 许可，
+// 只含印章所需字符），跨平台可用——云构建/Linux 环境没有 Windows 字体也能正常出字；
+// 若印章文字含子集未收录的字符则回退本机微软雅黑，避免缺字方块
+const STAMP_FONT_FAMILY = 'StampFont';
+const BUNDLED_FONT = path.join(ROOT, 'scripts', 'fonts', 'stamp-subset.otf');
+const BUNDLED_CHARSET = path.join(ROOT, 'scripts', 'fonts', 'stamp-subset.charset.txt');
+const WIN_FONT = 'C:/Windows/Fonts/msyh.ttc';
+
+function pickStampFont() {
+  const winOk = fs.existsSync(WIN_FONT);
+  if (fs.existsSync(BUNDLED_FONT)) {
+    let covered = true;
+    try {
+      const chars = fs.readFileSync(BUNDLED_CHARSET, 'utf-8');
+      covered = [...TEXT].every(ch => chars.includes(ch));
+    } catch { /* 字符集文件缺失按未覆盖处理 */ }
+    if (covered) return BUNDLED_FONT;
+    if (winOk) {
+      console.warn(`protect-assets: 印章文字「${TEXT}」含子集未收录字符，回退微软雅黑`);
+      return WIN_FONT;
+    }
+    console.warn('protect-assets: 印章文字含未收录字符且无系统字体，可能出现缺字方块');
+    return BUNDLED_FONT;
+  }
+  return WIN_FONT;
+}
+if (!GlobalFonts.registerFromPath(pickStampFont(), STAMP_FONT_FAMILY)) {
+  console.warn('protect-assets: 印章字体注册失败，印章文字将无法显示');
+}
 
 function walk(dir, out = []) {
   if (!fs.existsSync(dir)) return out;
@@ -120,7 +148,7 @@ function drawStamp(ctx, W, H) {
   const fontSize = Math.max(12, Math.round(W * 0.037));
   const cy = Math.round(H * 0.945);
   ctx.save();
-  ctx.font = `bold ${fontSize}px MSYH`;
+  ctx.font = `bold ${fontSize}px ${STAMP_FONT_FAMILY}`;
   ctx.textBaseline = 'middle';
   ctx.textAlign = 'center';
   ctx.lineJoin = 'round';
