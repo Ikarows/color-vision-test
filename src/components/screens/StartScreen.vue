@@ -20,7 +20,7 @@
       <img
         class="brand-logo"
         :src="BRAND_LOGO_SRC"
-        alt="色盲色弱助手 logo"
+        :alt="appTitle + ' logo'"
         draggable="false"
       />
     </div>
@@ -221,6 +221,8 @@
 <script setup>
 import { ref } from "vue";
 import { useEdition } from "../../composables/useEdition.js";
+
+const appTitle = import.meta.env.VITE_APP_TITLE;
 import { useQuizConfig } from "../../composables/useQuizConfig.js";
 import { useRecords } from "../../composables/useRecords.js";
 import DrivingHelpDialog from "../DrivingHelpDialog.vue";

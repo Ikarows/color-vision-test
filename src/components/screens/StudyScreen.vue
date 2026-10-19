@@ -177,6 +177,21 @@
           <div class="study-tip">
             <span class="study-label">技巧</span>
             <p>{{ studyItem.tip || "一眼就能看出,无需背诵。" }}</p>
+            <button
+              v-if="studyItem.tipAudio"
+              class="tip-play-btn"
+              :class="{ playing: isTipPlaying }"
+              :aria-label="isTipPlaying ? '停止技巧语音' : '播放技巧语音'"
+              @click="togglePlay(studyItem)"
+            >
+              <svg v-if="!isTipPlaying" viewBox="0 0 20 20" width="15" height="15">
+                <path d="M6.5 4.5l9 5.5-9 5.5z" fill="currentColor" />
+              </svg>
+              <svg v-else viewBox="0 0 20 20" width="15" height="15">
+                <rect x="5" y="4.5" width="3.4" height="11" rx="1.2" fill="currentColor" />
+                <rect x="11.6" y="4.5" width="3.4" height="11" rx="1.2" fill="currentColor" />
+              </svg>
+            </button>
           </div>
         </div>
 
@@ -201,13 +216,18 @@
         </div>
       </template>
     </main>
+
+    <!-- 播放小助手:可拖动悬浮球,点开设置记图语音自动播放与循环模式 -->
+    <StudyFloatHelper />
   </div>
 </template>
 
 <script setup>
 import { computed } from "vue";
 import { useStudy } from "../../composables/useStudy.js";
+import { useTipAudio } from "../../composables/useTipAudio.js";
 import { studyPath, studyOriginalPath, retryImg } from "../../utils/assets.js";
+import StudyFloatHelper from "../StudyFloatHelper.vue";
 
 // 滚动浮现:列表项进入视口时播放入场动画(总结复习画廊用),触发一次后停止观察
 const vReveal = {
@@ -257,6 +277,12 @@ const {
   prevStudy,
   nextStudy,
 } = useStudy();
+
+// 技巧语音点播:播当前卡的 tipAudio(暂停不推进;自动播放由悬浮小助手控制)
+const { playingImage, togglePlay } = useTipAudio();
+const isTipPlaying = computed(
+  () => !!studyItem.value && playingImage.value === studyItem.value.image,
+);
 
 // 总结复习:有特写合集数据时渲染画廊;无 crop 数据的版本该分类不会出现在分类栏
 const isReviewGallery = computed(
@@ -445,6 +471,41 @@ const showViewSwitch = computed(
   font-size: 15px;
   line-height: 1.8;
   color: #45556b;
+}
+
+/* 技巧语音播放按钮:靠技巧栏最右,播放中变实色带呼吸光圈 */
+.tip-play-btn {
+  flex-shrink: 0;
+  align-self: center;
+  margin-left: auto;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  border: 1.5px solid #14b8a6;
+  background: #e6f7f3;
+  color: #14b8a6;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition:
+    background 0.18s ease,
+    color 0.18s ease;
+}
+
+.tip-play-btn.playing {
+  background: #14b8a6;
+  color: #fff;
+  animation: tip-pulse 1.2s ease-out infinite;
+}
+
+@keyframes tip-pulse {
+  0% {
+    box-shadow: 0 0 0 0 rgba(13, 148, 136, 0.35);
+  }
+  100% {
+    box-shadow: 0 0 0 10px rgba(13, 148, 136, 0);
+  }
 }
 
 .study-nav {

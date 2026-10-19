@@ -3,7 +3,7 @@
 // 特殊图(9/12/13/14/15/17/19/20/21/22/23/25/26/36/60~65)另与解析图(study/v5/imageN_d1.png)逐张比对确认
 // 答案书写约定:图形类答案直接沿用标注符号不转中文(☆△○□、○/剪刀);
 //   标注「X/Y」为图中并列两个图形(一深一浅两色,色弱常只见其一),数字对按 v6 惯例合并「2 和 9」,上下排「899、022」
-// 图片素材:检查图在 public/plates/v5/、学习图在 public/study/v5/
+// 图片素材:检查图在 public/plates/v5/、学习图在 public/v5/
 //   (q_*.png 为红框标注技巧图,仅 24 张有;*_d1.png 为黑底解析图,65 张全有)
 
 // ---------- 测试题(65 道;按题型分组:数字 / 动物 / 形状 / 整行数字 / 物品) ----------
@@ -91,37 +91,37 @@ const QUESTIONS = [
 // 图14/51/55/57/59/61/63 为组合双拼的顶图,源图无技巧条,tip 留空;解析图 imageN_d1.png 全量配齐
 const STUDY_ITEMS = [
   // ---------- 简单一眼出(41 张,无技巧图) ----------
-  { image: 'q_image1.png',  answer: '98',  category: 'easy', tip: '大号的 98 直接看，小号 98=602', noTipImg: true, details: ['image1_d1.png'] },
-  { image: 'q_image2.png',  answer: '291', category: 'easy', tip: '能看出来 291 就不用记，只看到个 9 的，9 上面仅有两个三角形直接记 291', noTipImg: true, details: ['image2_d1.png'] },
+  { image: 'q_image1.png',  answer: '98',  category: 'easy', tip: '大号的 9 8 直接看，小号 9 8=6 0 2', noTipImg: true, details: ['image1_d1.png'], tipAudio: 'tip_audios/q_image1_tip.mp3' },
+  { image: 'q_image2.png',  answer: '291', category: 'easy', tip: '能看出来 2 9 1 就不用记，只看到个 9 的，9 上面仅有两个三角形直接记 2 9 1', noTipImg: true, details: ['image2_d1.png'], tipAudio: 'tip_audios/q_image2_tip.mp3' },
   { image: 'q_image3.png',  answer: '628', category: 'easy', tip: '简单一眼出，无需背', noTipImg: true, details: ['image3_d1.png'] },
-  { image: 'q_image4.png',  answer: '88',  category: 'easy', tip: '看到 66，直接记成 88', noTipImg: true, details: ['image4_d1.png'] },
-  { image: 'q_image10.png', answer: '286', category: 'easy', tip: '能看出来 286 就不用记，只看到个 8 的，直接记 286', noTipImg: true, details: ['image10_d1.png'] },
-  { image: 'q_image41.png', answer: '908',  category: 'easy', tip: '看得出来 908 不用记，只看到个 0 的，直接记 908 即可', noTipImg: true, details: ['image41_d1.png'] },
-  { image: 'q_image44.png', answer: '698',  category: 'easy', tip: '看得出来 698 不用记，只看到个蓝色 9 的，9 上面图形多的直接记 698 即可', noTipImg: true, details: ['image44_d1.png'] },
-  { image: 'q_image46.png', answer: '2901', category: 'easy', tip: '蓝色底图，斜着看能隐约看到数字 29 的，直接记 2901', noTipImg: true, details: ['image46_d1.png'] },
+  { image: 'q_image4.png',  answer: '88',  category: 'easy', tip: '看到 6 6，直接记成 8 8', noTipImg: true, details: ['image4_d1.png'], tipAudio: 'tip_audios/q_image4_tip.mp3' },
+  { image: 'q_image10.png', answer: '286', category: 'easy', tip: '能看出来 2 8 6 就不用记，只看到个 8 的，直接记 2 8 6', noTipImg: true, details: ['image10_d1.png'], tipAudio: 'tip_audios/q_image10_tip.mp3' },
+  { image: 'q_image41.png', answer: '908',  category: 'easy', tip: '看得出来 9 0 8 不用记，只看到个 0 的，直接记 9 0 8 即可', noTipImg: true, details: ['image41_d1.png'], tipAudio: 'tip_audios/q_image41_tip.mp3' },  
+  { image: 'q_image44.png', answer: '698',  category: 'easy', tip: '看得出来 6 9 8 不用记，只看到个蓝色 9 的，9 上面图形多的直接记 6 9 8 即可', noTipImg: true, details: ['image44_d1.png'], tipAudio: 'tip_audios/q_image44_tip.mp3' },  
+  { image: 'q_image46.png', answer: '2901', category: 'easy', tip: '蓝色底图，斜着看能隐约看到数字 2 9 的，直接记 2 9 0 1', noTipImg: true, details: ['image46_d1.png'], tipAudio: 'tip_audios/q_image46_tip.mp3' },
   { image: 'q_image47.png', answer: '899',  category: 'easy', tip: '简单一眼出，无需背', noTipImg: true, details: ['image47_d1.png'] },
-  { image: 'q_image48.png', answer: '602',  category: 'easy', tip: '看到小号 98，直接记成 602，酒吧里的酒太贵，600 块得 2 瓶', noTipImg: true, details: ['image48_d1.png'] },
+  { image: 'q_image48.png', answer: '602',  category: 'easy', tip: '看到小号 9 8，直接记成 6 0 2，酒吧里的酒太贵，600 块得 2 瓶', noTipImg: true, details: ['image48_d1.png'], tipAudio: 'tip_audios/q_image48_tip.mp3' },
   { image: 'q_image50.png', answer: '2619', category: 'easy', tip: '简单一眼出，无需背', noTipImg: true, details: ['image50_d1.png'] },
   { image: 'q_image51.png', answer: '606',  category: 'easy', tip: '', noTipImg: true, details: ['image51_d1.png'] },
   { image: 'q_image52.png', answer: '99',   category: 'easy', tip: '简单一眼出，无需背', noTipImg: true, details: ['image52_d1.png'] },
-  { image: 'q_image53.png', answer: '60',   category: 'easy', tip: '看得出来是 60 的不用记，只看到 00 的，直接记成 60 即可', noTipImg: true, details: ['image53_d1.png'] },
+  { image: 'q_image53.png', answer: '60',   category: 'easy', tip: '看得出来是 6 0 的不用记，只看到 0 0 的，直接记成 6 0 即可', noTipImg: true, details: ['image53_d1.png'], tipAudio: 'tip_audios/q_image53_tip.mp3' },
   { image: 'q_image54.png', answer: '266',  category: 'easy', tip: '简单一眼出，无需背', noTipImg: true, details: ['image54_d1.png'] },
   { image: 'q_image55.png', answer: '928',  category: 'easy', tip: '', noTipImg: true, details: ['image55_d1.png'] },
   { image: 'q_image56.png', answer: '68',   category: 'easy', tip: '简单一眼出，无需背', noTipImg: true, details: ['image56_d1.png'] },
   { image: 'q_image57.png', answer: '26',   category: 'easy', tip: '', noTipImg: true, details: ['image57_d1.png'] },
   { image: 'q_image58.png', answer: '16',   category: 'easy', tip: '简单一眼出，无需背', noTipImg: true, details: ['image58_d1.png'] },
-  { image: 'q_image27.png', answer: '鱼',   category: 'easy', tip: '看到这种花花的，要么是鱼，要么是鹅，可以记颜色，也可以记图，图形细碎，小的记鱼，图形大块的记鹅（小鱼，大鹅）', noTipImg: true, details: ['image27_d1.png'] },
-  { image: 'q_image28.png', answer: '鹅',   category: 'easy', tip: '看到这种花花的，要么是鱼，要么是鹅，可以记颜色，也可以记图，图形细碎，小的记鱼，图形大块的记鹅（小鱼，大鹅）', noTipImg: true, details: ['image28_d1.png'] },
+  { image: 'q_image27.png', answer: '鱼',   category: 'easy', tip: '看到这种花花的，要么是鱼，要么是鹅，可以记颜色，也可以记图，图形细碎，小的记鱼，图形大块的记鹅（小鱼，大鹅）', noTipImg: true, details: ['image27_d1.png'], tipAudio: 'tip_audios/q_image27_tip.mp3' },
+  { image: 'q_image28.png', answer: '鹅',   category: 'easy', tip: '看到这种花花的，要么是鱼，要么是鹅，可以记颜色，也可以记图，图形细碎，小的记鱼，图形大块的记鹅（小鱼，大鹅）', noTipImg: true, details: ['image28_d1.png'], tipAudio: 'tip_audios/q_image28_tip.mp3' },
   { image: 'q_image34.png', answer: '狗',   category: 'easy', tip: '简单一眼出，无需背', noTipImg: true, details: ['image34_d1.png'] },
   { image: 'q_image37.png', answer: '熊猫', category: 'easy', tip: '简单一眼出，无需背', noTipImg: true, details: ['image37_d1.png'] },
   { image: 'q_image14.png', answer: '☆', category: 'easy', tip: '', noTipImg: true, details: ['image14_d1.png'] },
   { image: 'q_image15.png', answer: '△/○', category: 'easy', tip: '简单一眼出，无需背', noTipImg: true, details: ['image15_d1.png'] },
-  { image: 'q_image16.png', answer: '☆', category: 'easy', tip: '色弱只看到类似三角形，直接记成五角星即可（表示啥也看不见）', noTipImg: true, details: ['image16_d1.png'] },
+  { image: 'q_image16.png', answer: '☆', category: 'easy', tip: '色弱只看到类似三角形，直接记成五角星即可（表示啥也看不见）', noTipImg: true, details: ['image16_d1.png'], tipAudio: 'tip_audios/q_image16_tip.mp3' },
   { image: 'q_image17.png', answer: '○/○', category: 'easy', tip: '简单一眼出，无需背', noTipImg: true, details: ['image17_d1.png'] },
-  { image: 'q_image20.png', answer: '△/○/△', category: 'easy', tip: '能看出来不用记，只看到中间圆圈的，斜着看圆圈两边还有两个三角形', noTipImg: true, details: ['image20_d1.png'] },
-  { image: 'q_image21.png', answer: '□/△', category: 'easy', tip: '首先一分为二看得出来，三角形比较容易看出来，看到三角形记住对应还有个正方形', noTipImg: true, details: ['image21_d1.png'] },
-  { image: 'q_image22.png', answer: '○/☆', category: 'easy', tip: '首先斜线一分为二看得出来，五角星比较容易看出来，看到五角星记住对应还有个圆', noTipImg: true, details: ['image22_d1.png'] },
-  { image: 'q_image25.png', answer: '○/✂', category: 'easy', tip: '看到圆圈，别忘了还有剪刀', noTipImg: true, details: ['image25_d1.png'] },
+  { image: 'q_image20.png', answer: '△/○/△', category: 'easy', tip: '能看出来不用记，只看到中间圆圈的，斜着看圆圈两边还有两个三角形', noTipImg: true, details: ['image20_d1.png'], tipAudio: 'tip_audios/q_image20_tip.mp3' },
+  { image: 'q_image21.png', answer: '□/△', category: 'easy', tip: '首先一分为二看得出来，三角形比较容易看出来，看到三角形记住对应还有个正方形', noTipImg: true, details: ['image21_d1.png'], tipAudio: 'tip_audios/q_image21_tip.mp3' },
+  { image: 'q_image22.png', answer: '○/☆', category: 'easy', tip: '首先斜线一分为二看得出来，五角星比较容易看出来，看到五角星记住对应还有个圆', noTipImg: true, details: ['image22_d1.png'], tipAudio: 'tip_audios/q_image22_tip.mp3' },
+  { image: 'q_image25.png', answer: '○/✂', category: 'easy', tip: '看到圆圈，别忘了还有剪刀', noTipImg: true, details: ['image25_d1.png'], tipAudio: 'tip_audios/q_image25_tip.mp3' },
   { image: 'q_image59.png', answer: '○', category: 'easy', tip: '', noTipImg: true, details: ['image59_d1.png'] },
   { image: 'q_image60.png', answer: '○/□', category: 'easy', tip: '简单一眼出，无需背', noTipImg: true, details: ['image60_d1.png'] },
   { image: 'q_image61.png', answer: '○/△', category: 'easy', tip: '', noTipImg: true, details: ['image61_d1.png'] },
@@ -134,33 +134,33 @@ const STUDY_ITEMS = [
   { image: 'q_image36.png', answer: '☂', category: 'easy', tip: '简单一眼出，无需背', noTipImg: true, details: ['image36_d1.png'] },
 
   // ---------- 特征认图(13 张;sub: num=数字 / animal=动物 / other=形状及其他) ----------
-  { image: 'q_image12.png', answer: '2/9', category: 'feature', sub: 'num', tip: '一分为二都能看出来，能看到个 9 的，记 2 和 9，看不到 9 的，记左上角四边形五边形=2 和 9', details: ['image12_d1.png'], crop: 'q_image12_c1.jpg' },
-  { image: 'q_image13.png', answer: '6/0', category: 'feature', sub: 'num', tip: '首先一分为二都能看出来，能看到个 0 的，记 6 和 0，看不到 0 的，记左上角小点点和四边形的=6 和 0', details: ['image13_d1.png'], crop: 'q_image13_c1.jpg' },
-  { image: 'q_image38.png', answer: '899/022', category: 'feature', sub: 'num', tip: '一分为 6 块，左上角长四边形的记 899、022，正梯形记 621、989', details: ['image38_d1.png'], crop: 'q_image38_c1.jpg' },
-  { image: 'q_image39.png', answer: '621/989', category: 'feature', sub: 'num', tip: '一分为 6 块，左上角长四边形的记 899、022，正梯形记 621、989', details: ['image39_d1.png'], crop: 'q_image39_c1.jpg' },
-  { image: 'q_image29.png', answer: '燕子', category: 'feature', sub: 'animal', tip: '看得出来就不用记，或记左上正方形和四边形，也可以记它在鹅的下一页，鹅燕不分家', details: ['image29_d1.png'], crop: 'q_image29_c1.jpg' },
-  { image: 'q_image30.png', answer: '蝴蝶', category: 'feature', sub: 'animal', tip: '左上两三角形像翅膀，比翼双飞是蝴蝶', details: ['image30_d1.png'], crop: 'q_image30_c1.jpg' },
-  { image: 'q_image31.png', answer: '蜻蜓', category: 'feature', sub: 'animal', tip: '左上缺角的正方形，或中间两个正方形相连，正义使者蜻蜓队长', details: ['image31_d1.png'], crop: 'q_image31_c1.jpg' },
-  { image: 'q_image32.png', answer: '鸽子', category: 'feature', sub: 'animal', tip: '看得出来就不用记，看不出来看肚子图案显亮、显白，记亮白肚子是鸽子', details: ['image32_d1.png'], crop: 'q_image32_c1.jpg' },
-  { image: 'q_image33.png', answer: '牛',   category: 'feature', sub: 'animal', tip: '色弱看到个鸡，可记左上角，正梯形是牛，左上角没图案的是羊，或鸡小的是牛，鸡大的是羊', details: ['image33_d1.png'], crop: 'q_image33_c1.jpg' },
-  { image: 'q_image35.png', answer: '羊',   category: 'feature', sub: 'animal', tip: '色弱看到个鸡，可记左上角，正梯形是牛，左上角没图案的是羊，或鸡小的是牛，鸡大的是羊', details: ['image35_d1.png'], crop: 'q_image35_c1.jpg' },
-  { image: 'q_image18.png', answer: '○', category: 'feature', sub: 'other', tip: '左上角三角形紧跟四边形=大圆圈', details: ['image18_d1.png'], crop: 'q_image18_c1.jpg' },
-  { image: 'q_image19.png', answer: '○/△', category: 'feature', sub: 'other', tip: '大块多边形，圆圈和三角形', details: ['image19_d1.png'], crop: 'q_image19_c1.jpg' },
-  { image: 'q_image26.png', answer: '水杯', category: 'feature', sub: 'other', tip: '上方，三角形扣着菱形，就像倒咖啡，记杯子', details: ['image26_d1.png'], crop: 'q_image26_c1.jpg' },
+  { image: 'q_image12.png', answer: '2/9', category: 'feature', sub: 'num', tip: '一分为二都能看出来，能看到个 9 的，记 2 和 9，看不到 9 的，记左上角四边形五边形=2 和 9', details: ['image12_d1.png'], crop: 'q_image12_c1.jpg', tipAudio: 'tip_audios/q_image12_tip.mp3' },
+  { image: 'q_image13.png', answer: '6/0', category: 'feature', sub: 'num', tip: '首先一分为二都能看出来，能看到个 0 的，记 6 和 0，看不到 0 的，记左上角小点点和四边形的=6 和 0', details: ['image13_d1.png'], crop: 'q_image13_c1.jpg', tipAudio: 'tip_audios/q_image13_tip.mp3' },
+  { image: 'q_image38.png', answer: '899/022', category: 'feature', sub: 'num', tip: '一分为 6 块，左上角长四边形的记 8 9 9、0 2 2，正梯形记 6 2 1、9 8 9', details: ['image38_d1.png'], crop: 'q_image38_c1.jpg', tipAudio: 'tip_audios/q_image38_tip.mp3' },
+  { image: 'q_image39.png', answer: '621/989', category: 'feature', sub: 'num', tip: '一分为 6 块，左上角长四边形的记 8 9 9、0 2 2 ，正梯形记 6 2 1、9 8 9', details: ['image39_d1.png'], crop: 'q_image39_c1.jpg', tipAudio: 'tip_audios/q_image39_tip.mp3' },
+  { image: 'q_image29.png', answer: '燕子', category: 'feature', sub: 'animal', tip: '看得出来就不用记，或记左上正方形和四边形，也可以记它在鹅的下一页，鹅燕不分家', details: ['image29_d1.png'], crop: 'q_image29_c1.jpg', tipAudio: 'tip_audios/q_image29_tip.mp3' },
+  { image: 'q_image30.png', answer: '蝴蝶', category: 'feature', sub: 'animal', tip: '左上两三角形像翅膀，比翼双飞是蝴蝶', details: ['image30_d1.png'], crop: 'q_image30_c1.jpg', tipAudio: 'tip_audios/q_image30_tip.mp3' },
+  { image: 'q_image31.png', answer: '蜻蜓', category: 'feature', sub: 'animal', tip: '左上缺角的正方形，或中间两个正方形相连，正义使者蜻蜓队长', details: ['image31_d1.png'], crop: 'q_image31_c1.jpg', tipAudio: 'tip_audios/q_image31_tip.mp3' },
+  { image: 'q_image32.png', answer: '鸽子', category: 'feature', sub: 'animal', tip: '看得出来就不用记，看不出来看肚子图案显亮、显白，记亮白肚子是鸽子', details: ['image32_d1.png'], crop: 'q_image32_c1.jpg', tipAudio: 'tip_audios/q_image32_tip.mp3' },
+  { image: 'q_image33.png', answer: '牛',   category: 'feature', sub: 'animal', tip: '色弱看到个鸡，可记左上角，正梯形是牛，左上角没图案的是羊，或鸡小的是牛，鸡大的是羊', details: ['image33_d1.png'], crop: 'q_image33_c1.jpg', tipAudio: 'tip_audios/q_image33_tip.mp3' },
+  { image: 'q_image35.png', answer: '羊',   category: 'feature', sub: 'animal', tip: '色弱看到个鸡，可记左上角，正梯形是牛，左上角没图案的是羊，或鸡小的是牛，鸡大的是羊', details: ['image35_d1.png'], crop: 'q_image35_c1.jpg', tipAudio: 'tip_audios/q_image35_tip.mp3' },
+  { image: 'q_image18.png', answer: '○', category: 'feature', sub: 'other', tip: '左上角三角形紧跟四边形=大圆圈', details: ['image18_d1.png'], crop: 'q_image18_c1.jpg', tipAudio: 'tip_audios/q_image18_tip.mp3' },
+  { image: 'q_image19.png', answer: '○/△', category: 'feature', sub: 'other', tip: '大块多边形，圆圈和三角形', details: ['image19_d1.png'], crop: 'q_image19_c1.jpg', tipAudio: 'tip_audios/q_image19_tip.mp3' },
+  { image: 'q_image26.png', answer: '水杯', category: 'feature', sub: 'other', tip: '上方，三角形扣着菱形，就像倒咖啡，记杯子', details: ['image26_d1.png'], crop: 'q_image26_c1.jpg', tipAudio: 'tip_audios/q_image26_tip.mp3' },
 
   // ---------- 数字口诀(11 张) ----------
-  { image: 'q_image5.png',  answer: '69',  category: 'number', tip: '看得出来 69 就不用记，看中间很多三角形四边形围绕，记 69', details: ['image5_d1.png'], crop: 'q_image5_c1.jpg' },
-  { image: 'q_image6.png',  answer: '60',  category: 'number', tip: '看得出来 60 就不用记，看不出来看中间一横线断开，记 60', details: ['image6_d1.png'], crop: 'q_image6_c1.jpg' },
-  { image: 'q_image7.png',  answer: '98',  category: 'number', tip: '看到 6 且下面记得多边形，直接记 98 即可，麻溜麻溜跑去酒吧（98）', details: ['image7_d1.png'], crop: 'q_image7_c1.jpg' },
-  { image: 'q_image8.png',  answer: '816', category: 'number', tip: '正中间，两个大黑色菱形，记 816', details: ['image8_d1.png'], crop: 'q_image8_c1.jpg' },
-  { image: 'q_image9.png',  answer: '9',   category: 'number', tip: '直接看出来 9 就不用记，看不出来记左上角黑色菱形记成 9 即可', details: ['image9_d1.png'], crop: 'q_image9_c1.jpg' },
-  { image: 'q_image11.png', answer: '62',  category: 'number', tip: '记左上角，大个三角形四边形记 62', details: ['image11_d1.png'], crop: 'q_image11_c1.jpg' },
-  { image: 'q_image40.png', answer: '812', category: 'number', tip: '左上两大黑色四边形，记 812', details: ['image40_d1.png'], crop: 'q_image40_c1.jpg' },
-  { image: 'q_image42.png', answer: '6098', category: 'number', tip: '左上单单一个直角三角形，记 6098', details: ['image42_d1.png'], crop: 'q_image42_c1.jpg' },
-  { image: 'q_image43.png', answer: '8609', category: 'number', tip: '很多大块头三角形四边形的记 8609', details: ['image43_d1.png'], crop: 'q_image43_c1.jpg' },
-  { image: 'q_image45.png', answer: '6289', category: 'number', tip: '记左上黑色方块，或在 698 下一页', details: ['image45_d1.png'], crop: 'q_image45_c1.jpg' },
-  { image: 'q_image49.png', answer: '820', category: 'number', tip: '左上黑色方块像开花，记 820', details: ['image49_d1.png'], crop: 'q_image49_c1.jpg' },
-]
+  { image: 'q_image5.png',  answer: '69',  category: 'number', tip: '看得出来 6 9 就不用记，看中间很多三角形四边形围绕，记 6 9', details: ['image5_d1.png'], crop: 'q_image5_c1.jpg', tipAudio: 'tip_audios/q_image5_tip.mp3' },
+  { image: 'q_image6.png',  answer: '60',  category: 'number', tip: '看得出来 6 0 就不用记，看不出来看中间一横线断开，记 6 0', details: ['image6_d1.png'], crop: 'q_image6_c1.jpg', tipAudio: 'tip_audios/q_image6_tip.mp3' },
+  { image: 'q_image7.png',  answer: '98',  category: 'number', tip: '看到 6 0 且下面记得多边形，直接记 9 8 即可，麻溜麻溜跑去酒吧（9 8）', details: ['image7_d1.png'], crop: 'q_image7_c1.jpg', tipAudio: 'tip_audios/q_image7_tip.mp3' },
+  { image: 'q_image8.png',  answer: '816', category: 'number', tip: '正中间，两个大黑色菱形，记 8 1 6', details: ['image8_d1.png'], crop: 'q_image8_c1.jpg', tipAudio: 'tip_audios/q_image8_tip.mp3' },
+  { image: 'q_image9.png',  answer: '9',   category: 'number', tip: '直接看出来 9 就不用记，看不出来记左上角黑色菱形记成 9 即可', details: ['image9_d1.png'], crop: 'q_image9_c1.jpg', tipAudio: 'tip_audios/q_image9_tip.mp3' },
+  { image: 'q_image11.png', answer: '62',  category: 'number', tip: '记左上角，大个三角形四边形记 6 2', details: ['image11_d1.png'], crop: 'q_image11_c1.jpg', tipAudio: 'tip_audios/q_image11_tip.mp3' },
+  { image: 'q_image40.png', answer: '812', category: 'number', tip: '左上两大黑色四边形，记 8 1 2', details: ['image40_d1.png'], crop: 'q_image40_c1.jpg', tipAudio: 'tip_audios/q_image40_tip.mp3' },
+  { image: 'q_image42.png', answer: '6098', category: 'number', tip: '左上单单一个直角三角形，记 6 0 9 8', details: ['image42_d1.png'], crop: 'q_image42_c1.jpg', tipAudio: 'tip_audios/q_image42_tip.mp3' },
+  { image: 'q_image43.png', answer: '8609', category: 'number', tip: '很多大块头三角形四边形的记 8 6 0 9', details: ['image43_d1.png'], crop: 'q_image43_c1.jpg', tipAudio: 'tip_audios/q_image43_tip.mp3' },
+  { image: 'q_image45.png', answer: '6289', category: 'number', tip: '记左上黑色方块，或在 6 9 8 下一页', details: ['image45_d1.png'], crop: 'q_image45_c1.jpg', tipAudio: 'tip_audios/q_image45_tip.mp3' },
+  { image: 'q_image49.png', answer: '820', category: 'number', tip: '左上黑色方块像开花，记 8 2 0', details: ['image49_d1.png'], crop: 'q_image49_c1.jpg', tipAudio: 'tip_audios/q_image49_tip.mp3' }
+];
 
 // 版本数据包:图片在 plates/v5/、study/v5/
 export const v5 = {

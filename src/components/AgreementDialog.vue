@@ -4,7 +4,7 @@
     <div class="agreement-dialog">
       <h2 class="agreement-title">使用协议</h2>
       <div class="agreement-body">
-        <p>欢迎使用「色盲色弱助手」，使用前请仔细阅读以下内容:</p>
+        <p>欢迎使用「{{ appTitle }}」，使用前请仔细阅读以下内容:</p>
         <p>
           <strong
             >1.
@@ -30,6 +30,8 @@
 
 <script setup>
 import { ref } from "vue";
+
+const appTitle = import.meta.env.VITE_APP_TITLE;
 
 // ---------- 首次使用协议 ----------
 const AGREEMENT_KEY = "cv_agreement_v1";

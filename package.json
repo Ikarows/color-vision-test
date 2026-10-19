@@ -1,14 +1,14 @@
 {
   "name": "color-vision-test",
   "private": true,
-  "version": "2.1.0",
+  "version": "2.2.0",
   "type": "module",
   "main": "electron/main.cjs",
   "scripts": {
     "dev": "vite",
-    "build": "vite build",
+    "build": "vite build && node scripts/protect-assets.mjs",
     "preview": "vite preview",
-    "app:build": "vite build && electron-builder --publish never"
+    "app:build": "vite build && node scripts/protect-assets.mjs && electron-builder --publish never"
   },
   "build": {
     "appId": "com.local.colorvisiontest",
@@ -49,9 +49,12 @@
     "vue": "^3.5.13"
   },
   "devDependencies": {
+    "@napi-rs/canvas": "^1.0.11",
     "@vitejs/plugin-vue": "^5.2.1",
+    "playwright-core": "^1.64.1",
     "postcss-pxtorem": "^6.1.0",
     "sass-embedded": "^1.105.1",
+    "sharp": "^0.35.5",
     "vite": "^6.0.7"
   },
   "description": "<div align=\"center\">\r <p><img width=\"150\" src=\"./public/logo.png\"></p>",

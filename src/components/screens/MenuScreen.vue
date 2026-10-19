@@ -58,11 +58,11 @@
         <img
           class="brand-logo"
           :src="BRAND_LOGO_SRC"
-          alt="色盲色弱助手 logo"
+          :alt="appTitle + ' logo'"
           draggable="false"
         />
       </div>
-      <h1 class="title">色盲色弱助手</h1>
+      <h1 class="title">{{ appTitle }}</h1>
       <p class="subtitle">基于{{ editionLabel }} · 共 {{ totalCount }} 题</p>
 
       <div class="menu-cards">
@@ -168,13 +168,15 @@
     </div>
 
     <p class="disclaimer">本软件仅供自测学习使用，不能替代专业医学诊断</p>
-    <p class="copyright">@Copyright 来杯橙汁/Ikarows 2026 v2.1.0</p>
+    <p class="copyright">@Copyright 来杯橙汁/Ikarows 2026 v2.2.0</p>
   </div>
 </template>
 
 <script setup>
 import { ref, onMounted, onBeforeUnmount } from "vue";
 import { useEdition } from "../../composables/useEdition.js";
+
+const appTitle = import.meta.env.VITE_APP_TITLE;
 import { useStudy } from "../../composables/useStudy.js";
 
 defineEmits(["study", "start", "hospitals"]);

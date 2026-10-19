@@ -63,6 +63,9 @@
                       <div class="answer-mask" aria-hidden="true">
                         <img :src="plateSrc" alt="" draggable="false" />
                       </div>
+                      <div class="stamp-mask" aria-hidden="true">
+                        <img :src="plateSrc" alt="" draggable="false" />
+                      </div>
                     </div>
                     <transition name="fade">
                       <div
@@ -741,22 +744,46 @@ html.android-app .screen.quiz-screen {
 .answer-mask {
   position: absolute;
   left: 0;
-  bottom: 1px; /* 压在图片 1px 边框上沿,不越出图片 */
-  width: 40%;
-  height: 11%;
+  bottom: 2.5%; /* 用户实测校准:恰好盖住答案栏且不压底部白边框 */
+  width: 39%;
+  height: 7.5%;
   overflow: hidden;
-  border-bottom-left-radius: 14px;
   pointer-events: none;
 }
 .answer-mask img {
   position: absolute;
-  left: 0;
-  bottom: 0;
-  width: 250%; /* 补丁宽为图宽的 40%,放大 2.5 倍即整图原比例宽度 */
+  left: 0; /* 取样与窗口同列 [0,40%],左缘自带原图左边框白段自然衔接 */
+  top: -21.05%; /* -2/9.5:窗口显示原图顶部 y 2%~11.5% 横带(无答案栏/无印章/无数字) */
+  width: 250%; /* 补丁宽为图宽的 40%,放大即整图原比例宽度 */
   max-width: none;
-  /* 取样同图右下角同一水平带并水平镜像:右缘白边翻到补丁左缘、底缘白边保持对齐,
-     补丁左右两侧的白边与原图自然衔接 */
-  transform: scaleX(-1);
+  /* 旧方案取样右下角横带并 scaleX(-1) 镜像,印章改贴右下角后落进其取样带,
+     镜像把印章字反写到左下角;改用顶部横带取样(与 stamp-mask 同机制)规避 */
+  user-select: none;
+}
+
+/* 体检模拟:遮挡图片底部烧入的"色盲色弱助手"水印章(仅显示层覆盖,不改图片文件)。
+   印章字贴底部右下角(文字右缘距图右 2.5%W,避开学习图底部中央的红圈技巧标注),
+   文字跨 75.3%~97.5%W,补丁窗口 72.9%~99.9%,取样原图顶部同一竖列的横带
+   (y 2%~9.5%,无数字/无印章;右缘含原图右侧白边框段,贴回底部正好延续右边框);
+   取印章右侧水平带的旧方案会切进数字下弧(如 v5 image1 的 8),红色弧线碎片
+   被平移到画面中央且与右侧真实弧线重复,非常突兀;
+   顶部横带左右缘与补丁同列自然衔接,下缘停在图片白边框上方保持边框连续 */
+.stamp-mask {
+  position: absolute;
+  left: 86.4%; /* 印章字中心 86.4%W,窗口 72.9%~99.9% */
+  bottom: 1.5%; /* 补丁下缘停在图片白边框(≈1%H)上方,底边框不被切断 */
+  width: 27%; /* 印章字宽约 22.2% 图宽(6 字 × 3.7% 字号),左右各留约 2.4% 余量 */
+  height: 7.5%; /* 覆盖印章字区 y 91.5%~97.6% */
+  transform: translateX(-50%);
+  overflow: hidden;
+  pointer-events: none;
+}
+.stamp-mask img {
+  position: absolute;
+  left: -270%; /* -72.9/27:补丁左缘对齐原图 72.9% 处,取样与窗口同列的顶部横带 */
+  top: -26.67%; /* -2/7.5:窗口显示原图顶部 y 2% ~ 9.5% 横带 */
+  width: 370.4%; /* 补丁宽为图宽的 27%,放大即整图原比例宽度 */
+  max-width: none;
   user-select: none;
 }
 

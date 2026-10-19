@@ -23,7 +23,7 @@ export function studyPath(name, editionId) {
 
 // 速记题目图 q_imageN.png → 测试原图 plates/v6/imageN.jpeg
 export function studyOriginalPath(item, editionId) {
-  const m = item.image.match(/^q_(image\d+)\.png$/);
+  const m = item.image.match(/^q_(image\d+)\.(?:png|jpe?g)$/);
   return m ? platePath(m[1] + ".jpeg", editionId) : null;
 }
 

@@ -55,9 +55,11 @@
 
 按当前版本展示学习内容，卡片式浏览，每次随机排序：
 
-- **第六版**：51 条，四分类——简单易看 13 / 特征对应 26（子分类：数字 14 / 动物 8 / 其它 4）/ 数字对应 9 / 总结复习 3
+- **第六版**：48 条，四分类——简单易看 13 / 特征认图 28（子分类：数字 15 / 动物 8 / 其它 5）/ 数字口诀 7 / 总结复习（聚合有特写图的条目）
 - **第五版**：65 条，按有无技巧图划分——特征对应 13 / 数字对应 11 / 简单易看 41
 - **三视图切换**：原图 / 技巧图 / 答案解析图（有技巧图的默认展示技巧图，无技巧图的条目自动隐藏切换栏）
+- **技巧语音**：每条技巧配 TTS 朗读语音（微软晓晓音色），技巧栏播放按钮一键试听/暂停，语音经 fetch 转 Blob 播放，绕开夸克等浏览器对媒体 URL 的下载劫持
+- **AI 智能语音小助手**：可拖动悬浮球（头像球，位置本地记忆），点击弹出设置面板（按剩余空间自动换向）——记图语音自动播放开关、单个/分类/全部三种循环、切卡间隔 0.5~3 秒档位，播完自动切下一张（无语音卡直接跳过，整类无语音自动切换），全部设置与球位置持久化，支持一键重置
 - **图片放大**：点击全屏查看，支持滚轮缩放、拖动平移、双击放大复位、移动端双指捏合，点击空白或 × 关闭
 
 ### 体检模拟
@@ -98,6 +100,10 @@ color-vision-test/
 ├── vite.config.js             # Vite 配置
 ├── capacitor.config.json      # Capacitor 配置（appId / 应用名）
 ├── package.json               # 脚本与依赖（含 electron-builder 配置）
+├── TTS-RULES.md               # 技巧语音（TTS）生成规则与批量自动化说明
+├── tts-gen.mjs                # 技巧语音批量生成脚本（用法见 TTS-RULES.md）
+├── scripts/
+│   └── protect-assets.mjs     # 构建后处理：题图覆盖答案栏（盖住题号/答案） + mp3 改名 .aud（资源保护）
 │
 ├── src/
 │   ├── main.js                # Vue 应用入口（先加载全局样式再挂载）
@@ -111,6 +117,7 @@ color-vision-test/
 │   │   ├── useQuizConfig.js   #   出题配置与驾照模拟开关
 │   │   ├── useRecords.js      #   统计记录（按版本过滤/聚合）
 │   │   ├── useStudy.js        #   学习条目、分类显隐
+│   │   ├── useTipAudio.js     #   技巧语音播放引擎（Blob 播放/自动连播/循环/切卡间隔/持久化）
 │   │   ├── useZoom.js         #   图片放大（手势/滚轮）
 │   │   └── useHospitalSearch.js # 体检点查询（懒加载+筛选）
 │   ├── components/
@@ -125,6 +132,7 @@ color-vision-test/
 │   │   │   ├── WrongBook.vue         # 错题本：常错图排行、发起错图针对测试
 │   │   │   └── HospitalsScreen.vue   # 体检点查询：省市区级联、场景标签、无限滚动
 │   │   ├── ZoomOverlay.vue    # 图片放大层
+│   │   ├── StudyFloatHelper.vue # AI 智能语音小助手悬浮球（拖动记忆/自动播放/循环设置面板）
 │   │   ├── AgreementDialog.vue# 用户协议弹窗
 │   │   └── DrivingHelpDialog.vue # 驾照模拟规则说明弹窗
 │   └── data/
@@ -139,7 +147,8 @@ color-vision-test/
 │   ├── study/v5/ v6/          # 各版本学习图：
 │   │   ├── q_image*.png       #   技巧图（带题号边框）
 │   │   ├── image*_d*.png      #   答案解析图（标出目标图形）
-│   │   └── review_p*.png      #   总结复习页
+│   │   ├── review_p*.png      #   总结复习页
+│   │   └── tip_audios/        #   技巧语音 mp3（q_imageN_tip.mp3，生成规则见 TTS-RULES.md）
 │   └── vision_data/           # 体检点数据（hospitals.json + regions.json，按需加载）
 │
 ├── build/                     # 三端图标资源与生成脚本
@@ -216,14 +225,19 @@ export const v6 = {
   image: 'q_image11.png',     // 技巧图（public/study/{版本}/ 下）
   answer: '268',              // 正确答案
   category: 'number',         // easy | number | feature | review
-  sub: 'num',                 // 特征对应子分类: num | animal | other
+  sub: 'num',                 // 特征认图子分类: num | animal | other
   tip: '记忆技巧文案',
   details: ['image11_d1.png'],// 答案解析图（可选）
+  tipAudio: 'tip_audios/q_image11_tip.mp3', // 技巧语音（可选，相对 study 目录）
   noTipImg: true              // 无真技巧图时标记，学习页隐藏技巧图栏
 }
 ```
 
 学习模式的"原图"视图按 `q_imageN.png → plates/{版本}/imageN.jpeg` 规则自动映射。
+
+### 技巧语音（tip_audios）
+
+语音 mp3 存放于 `public/study/{版本}/tip_audios/`（当前 v6 35 条 / v5 40 条，共 75 个），由微软晓晓 TTS 批量生成，播放侧经 fetch 转 Blob 绕开浏览器对媒体 URL 的下载劫持。完整生成规则（文案拼接、answer 中文读法转换、批量自动化）见 [TTS-RULES.md](TTS-RULES.md)。
 
 ## 免责声明
 
