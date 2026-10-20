@@ -60,7 +60,10 @@
     />
 
     <!-- ===================== 首次使用协议弹窗(逻辑自包含) ===================== -->
-    <AgreementDialog />
+    <AgreementDialog @agreed="checkUpdate" />
+
+    <!-- ===================== 应用内更新弹窗(安卓 App,检查到蒲公英新版本时弹出) ===================== -->
+    <UpdateDialog />
 
     <!-- ===================== 图片放大查看层(全局单例,双指/滚轮缩放/拖动/双击) ===================== -->
     <ZoomOverlay />
@@ -85,7 +88,9 @@ import StudyScreen from "./components/screens/StudyScreen.vue";
 import QuizScreen from "./components/screens/QuizScreen.vue";
 import HospitalsScreen from "./components/screens/HospitalsScreen.vue";
 import AgreementDialog from "./components/AgreementDialog.vue";
+import UpdateDialog from "./components/UpdateDialog.vue";
 import ZoomOverlay from "./components/ZoomOverlay.vue";
+import { checkUpdate } from "./composables/useUpdater.js";
 
 const { stage, go, back } = useStage();
 const { openStats, openWrongBook } = useRecords();
@@ -142,6 +147,8 @@ onMounted(() => {
   initBackKey();
   window.addEventListener("scroll", onWinScroll, { passive: true });
   updateBackBars();
+  // 应用内更新:合规要求,仅用户已同意协议后才发起检查(首次同意时由 @agreed 事件触发)
+  if (localStorage.getItem("cv_agreement_v1")) checkUpdate();
 });
 
 onUnmounted(() => {

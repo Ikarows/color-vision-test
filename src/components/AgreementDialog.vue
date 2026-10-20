@@ -29,17 +29,24 @@
 </template>
 
 <script setup>
-import { ref } from "vue";
+import { ref, watch } from "vue";
 
 const appTitle = import.meta.env.VITE_APP_TITLE;
+const emit = defineEmits(["agreed"]);
 
 // ---------- 首次使用协议 ----------
 const AGREEMENT_KEY = "cv_agreement_v1";
 const showAgreement = ref(!localStorage.getItem(AGREEMENT_KEY));
 
+// 弹窗打开时锁定背景滚动(关闭时恢复)
+watch(showAgreement, (v) => {
+  document.body.style.overflow = v ? "hidden" : "";
+});
+
 function acceptAgreement() {
   localStorage.setItem(AGREEMENT_KEY, "1");
   showAgreement.value = false;
+  emit("agreed");
 }
 </script>
 
