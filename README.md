@@ -162,6 +162,17 @@ color-vision-test/
 └── dist/                      # vite build 输出（构建生成）
 ```
 
+## 分支说明
+
+| 分支 | 用途 | 弹窗行为 |
+|---|---|---|
+| **release** | **正式线上分支，网站部署以此为准** | 无换域名公告，普通 `npm run build` 即干净正式版 |
+| main | 开发主干，功能合入后再同步到 release / prod | 默认无公告，需 `npm run build:notice` 才包含 |
+| prod | 域名迁移过渡分支（临时） | 公告默认显示，普通 `npm run build` 即带「换域名公告」弹窗 |
+
+> **域名迁移过渡期**：线上部署源使用 `prod` 分支；过渡期结束后切回 `release` 分支即可恢复正式版。
+> `build:notice` 依赖 `.env.notice`（`VITE_DOMAIN_NOTICE` 开关 + `VITE_NEW_DOMAIN` 新域名），仅 main 分支需要。
+
 ## 快速开始
 
 ```bash
