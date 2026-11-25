@@ -1,5 +1,5 @@
 <template>
-  <!-- 域名迁移公告弹窗（仅 VITE_DOMAIN_NOTICE=1 的构建中包含） -->
+  <!-- 域名迁移公告弹窗（prod 分支：默认包含，可设 VITE_DOMAIN_NOTICE=0 关闭） -->
   <Teleport to="body">
     <div v-if="visible" class="dn-overlay">
       <div class="dn-dialog">
@@ -61,9 +61,11 @@
 <script setup>
 import { ref } from "vue";
 
-// 编译期注入：仅 --mode notice 构建时为 "1"（普通构建中被常量折叠剔除）
-const enabled = import.meta.env.VITE_DOMAIN_NOTICE === "1";
-const newDomain = import.meta.env.VITE_NEW_DOMAIN || "";
+// prod 分支：默认开启（正常构建即带弹窗），如需关闭可设 VITE_DOMAIN_NOTICE=0
+const enabled = import.meta.env.VITE_DOMAIN_NOTICE !== "0";
+// prod 分支：域名内置兜底，普通构建即可用；如需换域名可设 VITE_NEW_DOMAIN 覆盖
+const newDomain =
+  import.meta.env.VITE_NEW_DOMAIN || "https://smsrzs-10f313yp.maozi.io";
 
 // 旧域名停用日期 = 构建日期 + 2 天
 const stopDate = (() => {
