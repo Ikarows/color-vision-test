@@ -62,6 +62,9 @@
     <!-- ===================== 首次使用协议弹窗(逻辑自包含) ===================== -->
     <AgreementDialog @agreed="checkUpdate" />
 
+    <!-- ===================== 换域名公告弹窗(仅 notice 模式构建时存在) ===================== -->
+    <DomainNotice />
+
     <!-- ===================== 应用内更新弹窗(安卓 App,检查到蒲公英新版本时弹出) ===================== -->
     <UpdateDialog />
 
@@ -89,6 +92,7 @@ import QuizScreen from "./components/screens/QuizScreen.vue";
 import HospitalsScreen from "./components/screens/HospitalsScreen.vue";
 import AgreementDialog from "./components/AgreementDialog.vue";
 import UpdateDialog from "./components/UpdateDialog.vue";
+import DomainNotice from "./components/DomainNotice.vue";
 import ZoomOverlay from "./components/ZoomOverlay.vue";
 import { checkUpdate } from "./composables/useUpdater.js";
 
