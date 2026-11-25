@@ -15,6 +15,10 @@ public class MainActivity extends BridgeActivity {
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
+        // 注册应用内更新插件:必须在 super.onCreate 之前调用,
+        // 此时 bridge 尚未初始化,注册才会进入待加载列表(放在之后会静默失效)
+        registerPlugin(UpdaterPlugin.class);
+
         super.onCreate(savedInstanceState);
 
         // 沉浸式状态栏：状态栏透明，WebView 延伸到屏幕顶端，

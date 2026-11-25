@@ -1,12 +1,13 @@
 {
   "name": "color-vision-test",
   "private": true,
-  "version": "2.2.1",
+  "version": "2.3.0",
   "type": "module",
   "main": "electron/main.cjs",
   "scripts": {
     "dev": "vite",
     "build": "node scripts/normalize-eol.mjs && vite build && node scripts/protect-assets.mjs",
+    "build:notice": "node scripts/normalize-eol.mjs && vite build --mode notice && node scripts/protect-assets.mjs",
     "preview": "vite preview",
     "norm": "node scripts/normalize-eol.mjs",
     "app:build": "node scripts/normalize-eol.mjs && vite build && node scripts/protect-assets.mjs && electron-builder --publish never"

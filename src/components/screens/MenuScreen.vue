@@ -167,8 +167,36 @@
       <div class="es-label">已切换 · {{ edition.edition }}</div>
     </div>
 
+    <!-- 检查更新入口:页脚低调小胶囊(测试环境一律显示,正式环境仅安卓 App 显示) -->
+    <button
+      v-if="showUpdateEntry"
+      class="upd-bottom-btn"
+      :disabled="checking"
+      aria-label="检查更新"
+      @click="forceCheckUpdate"
+    >
+      <!-- 循环刷新箭头:贴合"检测更新"语义 -->
+      <svg
+        viewBox="0 0 24 24"
+        width="13"
+        height="13"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="2.2"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+      >
+        <path d="M3 12a9 9 0 0 1 9-9 9.75 9.75 0 0 1 6.74 2.74L21 8" />
+        <path d="M21 3v5h-5" />
+        <path d="M21 12a9 9 0 0 1-9 9 9.75 9.75 0 0 1-6.74-2.74L3 16" />
+        <path d="M3 21v-5h5" />
+      </svg>
+      检查更新
+    </button>
+
     <p class="disclaimer">本软件仅供自测学习使用，不能替代专业医学诊断</p>
-    <p class="copyright">@Copyright 来杯橙汁/Ikarows 2026 v2.2.1</p>
+
+    <p class="copyright">@Copyright 来杯橙汁/Ikarows 2026 v2.3.0</p>
   </div>
 </template>
 
@@ -178,6 +206,7 @@ import { useEdition } from "../../composables/useEdition.js";
 
 const appTitle = import.meta.env.VITE_APP_TITLE;
 import { useStudy } from "../../composables/useStudy.js";
+import { useUpdater } from "../../composables/useUpdater.js";
 
 defineEmits(["study", "start", "hospitals"]);
 
@@ -187,6 +216,9 @@ const BRAND_LOGO_SRC = import.meta.env.BASE_URL + "logo.png";
 const { editions, edition, setEdition, totalCount, editionLabel } =
   useEdition();
 const { categoryCount } = useStudy();
+
+// 检查更新入口(页脚胶囊;测试环境一律显示,正式环境仅安卓 App 显示;手动触发跳过 30 分钟缓存)
+const { checking, forceCheckUpdate, showUpdateEntry } = useUpdater();
 
 // 左上角版本徽章的弹出状态
 const badgeOpen = ref(false);
@@ -373,9 +405,44 @@ onBeforeUnmount(() => {
 /* 吸顶条:只保留版本徽章胶囊一行(logo/标题已挪出,随内容滚动)
    (沿用 .back-bar 机制:透明→吸顶实色盖住滚过的内容,安卓 padding-top 让出状态栏) */
 
-/* 徽章行在吸顶条内左对齐(横向 padding 已按内容区对齐) */
+/* 徽章行在吸顶条内:仅左侧版本徽章(检查更新入口已移至页脚胶囊) */
 .menu-top {
   align-self: flex-start;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+/* 页脚检查更新小胶囊:低调弱化,不与主视觉抢焦点(测试环境一律显示,正式环境仅安卓显示) */
+.upd-bottom-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  margin: 12px auto 0;
+  padding: 6px 15px;
+  border: 1px solid rgba(255, 255, 255, 0.8);
+  outline: none;
+  appearance: none;
+  background: rgba(255, 255, 255, 0.65);
+  color: #9aa8b8;
+  font-size: 12px;
+  font-weight: 600;
+  font-family: inherit;
+  border-radius: 999px;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.upd-bottom-btn:hover {
+  color: #2f6fed;
+  border-color: #b6ccf5;
+  background: #fff;
+}
+
+.upd-bottom-btn:disabled {
+  opacity: 0.5;
 }
 
 /* 吸顶后用页面同款渐变(.app 背景的顶部一段)代替纯色,与页面背景无缝衔接 */
